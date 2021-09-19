@@ -21,7 +21,7 @@ contract Options {
 
     uint256 private optionId;
     mapping(uint256 => Option) private options;
-    mapping(address => uint256) private optionOwners;
+    mapping(uint256 => address) private optionOwners;
 
     // Trade data
     struct Trade {
@@ -53,6 +53,14 @@ contract Options {
             amount: amount,
             optionType: optionType
         });
+
+        // Save the option
+        options[optionId] = option;
+        optionOwners[optionId] = msg.sender;
+        optionId++;
+
+        // Return the id of the option
+        return optionId - 1;
     }
 
     function getOption(uint256 _optionId) public view returns (uint256, bool, address, uint256, string memory) {
