@@ -42,9 +42,10 @@ contract OptionsMarket {
 
     // Declare events
     event OptionWritten(uint256 optionId, string indexed optionType, address indexed tokenAddress);
-    event OptionExercised(uint256 optionId, address indexed writer);
-    event TradeOpened(uint256 tradeId, uint256 indexed optionId);
-    event TradeExecuted(uint256 tradeId, uint256 indexed optionId);
+    event OptionExercised(uint256 optionId, address indexed writer, address indexed exerciser);
+    event OptionCollected(uint256 optionId);
+    event TradeOpened(uint256 tradeId, uint256 indexed optionId, address indexed poster);
+    event TradeExecuted(uint256 tradeId, uint256 indexed optionId, uint256 indexed poster, address indexed buyer);
     event TradeCancelled(uint256 tradeId);
 
     // ============= Util functions =============
