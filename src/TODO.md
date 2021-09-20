@@ -1,4 +1,2 @@
 -   Implement the market with some kind of stable coin (what would be the problem with trading using ETH if ETH's price fluctuates ?)
--   Change the once public variables to private AND camelcase (use events for indexing)
--   Add in events
--   Change time to expire to an actual expiry date
+-   Write tests on Kovan network
