@@ -100,6 +100,7 @@ contract OptionsMarket {
         }
 
         // Update the option
+        Options[_optionId].status = "exercised";
     }
 
     function collectExpired(uint256 _optionId) public {
