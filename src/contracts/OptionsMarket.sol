@@ -35,7 +35,7 @@ contract OptionsMarket {
     address private immutable tradeCurrency;
 
     constructor(address currency) {
-        // Set the admin as the deployer of the contract and the currency of the trades
+        // Set the owner as the deployer of the contract and set the currency of the trades
         owner = msg.sender;
         tradeCurrency = currency;
     }
