@@ -156,5 +156,13 @@ contract OptionsMarket {
 
     // Cancel a trade
     function cancelTrade(uint256 _tradeId) public {
+        // Get the trade
+        Trade memory trade = Trades[_tradeId];
+
+        // Check that the poster of the trade is the sender
+        require(trade.poster == msg.sender, "Only the poster may cancel a trade");
+
+        // Cancel the trade
+        Trades[_tradeId].status = "cancelled";
     }
 }
