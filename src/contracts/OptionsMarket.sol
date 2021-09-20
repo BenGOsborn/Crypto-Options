@@ -68,7 +68,7 @@ contract OptionsMarket {
         if (_compareStrings(optionType, "call")) {
             IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount); 
         } else {
-            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), price); 
+            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), price);
         }
 
         // Save the option
@@ -110,6 +110,9 @@ contract OptionsMarket {
 
         // Check that the option may be collected
         require(option.expiry > block.timestamp, "Option has not expired yet");
+        require(option.writer == msg.sender, "Only the writer may collect an expired option");
+
+        // Transfer the funds back to the writer
     }
 
     // ============= Marketplace functions =============
