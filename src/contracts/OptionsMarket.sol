@@ -40,13 +40,11 @@ contract OptionsMarket {
         tradeCurrency = currency;
     }
 
-    // Declare events
+    // Declare events for logging data
     event OptionWritten(uint256 optionId, string indexed optionType, address indexed tokenAddress);
     event OptionExercised(uint256 optionId, address indexed writer, address indexed exerciser);
-    event OptionCollected(uint256 optionId);
     event TradeOpened(uint256 tradeId, uint256 indexed optionId, address indexed poster);
-    event TradeExecuted(uint256 tradeId, uint256 indexed optionId, uint256 indexed poster, address indexed buyer);
-    event TradeCancelled(uint256 tradeId);
+    event TradeExecuted(uint256 tradeId, uint256 indexed optionId, address indexed buyer);
 
     // ============= Util functions =============
 
