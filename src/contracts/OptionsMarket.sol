@@ -103,8 +103,13 @@ contract OptionsMarket {
         Options[_optionId].status = "exercised";
     }
 
+    // Allow a writer to collect an expired contract
     function collectExpired(uint256 _optionId) public {
-        // Allow a writer to collect an expired contract
+        // Get the data of the option
+        Option memory option = Options[_optionId];
+
+        // Check that the option may be collected
+        require(option.expiry > block.timestamp, "Option has not expired yet");
     }
 
     // ============= Marketplace functions =============
