@@ -19,8 +19,8 @@ contract OptionsMarket {
     }
 
     uint256 private optionId;
-    mapping(uint256 => Option) private Options;
-    mapping(uint256 => address) private OptionOwners;
+    mapping(uint256 => Option) private options;
+    mapping(uint256 => address) private optionOwners;
 
     // Trade data
     struct Trade {
@@ -31,7 +31,7 @@ contract OptionsMarket {
     }
 
     uint256 private tradeId;
-    mapping(uint256 => Trade) private Trades;
+    mapping(uint256 => Trade) private trades;
     address private immutable tradeCurrency;
 
     constructor(address currency) {
@@ -81,8 +81,8 @@ contract OptionsMarket {
         }
 
         // Save the option
-        Options[optionId] = option;
-        OptionOwners[optionId] = msg.sender;
+        options[optionId] = option;
+        optionOwners[optionId] = msg.sender;
         optionId++;
 
         // Emit an event and return the id of the option
@@ -92,19 +92,19 @@ contract OptionsMarket {
 
     // Get the data of an option
     function getOption(uint256 _optionId) public view returns (uint256, string memory, address, address, uint256, uint256, string memory) {
-        Option memory option = Options[_optionId];
+        Option memory option = options[_optionId];
         return (option.expiry, option.status, option.writer, option.tokenAddress, option.amount, option.price, option.optionType);
     }
 
     // Allow a option holder to exercise their option
     function exerciseOption(uint256 _optionId) public {
         // Get the data of the option
-        Option memory option = Options[_optionId];
+        Option memory option = options[_optionId];
 
         // Check that the option may be exercised
         require(option.expiry <= block.timestamp, "Option has expired");
         require(_compareStrings(option.status, "none"), "Option has already been exercised");
-        require(OptionOwners[_optionId] == msg.sender, "Only the owner of the option may exercise it");
+        require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may exercise it");
 
         // If the option is a call, then charge the user the premium to receive the tokens,
         // else if the option is a put, transfer their tokens
@@ -117,14 +117,14 @@ contract OptionsMarket {
         }
 
         // Update the status of the option and emit event
-        Options[_optionId].status = "exercised";
+        options[_optionId].status = "exercised";
         emit OptionExercised(_optionId, option.writer, msg.sender);
     }
 
     // Allow a writer to collect an expired contract
     function collectExpired(uint256 _optionId) public {
         // Get the data of the option
-        Option memory option = Options[_optionId];
+        Option memory option = options[_optionId];
 
         // Check that the option may be collected
         require(option.expiry > block.timestamp, "Option has not expired yet");
@@ -140,7 +140,7 @@ contract OptionsMarket {
         }
 
         // Update the status of the option
-        Options[_optionId].status = "collected";
+        options[_optionId].status = "collected";
     }
 
     // ============= Marketplace functions =============
@@ -148,7 +148,7 @@ contract OptionsMarket {
     // Open a new trade for selling an option
     function openTrade(uint256 _optionId, uint256 price) public returns (uint256) {
         // Check that the trade may be opened
-        require(OptionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
+        require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
 
         // Create a new trade
         Trade memory trade = Trade({
@@ -159,7 +159,7 @@ contract OptionsMarket {
         });
 
         // Store the new trade
-        Trades[tradeId] = trade;
+        trades[tradeId] = trade;
         tradeId++;
 
         // Emit an event and return the trade id
@@ -170,10 +170,10 @@ contract OptionsMarket {
     // Execute a trade for buying an option
     function executeTrade(uint256 _tradeId) public {
         // Get the trade
-        Trade memory trade = Trades[_tradeId];
+        Trade memory trade = trades[_tradeId];
 
         // Transfer the option
-        OptionOwners[_tradeId] = msg.sender;
+        optionOwners[_tradeId] = msg.sender;
 
         // Charge the recipient and pay a fee to the owner
         uint256 fee = trade.price * 3 / 100; 
@@ -187,19 +187,19 @@ contract OptionsMarket {
 
     // View a trade
     function viewTrade(uint256 _tradeId) public view returns(address, uint256, uint256, string memory) {
-        Trade memory trade = Trades[_tradeId];
+        Trade memory trade = trades[_tradeId];
         return (trade.poster, trade.optionId, trade.price, trade.status);
     }
 
     // Cancel a trade
     function cancelTrade(uint256 _tradeId) public {
         // Get the trade
-        Trade memory trade = Trades[_tradeId];
+        Trade memory trade = trades[_tradeId];
 
         // Check that the poster of the trade is the sender
         require(trade.poster == msg.sender, "Only the poster may cancel a trade");
 
         // Cancel the trade
-        Trades[_tradeId].status = "cancelled";
+        trades[_tradeId].status = "cancelled";
     }
 }
