@@ -41,7 +41,7 @@ contract OptionsMarket {
     }
 
     // Declare events for logging data
-    event OptionWritten(uint256 optionId, string indexed optionType, address indexed tokenAddress);
+    event OptionWritten(uint256 optionId, address indexed writer, string indexed optionType, address indexed tokenAddress);
     event OptionExercised(uint256 optionId, address indexed writer, address indexed exerciser);
     event TradeOpened(uint256 tradeId, uint256 indexed optionId, address indexed poster);
     event TradeExecuted(uint256 tradeId, uint256 indexed optionId, address indexed buyer);
@@ -56,14 +56,14 @@ contract OptionsMarket {
     // ============= Option functions =============
 
     // Allow the address to create a new option
-    function writeOption(string memory optionType, uint256 hoursToExpire, address tokenAddress, uint256 amount, uint256 price) public returns (uint256) {
+    function writeOption(string memory optionType, uint256 expiry, address tokenAddress, uint256 amount, uint256 price) public returns (uint256) {
         // Check that the option is valid
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
-        require(hoursToExpire > 0, "Hours to expire must be greater than 0");
+        require(expiry > block.timestamp, "Expiry must be in the future");
 
         // Write a new option
         Option memory option = Option({
-            expiry: block.timestamp + hoursToExpire * 1 hours,
+            expiry: expiry,
             status: "none",
             writer: msg.sender,
             tokenAddress: tokenAddress,
