@@ -1,5 +1,3 @@
--   Have some events to be emmitted as well
--   How am I going to store the previous events on the blockchain for anyone to see and monitor only the available and open ones ?
 -   Implement the market with some kind of stable coin (what would be the problem with trading using ETH if ETH's price fluctuates ?)
--   How does the new options work where the person has to buy for a given price ?
--   Hangon, is the memory when storing new objects allowed ?
+-   Change the once public variables to private AND camelcase (use events for indexing)
+-   Add in events

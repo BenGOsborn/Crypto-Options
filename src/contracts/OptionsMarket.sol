@@ -19,8 +19,8 @@ contract OptionsMarket {
     }
 
     uint256 private optionId;
-    mapping(uint256 => Option) public Options;
-    mapping(uint256 => address) public OptionOwners;
+    mapping(uint256 => Option) private Options;
+    mapping(uint256 => address) private OptionOwners;
 
     // Trade data
     struct Trade {
@@ -31,7 +31,7 @@ contract OptionsMarket {
     }
 
     uint256 private tradeId;
-    mapping(uint256 => Trade) public Trades;
+    mapping(uint256 => Trade) private Trades;
     address private immutable tradeCurrency;
 
     constructor(address currency) {
@@ -39,6 +39,14 @@ contract OptionsMarket {
         owner = msg.sender;
         tradeCurrency = currency;
     }
+
+    // Declare events
+    // **** Yikes, what am I going to do about this ?
+    event OptionWritten(string indexed optionType, uint256 indexed hoursToExpire, uint256 indexed amount, uint256 indexed price);
+    event OptionExercised(uint256 indexed optionId);
+    event TradeOpened(uint256 indexed );
+    event TradeExecuted();
+    event TradeCancelled();
 
     // ============= Util functions =============
 
@@ -81,6 +89,12 @@ contract OptionsMarket {
 
         // Return the id of the option
         return optionId - 1;
+    }
+
+    // Get the data of an option
+    function getOption(uint256 _optionId) public view returns (uint256, string memory, address, uint256, uint256, string memory) {
+        Option memory option = Options[_optionId];
+        return (option.expiry, option.status, option.tokenAddress, option.amount, option.price, option.optionType);
     }
 
     // Allow a option holder to exercise their option
@@ -165,6 +179,12 @@ contract OptionsMarket {
         uint256 payout = trade.price - fee;
         IERC20(tradeCurrency).transferFrom(msg.sender, trade.poster, payout);
         IERC20(tradeCurrency).transferFrom(msg.sender, owner, fee);
+    }
+
+    // View a trade
+    function viewTrade(uint256 _tradeId) public view returns(uint256, uint256, string memory) {
+        Trade memory trade = Trades[_tradeId];
+        return (trade.optionId, trade.price, trade.status);
     }
 
     // Cancel a trade
