@@ -1,2 +1,2 @@
 -   Implement the market with some kind of stable coin (what would be the problem with trading using ETH if ETH's price fluctuates ?)
--   Write tests on Kovan network
+-   Write tests on Kovan network + Ganache
