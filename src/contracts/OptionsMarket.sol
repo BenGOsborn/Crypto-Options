@@ -4,20 +4,17 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract OptionsMarket {
-    // **** Have some events to be emmitted as well
-    // **** How am I going to store the previous events on the blockchain
-
     // Admin access
     address private owner;
 
     // Option data
     struct Option {
         uint256 expiry;
-        bool exercised;
+        string status; // none, exercised, collected
         address writer;
         address tokenAddress;
         uint256 amount;
-        string optionType;
+        string optionType; // call, put
     }
 
     uint256 private optionId;
@@ -29,7 +26,7 @@ contract OptionsMarket {
         address poster;
         uint256 optionId;
         uint256 price;
-        string status; // Open, closed, cancelled
+        string status; // open, closed, cancelled
     }
 
     uint256 private tradeId;
@@ -40,15 +37,23 @@ contract OptionsMarket {
         owner = msg.sender;
     }
 
+    // ============= Util functions =============
+    function _compareStrings(string memory a, string memory b) private pure returns (bool) {
+        return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
+    }
+
     // ============= Option functions =============
     function writeOption(string memory optionType, uint256 hoursToExpire, address tokenAddress, uint256 amount) public returns (uint256) {
         // Transfer the tokens from the writers account to the contract
         IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount); 
 
+        // Verify the optionType is valid
+        require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Invalid option type");
+
         // Write a new option
         Option memory option = Option({
             expiry: block.timestamp + hoursToExpire * 1 hours,
-            exercised: false,
+            status: "none",
             writer: msg.sender,
             tokenAddress: tokenAddress,
             amount: amount,
@@ -64,14 +69,21 @@ contract OptionsMarket {
         return optionId - 1;
     }
 
-    function getOption(uint256 _optionId) public view returns (uint256, bool, address, uint256, string memory) {
+    function getOption(uint256 _optionId) public view returns (uint256, string memory, address, uint256, string memory) {
         // Get the data for an existing option
         Option memory option = Options[_optionId];
-        return (option.expiry, option.exercised, option.tokenAddress, option.amount, option.optionType);
+        return (option.expiry, option.status, option.tokenAddress, option.amount, option.optionType);
     }
 
-    function collectExpiredOption(uint256 _optionId) public {
-        // Allow the writer of an option to collect the tokens from their expired option
+    function exerciseOption(uint256 _optionId) public {
+        // Get the data of the option
+        Option memory option = Options[_optionId];
+
+        require(option.expiry <= block.timestamp, "Option has expired");
+    }
+
+    function collectExpired(uint256 _optionId) public {
+        // Allow a writer to collect an expired contract
     }
 
     // ============= Marketplace functions =============

@@ -1,0 +1,2 @@
+-   Have some events to be emmitted as well
+-   How am I going to store the previous events on the blockchain for anyone to see and monitor only the available and open ones ?
