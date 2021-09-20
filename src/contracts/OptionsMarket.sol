@@ -41,6 +41,8 @@ contract OptionsMarket {
     }
 
     // ============= Util functions =============
+
+    // Compare if two strings are equal
     function _compareStrings(string memory a, string memory b) private pure returns (bool) {
         return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
     }
@@ -152,6 +154,17 @@ contract OptionsMarket {
 
     // Execute a trade for buying an option
     function executeTrade(uint256 _tradeId) public {
+        // Get the trade
+        Trade memory trade = Trades[_tradeId];
+
+        // Transfer the option
+        OptionOwners[_tradeId] = msg.sender;
+
+        // Charge the recipient and pay a fee to the owner
+        uint256 fee = trade.price * 3 / 100; 
+        uint256 payout = trade.price - fee;
+        IERC20(tradeCurrency).transferFrom(msg.sender, trade.poster, payout);
+        IERC20(tradeCurrency).transferFrom(msg.sender, owner, fee);
     }
 
     // Cancel a trade
