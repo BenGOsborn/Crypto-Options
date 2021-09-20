@@ -41,12 +41,11 @@ contract OptionsMarket {
     }
 
     // Declare events
-    // **** Yikes, what am I going to do about this ?
-    event OptionWritten(uint256 indexed optionId);
-    event OptionExercised(uint256 indexed optionId);
-    event TradeOpened(uint256 indexed tradeId);
-    event TradeExecuted(uint256 indexed tradeId);
-    event TradeCancelled(uint256 indexed tradeId);
+    event OptionWritten(uint256 optionId, string indexed optionType, address indexed tokenAddress);
+    event OptionExercised(uint256 optionId, address indexed writer);
+    event TradeOpened(uint256 tradeId, uint256 indexed optionId);
+    event TradeExecuted(uint256 tradeId, uint256 indexed optionId);
+    event TradeCancelled(uint256 tradeId);
 
     // ============= Util functions =============
 
@@ -92,9 +91,9 @@ contract OptionsMarket {
     }
 
     // Get the data of an option
-    function getOption(uint256 _optionId) public view returns (uint256, string memory, address, uint256, uint256, string memory) {
+    function getOption(uint256 _optionId) public view returns (uint256, string memory, address, address, uint256, uint256, string memory) {
         Option memory option = Options[_optionId];
-        return (option.expiry, option.status, option.tokenAddress, option.amount, option.price, option.optionType);
+        return (option.expiry, option.status, option.writer, option.tokenAddress, option.amount, option.price, option.optionType);
     }
 
     // Allow a option holder to exercise their option
@@ -182,9 +181,9 @@ contract OptionsMarket {
     }
 
     // View a trade
-    function viewTrade(uint256 _tradeId) public view returns(uint256, uint256, string memory) {
+    function viewTrade(uint256 _tradeId) public view returns(address, uint256, uint256, string memory) {
         Trade memory trade = Trades[_tradeId];
-        return (trade.optionId, trade.price, trade.status);
+        return (trade.poster, trade.optionId, trade.price, trade.status);
     }
 
     // Cancel a trade
