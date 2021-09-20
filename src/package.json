@@ -2,7 +2,7 @@
     "name": "src",
     "version": "1.0.0",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "fork": "ganache-cli --fork https://mainnet.infura.io/v3/${INFURA} --networkId 999"
     },
     "devDependencies": {
         "@openzeppelin/contracts": "^4.3.2",
