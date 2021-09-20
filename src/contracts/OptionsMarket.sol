@@ -42,11 +42,11 @@ contract OptionsMarket {
 
     // Declare events
     // **** Yikes, what am I going to do about this ?
-    event OptionWritten(string indexed optionType, uint256 indexed hoursToExpire, uint256 indexed amount, uint256 indexed price);
+    event OptionWritten(uint256 indexed optionId);
     event OptionExercised(uint256 indexed optionId);
-    event TradeOpened(uint256 indexed );
-    event TradeExecuted();
-    event TradeCancelled();
+    event TradeOpened(uint256 indexed tradeId);
+    event TradeExecuted(uint256 indexed tradeId);
+    event TradeCancelled(uint256 indexed tradeId);
 
     // ============= Util functions =============
 
