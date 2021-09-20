@@ -46,11 +46,12 @@ contract OptionsMarket {
     }
 
     // ============= Option functions =============
+
+    // Allow the address to create a new option
     function writeOption(string memory optionType, uint256 hoursToExpire, address tokenAddress, uint256 amount, uint256 price) public returns (uint256) {
-        // Verify the option type is valid, the time to live is valid, and the amount of tokens is more than 0
+        // Check that the option is valid
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
         require(hoursToExpire > 0, "Hours to expire must be greater than 0");
-        require(amount > 0, "Amount of tokens must be greater than 0");
 
         // Write a new option
         Option memory option = Option({
@@ -80,6 +81,7 @@ contract OptionsMarket {
         return optionId - 1;
     }
 
+    // Allow a option holder to exercise their option
     function exerciseOption(uint256 _optionId) public {
         // Get the data of the option
         Option memory option = Options[_optionId];
@@ -126,15 +128,33 @@ contract OptionsMarket {
     }
 
     // ============= Marketplace functions =============
-    function executeTrade() public {
-        // Execute a trade for buying an option
+
+    // Open a new trade for selling an option
+    function openTrade(uint256 _optionId, uint256 price) public returns (uint256) {
+        // Check that the trade may be opened
+        require(OptionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
+
+        // Create a new trade
+        Trade memory trade = Trade({
+            poster: msg.sender,
+            optionId: _optionId,
+            price: price,
+            status: "open"
+        });
+
+        // Store the new trade
+        Trades[tradeId] = trade;
+        tradeId++;
+
+        // Return the trade id
+        return tradeId - 1;
     }
 
-    function openTrade() public {
-        // Open a new trade for selling an option
+    // Execute a trade for buying an option
+    function executeTrade(uint256 _tradeId) public {
     }
 
-    function cancelTrade() public {
-        // Cancel a trade
+    // Cancel a trade
+    function cancelTrade(uint256 _tradeId) public {
     }
 }
