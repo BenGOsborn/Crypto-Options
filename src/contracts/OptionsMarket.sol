@@ -99,7 +99,7 @@ contract OptionsMarket {
             IERC20(tradeCurrency).transfer(msg.sender, option.price);
         }
 
-        // Update the option
+        // Update the status of the option
         Options[_optionId].status = "exercised";
     }
 
@@ -110,9 +110,19 @@ contract OptionsMarket {
 
         // Check that the option may be collected
         require(option.expiry > block.timestamp, "Option has not expired yet");
+        require(_compareStrings(option.status, "none"), "Option has already been exercised or collected");
         require(option.writer == msg.sender, "Only the writer may collect an expired option");
 
-        // Transfer the funds back to the writer
+        // If the option is a call then transfer the tokens back to the writer,
+        // otherwise transfer the price back to the writer
+        if (_compareStrings(option.optionType, "call")) {
+            IERC20(option.tokenAddress).transfer(msg.sender, option.amount);
+        } else {
+            IERC20(tradeCurrency).transfer(msg.sender, option.price);
+        }
+
+        // Update the status of the option
+        Options[_optionId].status = "collected";
     }
 
     // ============= Marketplace functions =============
