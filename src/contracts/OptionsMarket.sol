@@ -47,8 +47,10 @@ contract OptionsMarket {
         // Transfer the tokens from the writers account to the contract
         IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount); 
 
-        // Verify the optionType is valid
-        require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Invalid option type");
+        // Verify the option type is valid, the time to live is valid, and the amount of tokens is more than 0
+        require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
+        require(hoursToExpire > 0, "Hours to expire must be greater than 0");
+        require(amount > 0, "Amount of tokens must be greater than 0");
 
         // Write a new option
         Option memory option = Option({
@@ -79,7 +81,9 @@ contract OptionsMarket {
         // Get the data of the option
         Option memory option = Options[_optionId];
 
+        // Check that the option may be exercised
         require(option.expiry <= block.timestamp, "Option has expired");
+        require(_compareStrings(option.status, "none"), "Option has already been exercised");
     }
 
     function collectExpired(uint256 _optionId) public {
