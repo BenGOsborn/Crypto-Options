@@ -31,10 +31,12 @@ contract OptionsMarket {
 
     uint256 private tradeId;
     mapping(uint256 => Trade) public Trades;
+    address private immutable tradeCurrency;
 
-    constructor() {
-        // Set the admin as the deployer of the contract
+    constructor(address currency) {
+        // Set the admin as the deployer of the contract and the currency of the trades
         owner = msg.sender;
+        tradeCurrency = currency;
     }
 
     // ============= Util functions =============
@@ -44,9 +46,6 @@ contract OptionsMarket {
 
     // ============= Option functions =============
     function writeOption(string memory optionType, uint256 hoursToExpire, address tokenAddress, uint256 amount) public returns (uint256) {
-        // Transfer the tokens from the writers account to the contract
-        IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount); 
-
         // Verify the option type is valid, the time to live is valid, and the amount of tokens is more than 0
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
         require(hoursToExpire > 0, "Hours to expire must be greater than 0");
@@ -62,6 +61,15 @@ contract OptionsMarket {
             optionType: optionType
         });
 
+        // If this is a call then transfer the amount of the token to the contract,
+        // otherwise if a put then transfer the trade currency to the contract
+        if (_compareStrings(optionType, "call")) {
+            IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount); 
+        } else {
+            // What about the amount though ???
+            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), amount); 
+        }
+
         // Save the option
         Options[optionId] = option;
         OptionOwners[optionId] = msg.sender;
@@ -71,12 +79,6 @@ contract OptionsMarket {
         return optionId - 1;
     }
 
-    function getOption(uint256 _optionId) public view returns (uint256, string memory, address, uint256, string memory) {
-        // Get the data for an existing option
-        Option memory option = Options[_optionId];
-        return (option.expiry, option.status, option.tokenAddress, option.amount, option.optionType);
-    }
-
     function exerciseOption(uint256 _optionId) public {
         // Get the data of the option
         Option memory option = Options[_optionId];
@@ -84,6 +86,10 @@ contract OptionsMarket {
         // Check that the option may be exercised
         require(option.expiry <= block.timestamp, "Option has expired");
         require(_compareStrings(option.status, "none"), "Option has already been exercised");
+        require(OptionOwners[_optionId] == msg.sender, "Only the owner of the option may exercise it");
+
+        // Transfer the tokens to the user
+        IERC20(option.tokenAddress).transfer(msg.sender, option.amount);
     }
 
     function collectExpired(uint256 _optionId) public {
