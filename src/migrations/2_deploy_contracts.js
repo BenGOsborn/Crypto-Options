@@ -1,5 +1,5 @@
-require("dotenv").config();
 const OptionsMarket = artifacts.require("OptionsMarket");
+const { STABLECOIN } = require("../loadEnv");
 
 // Declare stablecoin
 const STABLECOIN = process.env.STABLECOIN;
