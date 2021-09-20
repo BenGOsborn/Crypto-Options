@@ -1,10 +1,11 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract Options {
-    // Have some events to be emmitted as well
+contract OptionsMarket {
+    // **** Have some events to be emmitted as well
+    // **** How am I going to store the previous events on the blockchain
 
     // Admin access
     address private owner;
@@ -20,8 +21,8 @@ contract Options {
     }
 
     uint256 private optionId;
-    mapping(uint256 => Option) private options;
-    mapping(uint256 => address) private optionOwners;
+    mapping(uint256 => Option) public Options;
+    mapping(uint256 => address) public OptionOwners;
 
     // Trade data
     struct Trade {
@@ -32,7 +33,7 @@ contract Options {
     }
 
     uint256 private tradeId;
-    mapping(uint256 => Trade) private trades;
+    mapping(uint256 => Trade) public Trades;
 
     constructor() {
         // Set the admin as the deployer of the contract
@@ -55,8 +56,8 @@ contract Options {
         });
 
         // Save the option
-        options[optionId] = option;
-        optionOwners[optionId] = msg.sender;
+        Options[optionId] = option;
+        OptionOwners[optionId] = msg.sender;
         optionId++;
 
         // Return the id of the option
@@ -65,7 +66,7 @@ contract Options {
 
     function getOption(uint256 _optionId) public view returns (uint256, bool, address, uint256, string memory) {
         // Get the data for an existing option
-        Option memory option = options[_optionId];
+        Option memory option = Options[_optionId];
         return (option.expiry, option.exercised, option.tokenAddress, option.amount, option.optionType);
     }
 
