@@ -85,7 +85,8 @@ contract OptionsMarket {
         OptionOwners[optionId] = msg.sender;
         optionId++;
 
-        // Return the id of the option
+        // Emit an event and return the id of the option
+        emit OptionWritten(optionId - 1, msg.sender, optionType, tokenAddress);
         return optionId - 1;
     }
 
@@ -115,8 +116,9 @@ contract OptionsMarket {
             IERC20(tradeCurrency).transfer(msg.sender, option.price);
         }
 
-        // Update the status of the option
+        // Update the status of the option and emit event
         Options[_optionId].status = "exercised";
+        emit OptionExercised(_optionId, option.writer, msg.sender);
     }
 
     // Allow a writer to collect an expired contract
@@ -160,7 +162,8 @@ contract OptionsMarket {
         Trades[tradeId] = trade;
         tradeId++;
 
-        // Return the trade id
+        // Emit an event and return the trade id
+        emit TradeOpened(tradeId - 1, _optionId, msg.sender);
         return tradeId - 1;
     }
 
@@ -177,6 +180,9 @@ contract OptionsMarket {
         uint256 payout = trade.price - fee;
         IERC20(tradeCurrency).transferFrom(msg.sender, trade.poster, payout);
         IERC20(tradeCurrency).transferFrom(msg.sender, owner, fee);
+
+        // Emit an event
+        emit TradeExecuted(_tradeId, trade.optionId, msg.sender);
     }
 
     // View a trade
