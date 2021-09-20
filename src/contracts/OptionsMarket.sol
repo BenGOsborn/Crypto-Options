@@ -14,6 +14,7 @@ contract OptionsMarket {
         address writer;
         address tokenAddress;
         uint256 amount;
+        uint256 price;
         string optionType; // call, put
     }
 
@@ -45,7 +46,7 @@ contract OptionsMarket {
     }
 
     // ============= Option functions =============
-    function writeOption(string memory optionType, uint256 hoursToExpire, address tokenAddress, uint256 amount) public returns (uint256) {
+    function writeOption(string memory optionType, uint256 hoursToExpire, address tokenAddress, uint256 amount, uint256 price) public returns (uint256) {
         // Verify the option type is valid, the time to live is valid, and the amount of tokens is more than 0
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
         require(hoursToExpire > 0, "Hours to expire must be greater than 0");
@@ -58,6 +59,7 @@ contract OptionsMarket {
             writer: msg.sender,
             tokenAddress: tokenAddress,
             amount: amount,
+            price: price,
             optionType: optionType
         });
 
@@ -66,8 +68,7 @@ contract OptionsMarket {
         if (_compareStrings(optionType, "call")) {
             IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount); 
         } else {
-            // What about the amount though ???
-            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), amount); 
+            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), price); 
         }
 
         // Save the option
@@ -88,8 +89,17 @@ contract OptionsMarket {
         require(_compareStrings(option.status, "none"), "Option has already been exercised");
         require(OptionOwners[_optionId] == msg.sender, "Only the owner of the option may exercise it");
 
-        // Transfer the tokens to the user
-        IERC20(option.tokenAddress).transfer(msg.sender, option.amount);
+        // If the option is a call, then charge the user the premium to receive the tokens,
+        // else if the option is a put, transfer their tokens
+        if (_compareStrings(option.optionType, "call")) {
+            IERC20(tradeCurrency).transferFrom(msg.sender, option.writer, option.price);
+            IERC20(option.tokenAddress).transfer(msg.sender, option.amount);
+        } else {
+            IERC20(option.tokenAddress).transferFrom(msg.sender, option.writer, option.amount);
+            IERC20(tradeCurrency).transfer(msg.sender, option.price);
+        }
+
+        // Update the option
     }
 
     function collectExpired(uint256 _optionId) public {
