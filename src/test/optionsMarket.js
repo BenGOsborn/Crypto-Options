@@ -18,6 +18,7 @@ contract("OptionsMarket", (accounts) => {
         // Get the balance of the whales
         const stableCoinBal = await stableCoin.balanceOf(STABLECOIN_WHALE);
         const tokenBal = await token.balanceOf(TOKEN_WHALE);
+        console.log(`Stable coins: ${stableCoinBal}\nTokens: ${tokenBal}`);
 
         // Approve the contract to use tokens
         await stableCoin.approve(optionsMarket.address, stableCoinBal, {
@@ -46,5 +47,28 @@ contract("OptionsMarket", (accounts) => {
             tokenBal,
             "Failed to transfer correct amount of tokens"
         );
+    });
+
+    it("Should write a new call option", async () => {
+        // Get the contract and tokens
+        const optionsMarket = await OptionsMarket.deployed();
+
+        // Set the options expiry as one day
+        const today = new Date();
+        const expiry = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate() + 1
+        ).getTime();
+
+        // Write the new contract
+        const optionId = await optionsMarket.writeOption(
+            "call",
+            expiry,
+            TOKEN,
+            10,
+            20
+        );
+        console.log(optionId.toString());
     });
 });
