@@ -32,6 +32,16 @@ contract("OptionsMarket", (accounts) => {
             tokenBal,
             { from: TOKEN_WHALE }
         );
+        assert.equal(
+            stableCoinSuccess,
+            true,
+            "Could not approve contract for stablecoin"
+        );
+        assert.equal(
+            tokenSuccess,
+            true,
+            "Could not approve contract for token"
+        );
     });
 
     // it("should write a new option to expire tommorow", async () => {
