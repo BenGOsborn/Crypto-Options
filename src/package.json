@@ -2,7 +2,7 @@
     "name": "src",
     "version": "1.0.0",
     "scripts": {
-        "fork": "ganache-cli --fork https://mainnet.infura.io/v3/${INFURA} --unlock ${STABLECOIN_WHALE} --unlock ${TOKEN_WHALE} --networkId 999",
+        "fork": "ganache-cli --fork https://mainnet.infura.io/v3/${INFURA} --unlock ${STABLECOIN_WHALE} ${TOKEN_WHALE} --networkId 999",
         "test": "npx truffle test --network mainnet_fork"
     },
     "devDependencies": {

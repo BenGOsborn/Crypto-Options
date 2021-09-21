@@ -20,15 +20,15 @@ contract("OptionsMarket", (accounts) => {
 
         // Approve the contract to spend the whales tokens
         await stableCoin.approve(optionsMarket.address, stableCoinBal, {
-            from: accounts[0],
+            from: STABLECOIN_WHALE,
         });
-        await token.approve(optionsMarket.address, tokenBal, {
-            from: accounts[0],
-        });
+        // await token.approve(optionsMarket.address, tokenBal, {
+        //     from: accounts[0],
+        // });
 
         // Check that the allowance matches what was allocated
         const stableCoinAllowance = await stableCoin.allowance(
-            accounts[0],
+            STABLECOIN_WHALE,
             optionsMarket.address
         );
         assert.equal(
@@ -36,15 +36,15 @@ contract("OptionsMarket", (accounts) => {
             stableCoinBal,
             "Did not transfer correct amount of stable coin"
         );
-        const tokenAllowance = await token.allowance(
-            accounts[0],
-            optionsMarket.address
-        );
-        assert.equal(
-            tokenAllowance.toString(),
-            tokenBal,
-            "Did not transfer correct amount of token"
-        );
+        // const tokenAllowance = await token.allowance(
+        //     accounts[0],
+        //     optionsMarket.address
+        // );
+        // assert.equal(
+        //     tokenAllowance.toString(),
+        //     tokenBal,
+        //     "Did not transfer correct amount of token"
+        // );
     });
 
     // it("should write a new option to expire tommorow", async () => {
