@@ -70,6 +70,10 @@ contract("OptionsMarket", (accounts) => {
             20,
             { from: TOKEN_WHALE }
         );
-        console.log(optionId.logs);
+        for (const log of optionId.logs) {
+            if (log.event === "OptionWritten") {
+                console.log(log.args[0].toString());
+            }
+        }
     });
 });
