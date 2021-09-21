@@ -32,7 +32,7 @@ contract("OptionsMarket", (accounts) => {
             optionsMarket.address
         );
         assert.equal(
-            stableCoinAllowance.valueOf(),
+            stableCoinAllowance.toString(),
             stableCoinBal,
             "Did not transfer correct amount of stable coin"
         );
@@ -41,7 +41,7 @@ contract("OptionsMarket", (accounts) => {
             optionsMarket.address
         );
         assert.equal(
-            tokenAllowance.valueOf(),
+            tokenAllowance.toString(),
             tokenBal,
             "Did not transfer correct amount of token"
         );
