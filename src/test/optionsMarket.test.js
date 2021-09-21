@@ -61,20 +61,15 @@ contract("OptionsMarket", (accounts) => {
             today.getDate() + 1
         ).getTime();
 
-        // Write the new contract
-        const optionId = await optionsMarket.writeOption(
-            "call",
-            expiry,
-            TOKEN,
-            10,
-            20,
+        // Write the new contracts and get the options
+        const callOptionParams = ["call", expiry, TOKEN, 10, 20];
+        const transactionCall = await optionsMarket.writeOption(
+            ...callOptionParams,
             { from: TOKEN_WHALE }
         );
-        console.log(optionId);
-        for (const log of optionId.logs) {
-            if (log.event === "OptionWritten") {
-                console.log(log.args[0].toString());
-            }
-        }
+        const callOptionId = transactionCall.logs[0].args[0].toString();
+        const callOption = await optionsMarket.getOption(callOptionId);
+
+        console.log(callOption);
     });
 });
