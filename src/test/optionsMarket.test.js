@@ -74,8 +74,16 @@ contract("OptionsMarket", (accounts) => {
             callOptionParams[1],
             "Expiry times do not match"
         );
-        assert.equal(callOption[2], TOKEN_WHALE, "Option writers do not match");
-        assert.equal(callOption[3], callOptionParams[2], "Tokens do not match");
+        assert.equal(
+            callOption[2].toString().toLowerCase(),
+            String(TOKEN_WHALE),
+            "Option writers do not match"
+        );
+        assert.equal(
+            callOption[3].toString().toLowerCase(),
+            callOptionParams[2],
+            "Tokens do not match"
+        );
         assert.equal(
             callOption[4].toString(),
             callOptionParams[3],
