@@ -18,7 +18,6 @@ contract("OptionsMarket", (accounts) => {
         // Get the balance of the whales
         const stableCoinBal = await stableCoin.balanceOf(STABLECOIN_WHALE);
         const tokenBal = await token.balanceOf(TOKEN_WHALE);
-        console.log(`Stable coins: ${stableCoinBal}\nTokens: ${tokenBal}`);
 
         // Approve the contract to use tokens
         await stableCoin.approve(optionsMarket.address, stableCoinBal, {
