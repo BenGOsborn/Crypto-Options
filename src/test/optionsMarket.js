@@ -27,7 +27,6 @@ contract("OptionsMarket", (accounts) => {
             stableCoinBal,
             { from: STABLECOIN_WHALE }
         );
-        console.log(stableCoinSuccess);
         // assert.equal(
         //     stableCoinSuccess,
         //     true,
