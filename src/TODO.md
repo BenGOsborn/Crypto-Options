@@ -1,3 +1,4 @@
 -   Implement the market with some kind of stable coin (what would be the problem with trading using ETH if ETH's price fluctuates ?)
 -   Write tests on Kovan network + Ganache
     -   [Is there any way to run tests on Ganache by deploying to the existing local blockchain? If this is the case I can make my own startup script](https://youtu.be/G8bDhS24eds)
+    -   Maybe seperate contracts into a trade contract and an option contract
