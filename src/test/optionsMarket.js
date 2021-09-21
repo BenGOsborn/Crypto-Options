@@ -27,25 +27,24 @@ contract("OptionsMarket", (accounts) => {
         });
 
         // Check that the allowance matches what was allocated
-        // const stableCoinAllowance = await stableCoin.allowance(
-        //     STABLECOIN_WHALE,
-        //     optionsMarket.address
-        // );
-        // console.log(stableCoinAllowance.valueOf());
-        // assert.equal(
-        //     stableCoinAllowance.valueOf(),
-        //     stableCoinBal,
-        //     "Did not transfer correct amount of stable coin"
-        // );
-        // const tokenAllowance = await token.allowance.call(
-        //     TOKEN_WHALE,
-        //     optionsMarket.address
-        // );
-        // assert.equal(
-        //     tokenAllowance.valueOf(),
-        //     tokenBal,
-        //     "Did not transfer correct amount of token"
-        // );
+        const stableCoinAllowance = await stableCoin.allowance(
+            accounts[0],
+            optionsMarket.address
+        );
+        assert.equal(
+            stableCoinAllowance.valueOf(),
+            stableCoinBal,
+            "Did not transfer correct amount of stable coin"
+        );
+        const tokenAllowance = await token.allowance(
+            accounts[0],
+            optionsMarket.address
+        );
+        assert.equal(
+            tokenAllowance.valueOf(),
+            tokenBal,
+            "Did not transfer correct amount of token"
+        );
     });
 
     // it("should write a new option to expire tommorow", async () => {
