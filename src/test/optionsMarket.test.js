@@ -61,7 +61,7 @@ contract("OptionsMarket", (accounts) => {
             today.getDate() + 1
         ).getTime();
 
-        // Write the new contracts and get the options
+        // Write a new call option and verify it was successful
         const callOptionParams = ["call", expiry, TOKEN, 10, 20];
         const transactionCall = await optionsMarket.writeOption(
             ...callOptionParams,
@@ -69,7 +69,27 @@ contract("OptionsMarket", (accounts) => {
         );
         const callOptionId = transactionCall.logs[0].args[0].toString();
         const callOption = await optionsMarket.getOption(callOptionId);
-
-        console.log(callOption);
+        assert.equal(
+            callOption[0].toString(),
+            callOptionParams[1],
+            "Expiry times do not match"
+        );
+        assert.equal(callOption[2], TOKEN_WHALE, "Option writers do not match");
+        assert.equal(callOption[3], callOptionParams[2], "Tokens do not match");
+        assert.equal(
+            callOption[4].toString(),
+            callOptionParams[3],
+            "Option token amounts do not match"
+        );
+        assert.equal(
+            callOption[5].toString(),
+            callOptionParams[4],
+            "Prices do not match"
+        );
+        assert.equal(
+            callOption[6],
+            callOptionParams[0],
+            "Option types do not match"
+        );
     });
 });
