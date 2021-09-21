@@ -16,8 +16,10 @@ contract("OptionsMarket", (accounts) => {
         const token = await IERC20.at(TOKEN);
 
         // Get the balance of the whales
-        const stableCoinBal = await stableCoin.balanceOf(STABLECOIN_WHALE);
-        const tokenBal = await token.balanceOf(TOKEN_WHALE);
+        const stableCoinBal = (
+            await stableCoin.balanceOf(STABLECOIN_WHALE)
+        ).toString();
+        const tokenBal = (await token.balanceOf(TOKEN_WHALE)).toString();
 
         // Approve the contract to use tokens
         await stableCoin.approve(optionsMarket.address, stableCoinBal, {
@@ -28,21 +30,19 @@ contract("OptionsMarket", (accounts) => {
         });
 
         // Check that the approval was successful
-        const stableCoinAllowance = await stableCoin.allowance(
-            STABLECOIN_WHALE,
-            optionsMarket.address
-        );
+        const stableCoinAllowance = (
+            await stableCoin.allowance(STABLECOIN_WHALE, optionsMarket.address)
+        ).toString();
         assert.equal(
-            stableCoinAllowance.toString(),
+            stableCoinAllowance,
             stableCoinBal,
             "Failed to transfer correct amount of stablecoins"
         );
-        const tokenAllowance = await token.allowance(
-            TOKEN_WHALE,
-            optionsMarket.address
-        );
+        const tokenAllowance = (
+            await token.allowance(TOKEN_WHALE, optionsMarket.address)
+        ).toString();
         assert.equal(
-            tokenAllowance.toString(),
+            tokenAllowance,
             tokenBal,
             "Failed to transfer correct amount of tokens"
         );
@@ -73,12 +73,12 @@ contract("OptionsMarket", (accounts) => {
             "Expiry times do not match"
         );
         assert.equal(
-            option[2].toLowerCase(),
+            option[2].toString().toLowerCase(),
             TOKEN_WHALE.toLowerCase(),
             "Option writers do not match"
         );
         assert.equal(
-            option[3].toLowerCase(),
+            option[3].toString().toLowerCase(),
             optionParams[2].toLowerCase(),
             "Tokens do not match"
         );
@@ -120,12 +120,12 @@ contract("OptionsMarket", (accounts) => {
             "Expiry times do not match"
         );
         assert.equal(
-            option[2].toLowerCase(),
+            option[2].toString().toLowerCase(),
             STABLECOIN_WHALE.toLowerCase(),
             "Option writers do not match"
         );
         assert.equal(
-            option[3].toLowerCase(),
+            option[3].toString().toLowerCase(),
             optionParams[2].toLowerCase(),
             "Tokens do not match"
         );
@@ -154,7 +154,7 @@ contract("OptionsMarket", (accounts) => {
         const tradeId = transaction.logs[0].args[0].toString();
         const trade = await optionsMarket.getTrade(tradeId);
         assert.equal(
-            trade[0].toLowerCase(),
+            trade[0].toString().toLowerCase(),
             TOKEN_WHALE.toLowerCase(),
             "Trade poster is different"
         );
@@ -198,11 +198,12 @@ contract("OptionsMarket", (accounts) => {
         // Get the contract and tokens
         const optionsMarket = await OptionsMarket.deployed();
         const stableCoin = await IERC20.at(STABLECOIN);
-        const token = await IERC20.at(TOKEN);
 
         // Get the balance of the whales
-        const stableCoinBal = await stableCoin.balanceOf(STABLECOIN_WHALE);
-        const tokenBal = await token.balanceOf(TOKEN_WHALE);
+        const stableCoinSC = (
+            await stableCoin.balanceOf(STABLECOIN_WHALE)
+        ).toString();
+        const tokenSC = (await stableCoin.balanceOf(TOKEN_WHALE)).toString();
 
         // Open a new trade
         const tradeParams = [0, 200];
@@ -213,13 +214,23 @@ contract("OptionsMarket", (accounts) => {
 
         // Execute the trade
         await optionsMarket.executeTrade(tradeId, { from: STABLECOIN_WHALE });
-        const optionOwner = await optionsMarket.getOptionOwner(tradeParams[0]);
+        const optionOwner = (
+            await optionsMarket.getOptionOwner(tradeParams[0])
+        ).toString();
         assert.equal(
             optionOwner.toLowerCase(),
             STABLECOIN_WHALE.toLowerCase(),
             "Failed to transfer option to buyer"
         );
-        // **** Also check the new balances of the whales AND dont forget the trade tax
+        assert.equal(
+            (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
+            stableCoinSC - tradeParams[0],
+            "Failed to update buyers tokens"
+        );
+        assert.equal(
+            (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
+            tokenSC + tradeParams[1] - Math.floor((tradeParams[1] * 3) / 100)
+        );
 
         // Try and execute the closed trade
     });
