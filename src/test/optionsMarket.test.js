@@ -113,7 +113,7 @@ contract("OptionsMarket", (accounts) => {
         const optionParams = ["put", expiry, TOKEN, 10, 20];
         const transactionCall = await optionsMarket.writeOption(
             ...optionParams,
-            { from: TOKEN_WHALE }
+            { from: STABLECOIN_WHALE }
         );
         const optionId = transactionCall.logs[0].args[0].toString();
         const option = await optionsMarket.getOption(optionId);
