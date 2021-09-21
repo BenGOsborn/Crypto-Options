@@ -49,7 +49,7 @@ contract("OptionsMarket", (accounts) => {
         );
     });
 
-    it("Should write a new call option", async () => {
+    it("should write a new call option", async () => {
         // Get the contract and tokens
         const optionsMarket = await OptionsMarket.deployed();
 
@@ -62,42 +62,86 @@ contract("OptionsMarket", (accounts) => {
         ).getTime();
 
         // Write a new call option and verify it was successful
-        const callOptionParams = ["call", expiry, TOKEN, 10, 20];
+        const optionParams = ["call", expiry, TOKEN, 10, 20];
         const transactionCall = await optionsMarket.writeOption(
-            ...callOptionParams,
+            ...optionParams,
             { from: TOKEN_WHALE }
         );
-        const callOptionId = transactionCall.logs[0].args[0].toString();
-        const callOption = await optionsMarket.getOption(callOptionId);
+        const optionId = transactionCall.logs[0].args[0].toString();
+        const option = await optionsMarket.getOption(optionId);
         assert.equal(
-            callOption[0].toString(),
-            callOptionParams[1],
+            option[0].toString(),
+            optionParams[1],
             "Expiry times do not match"
         );
         assert.equal(
-            callOption[2].toString().toLowerCase(),
+            option[2].toString().toLowerCase(),
             TOKEN_WHALE,
             "Option writers do not match"
         );
         assert.equal(
-            callOption[3].toString().toLowerCase(),
-            callOptionParams[2],
+            option[3].toString().toLowerCase(),
+            optionParams[2],
             "Tokens do not match"
         );
         assert.equal(
-            callOption[4].toString(),
-            callOptionParams[3],
+            option[4].toString(),
+            optionParams[3],
             "Option token amounts do not match"
         );
         assert.equal(
-            callOption[5].toString(),
-            callOptionParams[4],
+            option[5].toString(),
+            optionParams[4],
             "Prices do not match"
         );
-        assert.equal(
-            callOption[6],
-            callOptionParams[0],
-            "Option types do not match"
+        assert.equal(option[6], optionParams[0], "Option types do not match");
+    });
+
+    it("should write a new put option", async () => {
+        // Get the contract and tokens
+        const optionsMarket = await OptionsMarket.deployed();
+
+        // Set the options expiry as one day
+        const today = new Date();
+        const expiry = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate() + 1
+        ).getTime();
+
+        // Write a new put option and verify it was successful
+        const optionParams = ["put", expiry, TOKEN, 10, 20];
+        const transactionCall = await optionsMarket.writeOption(
+            ...optionParams,
+            { from: TOKEN_WHALE }
         );
+        const optionId = transactionCall.logs[0].args[0].toString();
+        const option = await optionsMarket.getOption(optionId);
+        assert.equal(
+            option[0].toString(),
+            optionParams[1],
+            "Expiry times do not match"
+        );
+        assert.equal(
+            option[2].toString().toLowerCase(),
+            TOKEN_WHALE,
+            "Option writers do not match"
+        );
+        assert.equal(
+            option[3].toString().toLowerCase(),
+            optionParams[2],
+            "Tokens do not match"
+        );
+        assert.equal(
+            option[4].toString(),
+            optionParams[3],
+            "Option token amounts do not match"
+        );
+        assert.equal(
+            option[5].toString(),
+            optionParams[4],
+            "Prices do not match"
+        );
+        assert.equal(option[6], optionParams[0], "Option types do not match");
     });
 });
