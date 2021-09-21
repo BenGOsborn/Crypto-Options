@@ -3,4 +3,3 @@
     -   [Is there any way to run tests on Ganache by deploying to the existing local blockchain? If this is the case I can make my own startup script](https://youtu.be/G8bDhS24eds)
     -   Maybe seperate contracts into a trade contract and an option contract
     -   Repeat the same test for a put option
-    -   **Hangon, are options even allowed to be sold multiple times **
