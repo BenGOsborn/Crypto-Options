@@ -67,8 +67,9 @@ contract("OptionsMarket", (accounts) => {
             expiry,
             TOKEN,
             10,
-            20
+            20,
+            { from: TOKEN_WHALE }
         );
-        console.log(optionId.toString());
+        console.log(optionId);
     });
 });
