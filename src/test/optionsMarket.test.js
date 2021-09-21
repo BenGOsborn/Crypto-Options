@@ -144,5 +144,11 @@ contract("OptionsMarket", (accounts) => {
         assert.equal(option[6], optionParams[0], "Option types do not match");
     });
 
-    it("should open a new trade", async () => {});
+    it("should open a trade", async () => {});
+
+    it("should execute a trade", async () => {});
+
+    it("should exercise a call option", async () => {});
+
+    it("should exercise a put option", async () => {});
 });
