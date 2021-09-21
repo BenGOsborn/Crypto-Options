@@ -186,7 +186,7 @@ contract OptionsMarket {
     }
 
     // View a trade
-    function viewTrade(uint256 _tradeId) public view returns(address, uint256, uint256, string memory) {
+    function getTrade(uint256 _tradeId) public view returns(address, uint256, uint256, string memory) {
         Trade memory trade = trades[_tradeId];
         return (trade.poster, trade.optionId, trade.price, trade.status);
     }

@@ -62,11 +62,10 @@ contract("OptionsMarket", (accounts) => {
 
         // Write a new call option and verify it was successful
         const optionParams = ["call", expiry, TOKEN, 10, 20];
-        const transactionCall = await optionsMarket.writeOption(
-            ...optionParams,
-            { from: TOKEN_WHALE }
-        );
-        const optionId = transactionCall.logs[0].args[0].toString();
+        const transaction = await optionsMarket.writeOption(...optionParams, {
+            from: TOKEN_WHALE,
+        });
+        const optionId = transaction.logs[0].args[0].toString();
         const option = await optionsMarket.getOption(optionId);
         assert.equal(
             option[0].toString(),
@@ -97,7 +96,7 @@ contract("OptionsMarket", (accounts) => {
     });
 
     it("should write a new put option", async () => {
-        // Get the contract and tokens
+        // Get the contract
         const optionsMarket = await OptionsMarket.deployed();
 
         // Set the options expiry as one day
@@ -110,11 +109,10 @@ contract("OptionsMarket", (accounts) => {
 
         // Write a new put option and verify it was successful
         const optionParams = ["put", expiry, TOKEN, 10, 20];
-        const transactionCall = await optionsMarket.writeOption(
-            ...optionParams,
-            { from: STABLECOIN_WHALE }
-        );
-        const optionId = transactionCall.logs[0].args[0].toString();
+        const transaction = await optionsMarket.writeOption(...optionParams, {
+            from: STABLECOIN_WHALE,
+        });
+        const optionId = transaction.logs[0].args[0].toString();
         const option = await optionsMarket.getOption(optionId);
         assert.equal(
             option[0].toString(),
@@ -144,11 +142,21 @@ contract("OptionsMarket", (accounts) => {
         assert.equal(option[6], optionParams[0], "Option types do not match");
     });
 
-    it("should open a trade", async () => {});
+    it("should open a trade", async () => {
+        // Get the contract
+        const optionsMarket = await OptionsMarket.deployed();
+
+        // Open a new trade
+        const tradeParams = [0, 200];
+        const transaction = await optionsMarket.openTrade(...tradeParams, {
+            from: TOKEN_WHALE,
+        });
+        const tradeId = transaction.logs[0].args[0].toString();
+        const trade = await optionsMarket.getTrade(optionId);
+        console.log(trade);
+    });
 
     it("should execute a trade", async () => {});
 
     it("should exercise a call option", async () => {});
-
-    it("should exercise a put option", async () => {});
 });
