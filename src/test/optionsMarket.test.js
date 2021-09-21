@@ -180,6 +180,18 @@ contract("OptionsMarket", (accounts) => {
             "cancelled",
             "Failed to cancel trade"
         );
+
+        // Try and execute the cancelled trade
+        let executed;
+        try {
+            await optionsMarket.executeTrade(tradeId, {
+                from: STABLECOIN_WHALE,
+            });
+            executed = true;
+        } catch {
+            executed = false;
+        }
+        assert.equal(!executed, true, "Cancelled trade was executed");
     });
 
     it("should open a trade and execute it", async () => {});
