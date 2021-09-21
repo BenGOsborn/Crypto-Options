@@ -16,8 +16,8 @@ contract("OptionsMarket", (accounts) => {
         const token = await IERC20.at(TOKEN);
 
         // Get the balance of the whales
-        const stableCoinBal = await stableCoin.balanceOf(STABLECOIN_WHALE);
-        const tokenBal = await token.balanceOf(TOKEN_WHALE);
+        const stableCoinBal = await stableCoin.balanceOf.call(STABLECOIN_WHALE);
+        const tokenBal = await token.balanceOf.call(TOKEN_WHALE);
         console.log(`Stable coins: ${stableCoinBal}\nTokens: ${tokenBal}`);
 
         // Approve the contract to use tokens
@@ -29,7 +29,7 @@ contract("OptionsMarket", (accounts) => {
         });
 
         // Check that the approval was successful
-        const stableCoinAllowance = await stableCoin.allowance(
+        const stableCoinAllowance = await stableCoin.allowance.call(
             STABLECOIN_WHALE,
             optionsMarket.address
         );
@@ -38,7 +38,7 @@ contract("OptionsMarket", (accounts) => {
             stableCoinBal,
             "Failed to transfer correct amount of stablecoins"
         );
-        const tokenAllowance = await token.allowance(
+        const tokenAllowance = await token.allowance.call(
             TOKEN_WHALE,
             optionsMarket.address
         );
@@ -70,6 +70,8 @@ contract("OptionsMarket", (accounts) => {
             20,
             { from: TOKEN_WHALE }
         );
-        console.log(optionId);
+
+        // Why is it non view functions do this ?
+        console.log(optionId.toString());
     });
 });
