@@ -76,12 +76,12 @@ contract("OptionsMarket", (accounts) => {
         );
         assert.equal(
             option[2].toString().toLowerCase(),
-            TOKEN_WHALE,
+            TOKEN_WHALE.toLowerCase(),
             "Option writers do not match"
         );
         assert.equal(
             option[3].toString().toLowerCase(),
-            optionParams[2],
+            optionParams[2].toLowerCase(),
             "Tokens do not match"
         );
         assert.equal(
