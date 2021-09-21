@@ -9,7 +9,7 @@ contract("OptionsMarket", (accounts) => {
     const TOKEN = process.env.TOKEN;
     const TOKEN_WHALE = process.env.TOKEN_WHALE;
 
-    it("should get the balance of the stablecoin and token whales and approve the contract to spend all their tokens", async () => {
+    it("should get the balance of the whales and approve the contract as a spender", async () => {
         // Get the contract and tokens
         const optionsMarket = await OptionsMarket.deployed();
         const stableCoin = await IERC20.at(STABLECOIN);
