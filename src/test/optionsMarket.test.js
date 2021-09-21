@@ -168,6 +168,7 @@ contract("OptionsMarket", (accounts) => {
             tradeParams[1],
             "Trade price is different"
         );
+        assert.equal(trade[3].toString(), "open", "Failed to open trade");
 
         // Cancel the trade
     });

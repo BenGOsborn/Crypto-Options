@@ -172,6 +172,9 @@ contract OptionsMarket {
         // Get the trade
         Trade memory trade = trades[_tradeId];
 
+        // Verify that the trade status is valid
+        require(_compareStrings(trade.status, "open"), "Only open trades may be executed");
+
         // Transfer the option
         optionOwners[_tradeId] = msg.sender;
 
@@ -180,6 +183,9 @@ contract OptionsMarket {
         uint256 payout = trade.price - fee;
         IERC20(tradeCurrency).transferFrom(msg.sender, trade.poster, payout);
         IERC20(tradeCurrency).transferFrom(msg.sender, owner, fee);
+
+        // Update the status of the trade
+        trades[_tradeId].status = "closed";
 
         // Emit an event
         emit TradeExecuted(_tradeId, trade.optionId, msg.sender);
