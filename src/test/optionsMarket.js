@@ -21,7 +21,7 @@ contract("OptionsMarket", (accounts) => {
 
         // Approve the contract to spend the whales tokens
         await stableCoin.approve(optionsMarket.address, stableCoinBal, {
-            from: TOKEN_WHALE,
+            from: STABLECOIN_WHALE,
         });
         // await token.approve(optionsMarket.address, tokenBal, {
         //     from: TOKEN_WHALE,
