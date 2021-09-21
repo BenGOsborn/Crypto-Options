@@ -73,12 +73,12 @@ contract("OptionsMarket", (accounts) => {
             "Expiry times do not match"
         );
         assert.equal(
-            option[2].toString().toLowerCase(),
+            option[2].toLowerCase(),
             TOKEN_WHALE.toLowerCase(),
             "Option writers do not match"
         );
         assert.equal(
-            option[3].toString().toLowerCase(),
+            option[3].toLowerCase(),
             optionParams[2].toLowerCase(),
             "Tokens do not match"
         );
@@ -120,12 +120,12 @@ contract("OptionsMarket", (accounts) => {
             "Expiry times do not match"
         );
         assert.equal(
-            option[2].toString().toLowerCase(),
+            option[2].toLowerCase(),
             STABLECOIN_WHALE.toLowerCase(),
             "Option writers do not match"
         );
         assert.equal(
-            option[3].toString().toLowerCase(),
+            option[3].toLowerCase(),
             optionParams[2].toLowerCase(),
             "Tokens do not match"
         );
@@ -142,7 +142,7 @@ contract("OptionsMarket", (accounts) => {
         assert.equal(option[6], optionParams[0], "Option types do not match");
     });
 
-    it("should open a trade", async () => {
+    it("should open a trade and then cancel it", async () => {
         // Get the contract
         const optionsMarket = await OptionsMarket.deployed();
 
@@ -152,11 +152,27 @@ contract("OptionsMarket", (accounts) => {
             from: TOKEN_WHALE,
         });
         const tradeId = transaction.logs[0].args[0].toString();
-        const trade = await optionsMarket.getTrade(optionId);
-        console.log(trade);
+        const trade = await optionsMarket.getTrade(tradeId);
+        assert.equal(
+            trade[0].toLowerCase(),
+            TOKEN_WHALE.toLowerCase(),
+            "Trade poster is different"
+        );
+        assert.equal(
+            trade[1].toString(),
+            tradeParams[0],
+            "OptionId is different"
+        );
+        assert.equal(
+            trade[2].toString(),
+            tradeParams[1],
+            "Trade price is different"
+        );
+
+        // Cancel the trade
     });
 
-    it("should execute a trade", async () => {});
+    it("should open a trade and execute it", async () => {});
 
     it("should exercise a call option", async () => {});
 });
