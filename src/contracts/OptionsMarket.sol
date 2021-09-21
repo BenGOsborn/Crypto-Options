@@ -96,6 +96,11 @@ contract OptionsMarket {
         return (option.expiry, option.status, option.writer, option.tokenAddress, option.amount, option.price, option.optionType);
     }
 
+    // Get the owner of an option
+    function getOptionOwner(uint256 _optionId) public view returns (address) {
+        return optionOwners[_optionId];
+    }
+
     // Allow a option holder to exercise their option
     function exerciseOption(uint256 _optionId) public {
         // Get the data of the option

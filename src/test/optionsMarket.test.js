@@ -194,7 +194,22 @@ contract("OptionsMarket", (accounts) => {
         assert.equal(!executed, true, "Cancelled trade was executed");
     });
 
-    it("should open a trade and execute it", async () => {});
+    it("should open a trade and execute it", async () => {
+        // Get the contract
+        const optionsMarket = await OptionsMarket.deployed();
+
+        // Open a new trade
+        const tradeParams = [0, 200];
+        const transaction = await optionsMarket.openTrade(...tradeParams, {
+            from: TOKEN_WHALE,
+        });
+        const tradeId = transaction.logs[0].args[0].toString();
+
+        // Execute the trade + check owner of options and balances
+        await optionsMarket.executeTrade(tradeId);
+
+        // Try and execute the closed trade
+    });
 
     it("should exercise a call option", async () => {});
 });
