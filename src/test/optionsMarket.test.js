@@ -233,6 +233,16 @@ contract("OptionsMarket", (accounts) => {
         );
 
         // Try and execute the closed trade
+        let executed;
+        try {
+            await optionsMarket.executeTrade(tradeId, {
+                from: STABLECOIN_WHALE,
+            });
+            executed = true;
+        } catch {
+            executed = false;
+        }
+        assert.equal(!executed, true, "Closed trade was executed");
     });
 
     it("should exercise a call option", async () => {});
