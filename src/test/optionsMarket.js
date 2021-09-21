@@ -12,16 +12,16 @@ contract("OptionsMarket", (accounts) => {
     it("should get the balance of the stablecoin and token whales and approve the contract to spend all their tokens", async () => {
         // Get the stable coin, token, and optionsmarket
         const stableCoin = await IERC20.at(STABLECOIN);
-        const token = await IERC20.at(TOKEN);
+        // const token = await IERC20.at(TOKEN);
         const optionsMarket = await OptionsMarket.deployed();
 
         // Get the balance of the whales
         const stableCoinBal = await stableCoin.balanceOf(STABLECOIN_WHALE);
-        const tokenBal = await token.balanceOf(TOKEN_WHALE);
+        // const tokenBal = await token.balanceOf(TOKEN_WHALE);
 
         // Approve the contract to spend the whales tokens
         await stableCoin.approve(optionsMarket.address, stableCoinBal, {
-            from: STABLECOIN_WHALE,
+            from: TOKEN_WHALE,
         });
         // await token.approve(optionsMarket.address, tokenBal, {
         //     from: TOKEN_WHALE,

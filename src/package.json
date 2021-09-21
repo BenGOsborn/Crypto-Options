@@ -2,12 +2,13 @@
     "name": "src",
     "version": "1.0.0",
     "scripts": {
-        "fork": "ganache-cli --fork https://mainnet.infura.io/v3/${INFURA} --unlock ${STABLECOIN_WHALE} --unlock ${TOKEN_WHALE} --networkId 999",
+        "fork": "npx ganache-cli --fork https://mainnet.infura.io/v3/${INFURA} -u ${STABLECOIN_WHALE} -u ${TOKEN_WHALE} --networkId 999",
         "test": "npx truffle test --network mainnet_fork"
     },
     "devDependencies": {
         "@openzeppelin/contracts": "^4.3.2",
         "dotenv": "^10.0.0",
+        "ganache-cli": "^6.12.2",
         "truffle": "^5.4.11"
     }
 }
