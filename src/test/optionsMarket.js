@@ -24,8 +24,8 @@ contract("OptionsMarket", (accounts) => {
         // Approve the contract to spend the whales tokens
         const stableCoinSuccess = await stableCoin.approve.call(
             optionsMarket.address,
-            stableCoinBal
-            // { from: STABLECOIN_WHALE }
+            stableCoinBal,
+            { from: STABLECOIN_WHALE }
         );
         assert.equal(
             stableCoinSuccess,
@@ -34,8 +34,8 @@ contract("OptionsMarket", (accounts) => {
         );
         const tokenSuccess = await token.approve.call(
             optionsMarket.address,
-            tokenBal
-            // { from: TOKEN_WHALE }
+            tokenBal,
+            { from: TOKEN_WHALE }
         );
         assert.equal(
             tokenSuccess,
