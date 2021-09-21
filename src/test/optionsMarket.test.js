@@ -62,7 +62,7 @@ contract("OptionsMarket", (accounts) => {
         ).getTime();
 
         // Write the new contract
-        const optionId = await optionsMarket.writeOption(
+        const optionId = await optionsMarket.writeOption.call(
             "call",
             expiry,
             TOKEN,
