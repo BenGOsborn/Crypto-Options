@@ -1,6 +1,6 @@
 const OptionsMarket = artifacts.require("OptionsMarket");
-const { STABLECOIN } = require("../loadEnv");
 
 module.exports = function (deployer) {
-    deployer.deploy(OptionsMarket, STABLECOIN);
+    require("dotenv").config();
+    deployer.deploy(OptionsMarket, process.env.STABLECOIN);
 };

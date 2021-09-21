@@ -3,6 +3,7 @@ const IERC20 = artifacts.require("IERC20");
 
 contract("OptionsMarket", (accounts) => {
     // Load addresses
+    require("dotenv").config();
     const STABLECOIN = process.env.STABLECOIN;
     const STABLECOIN_WHALE = process.env.STABLECOIN;
     const TOKEN = process.env.STABLECOIN;
