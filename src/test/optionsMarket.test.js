@@ -70,8 +70,6 @@ contract("OptionsMarket", (accounts) => {
             20,
             { from: TOKEN_WHALE }
         );
-
-        // Why is it non view functions do this ?
-        console.log(optionId.toString());
+        console.log(optionId.logs);
     });
 });
