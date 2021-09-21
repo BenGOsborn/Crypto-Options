@@ -195,8 +195,14 @@ contract("OptionsMarket", (accounts) => {
     });
 
     it("should open a trade and execute it", async () => {
-        // Get the contract
+        // Get the contract and tokens
         const optionsMarket = await OptionsMarket.deployed();
+        const stableCoin = await IERC20.at(STABLECOIN);
+        const token = await IERC20.at(TOKEN);
+
+        // Get the balance of the whales
+        const stableCoinBal = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        const tokenBal = await token.balanceOf(TOKEN_WHALE);
 
         // Open a new trade
         const tradeParams = [0, 200];
@@ -205,8 +211,15 @@ contract("OptionsMarket", (accounts) => {
         });
         const tradeId = transaction.logs[0].args[0].toString();
 
-        // Execute the trade + check owner of options and balances
-        await optionsMarket.executeTrade(tradeId);
+        // Execute the trade
+        await optionsMarket.executeTrade(tradeId, { from: STABLECOIN_WHALE });
+        const optionOwner = await optionsMarket.getOptionOwner(tradeParams[0]);
+        assert.equal(
+            optionOwner.toLowerCase(),
+            STABLECOIN_WHALE.toLowerCase(),
+            "Failed to transfer option to buyer"
+        );
+        // **** Also check the new balances of the whales AND dont forget the trade tax
 
         // Try and execute the closed trade
     });
