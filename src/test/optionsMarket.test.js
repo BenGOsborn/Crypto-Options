@@ -171,6 +171,15 @@ contract("OptionsMarket", (accounts) => {
         assert.equal(trade[3].toString(), "open", "Failed to open trade");
 
         // Cancel the trade
+        await optionsMarket.closeTrade(tradeId, {
+            from: TOKEN_WHALE,
+        });
+        const cancelledTrade = await optionsMarket.getTrade(tradeId);
+        assert.equal(
+            trade[3].toString(),
+            "cancelled",
+            "Failed to cancel trade"
+        );
     });
 
     it("should open a trade and execute it", async () => {});
