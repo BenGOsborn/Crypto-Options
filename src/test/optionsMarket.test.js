@@ -373,7 +373,7 @@ contract("OptionsMarket", (accounts) => {
         await new Promise((r) => setTimeout(r, 8000));
 
         // Collect the expired options
-        await optionsMarket.collectOption(callOptionId, {
+        await optionsMarket.collectExpired(callOptionId, {
             from: TOKEN_WHALE,
         });
         assert.equal(
@@ -382,7 +382,7 @@ contract("OptionsMarket", (accounts) => {
             "Failed to collect tokens from call option"
         );
 
-        await optionsMarket.collectOption(putOptionId, {
+        await optionsMarket.collectExpired(putOptionId, {
             from: STABLECOIN_WHALE,
         });
         assert.equal(
