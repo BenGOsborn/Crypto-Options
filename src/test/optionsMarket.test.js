@@ -369,6 +369,9 @@ contract("OptionsMarket", (accounts) => {
         const tokenT = await token.balanceOf(TOKEN_WHALE);
         const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
 
+        // Wait for the contracts to expire
+        await new Promise((r) => setTimeout(r, 1500));
+
         // Collect the expired options
         await optionsMarket.collectOption(callOptionId, {
             from: TOKEN_WHALE,
