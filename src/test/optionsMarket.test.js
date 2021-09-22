@@ -285,24 +285,34 @@ contract("OptionsMarket", (accounts) => {
         assert.equal(
             (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
             stableCoinSC - callOption[5],
-            "Failed to remove funds from exerciser during call option exercised"
+            "Failed to remove funds from exerciser when call option exercised"
         );
         assert.equal(
             (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
             tokenSC + callOption[5],
-            "Failed to add funds to writer during call option exercised"
+            "Failed to add funds to writer when call option exercised"
         );
         assert.equal(
             (await token.balanceOf(STABLECOIN_WHALE)).toString(),
             stableCoinT + callOption[4],
-            "Failed to move tokens to exerciser during call option"
+            "Failed to move tokens to exerciser when call option exercised"
         );
 
         await optionsMarket.exerciseOption(putOptionId, { from: TOKEN_WHALE });
         assert.equal(
             (await token.balanceOf(TOKEN_WHALE)).toString(),
             tokenT - putOption[4],
-            "Failed to remove tokens from exerciser during put option exercised"
+            "Failed to remove tokens from exerciser when put option exercised"
+        );
+        assert.equal(
+            (await token.balanceOf(STABLECOIN_WHALE)).toString(),
+            stableCoinT + putOption[4],
+            "Failed to move tokens to writer when put option exercised"
+        );
+        asset.equal(
+            (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
+            stableCoinSC + putOption[5],
+            "Failed to add funds to exerciser when put option exercised"
         );
     });
 });
