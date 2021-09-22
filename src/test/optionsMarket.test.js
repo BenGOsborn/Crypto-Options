@@ -274,6 +274,7 @@ contract("OptionsMarket", (accounts) => {
         await optionsMarket.exerciseOption(callOptionId, {
             from: STABLECOIN_WHALE,
         });
+        // **** MOVE THE FOLLOWING TO NUMBERS - IT IS DOING STRING CONCATENATION
         assert.equal(
             (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
             stableCoinSC - callOption[5],
