@@ -297,6 +297,12 @@ contract("OptionsMarket", (accounts) => {
             stableCoinT + callOption[4],
             "Failed to move tokens to exerciser during call option"
         );
+
         await optionsMarket.exerciseOption(putOptionId, { from: TOKEN_WHALE });
+        assert.equal(
+            (await token.balanceOf(TOKEN_WHALE)).toString(),
+            tokenT - putOption[4],
+            "Failed to remove tokens from exerciser during put option exercised"
+        );
     });
 });
