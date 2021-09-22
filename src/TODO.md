@@ -1,4 +1,4 @@
 -   Implement the market with some kind of stable coin (what would be the problem with trading using ETH if ETH's price fluctuates ?)
--   Test on Kovan
+-   Test on Kovan + frontend
 -   Maybe seperate contracts into a trade contract and an option contract
 -   Clean up spaghetti code tests + add new lines between tests

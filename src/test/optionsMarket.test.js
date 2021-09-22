@@ -17,14 +17,14 @@ contract("OptionsMarket", (accounts) => {
         const token = await IERC20.at(TOKEN);
 
         // Get the balance of the whales
-        const stableCoinBal = await stableCoin.balanceOf(STABLECOIN_WHALE);
-        const tokenBal = await token.balanceOf(TOKEN_WHALE);
+        const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        const tokenT = await token.balanceOf(TOKEN_WHALE);
 
         // Approve the contract to use tokens
-        await stableCoin.approve(optionsMarket.address, stableCoinBal, {
+        await stableCoin.approve(optionsMarket.address, stableCoinSC, {
             from: STABLECOIN_WHALE,
         });
-        await token.approve(optionsMarket.address, tokenBal, {
+        await token.approve(optionsMarket.address, tokenT, {
             from: TOKEN_WHALE,
         });
 
@@ -35,7 +35,7 @@ contract("OptionsMarket", (accounts) => {
         );
         assert.equal(
             stableCoinAllowance.toString(),
-            stableCoinBal.toString(),
+            stableCoinSC.toString(),
             "Failed to transfer correct amount of stablecoins"
         );
         const tokenAllowance = await token.allowance(
@@ -44,7 +44,7 @@ contract("OptionsMarket", (accounts) => {
         );
         assert.equal(
             tokenAllowance.toString(),
-            tokenBal.toString(),
+            tokenT.toString(),
             "Failed to transfer correct amount of tokens"
         );
     });
