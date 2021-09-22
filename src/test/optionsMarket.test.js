@@ -313,7 +313,7 @@ contract("OptionsMarket", (accounts) => {
         );
         assert.equal(
             (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
-            stableCoinSC.add(putOption[5]).toString(),
+            tokenSC.add(putOption[5]).toString(),
             "Failed to add funds to exerciser when put option exercised"
         );
 
