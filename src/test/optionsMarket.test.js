@@ -205,7 +205,7 @@ contract("OptionsMarket", (accounts) => {
         ).toString();
         const tokenSC = (await stableCoin.balanceOf(TOKEN_WHALE)).toString();
 
-        // Open a new trade
+        // Open a new trade for the call option
         const tradeParams = [0, 200];
         const transaction = await optionsMarket.openTrade(...tradeParams, {
             from: TOKEN_WHALE,
@@ -245,5 +245,27 @@ contract("OptionsMarket", (accounts) => {
         assert.equal(!executed, true, "Closed trade was executed");
     });
 
-    it("should exercise a call option", async () => {});
+    it("should exercise the options", async () => {
+        // Get the contract and tokens
+        const optionsMarket = await OptionsMarket.deployed();
+        const stableCoin = await IERC20.at(STABLECOIN);
+        const token = await IERC20.at(TOKEN);
+
+        // Open a new trade for the put option
+        const tradeParams = [1, 200];
+        const transaction = await optionsMarket.openTrade(...tradeParams, {
+            from: STABLECOIN_WHALE,
+        });
+        const tradeId = transaction.logs[0].args[0].toString();
+
+        // Transfer stable coins to token whale
+        await stableCoin.transfer(TOKEN_WHALE, tradeParams[1], {
+            from: STABLECOIN_WHALE,
+        });
+
+        // Execute the trade
+        await optionsMarket.executeTrade(tradeId, { from: TOKEN_WHALE });
+
+        // Exercise the options
+    });
 });
