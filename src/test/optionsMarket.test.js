@@ -49,91 +49,110 @@ contract("OptionsMarket", (accounts) => {
         );
     });
 
-    it("should write a new call option", async () => {
+    it("should write new options", async () => {
         // Get the contract and tokens
         const optionsMarket = await OptionsMarket.deployed();
+        const stableCoin = await IERC20.at(STABLECOIN);
+        const token = await IERC20.at(TOKEN);
 
-        // Set the options expiry as one day
-        const expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
+        // Get the balances of the whales
+        const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        const tokenT = await token.balanceOf(TOKEN_WHALE);
 
         // Write a new call option and verify it was successful
-        const optionParams = ["call", expiry, TOKEN, 10, 20];
-        const transaction = await optionsMarket.writeOption(...optionParams, {
-            from: TOKEN_WHALE,
-        });
-        const optionId = transaction.logs[0].args[0];
-        const option = await optionsMarket.getOption(optionId);
+        let expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
+        const callOptionParams = ["call", expiry, TOKEN, 10, 20];
+        const callTransaction = await optionsMarket.writeOption(
+            ...callOptionParams,
+            {
+                from: TOKEN_WHALE,
+            }
+        );
+        const callOptionId = callTransaction.logs[0].args[0];
+        const callOption = await optionsMarket.getOption(callOptionId);
         assert.equal(
-            option[0].toString(),
-            optionParams[1].toString(),
+            callOption[0].toString(),
+            callOptionParams[1].toString(),
             "Expiry times do not match"
         );
         assert.equal(
-            option[2].toString().toLowerCase(),
+            callOption[2].toString().toLowerCase(),
             TOKEN_WHALE.toString().toLowerCase(),
             "Option writers do not match"
         );
         assert.equal(
-            option[3].toString().toLowerCase(),
-            optionParams[2].toString().toLowerCase(),
+            callOption[3].toString().toLowerCase(),
+            callOptionParams[2].toString().toLowerCase(),
             "Tokens do not match"
         );
         assert.equal(
-            option[4].toString(),
-            optionParams[3].toString(),
+            callOption[4].toString(),
+            callOptionParams[3].toString(),
             "Option token amounts do not match"
         );
         assert.equal(
-            option[5].toString(),
-            optionParams[4].toString(),
+            callOption[5].toString(),
+            callOptionParams[4].toString(),
             "Prices do not match"
         );
         assert.equal(
-            option[6].toString(),
-            optionParams[0].toString(),
+            callOption[6].toString(),
+            callOptionParams[0].toString(),
             "Option types do not match"
         );
-    });
-
-    it("should write a new put option", async () => {
-        // Get the contract
-        const optionsMarket = await OptionsMarket.deployed();
-
-        // Set the options expiry as one day
-        const expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
 
         // Write a new put option and verify it was successful
-        const optionParams = ["put", expiry, TOKEN, 10, 20];
-        const transaction = await optionsMarket.writeOption(...optionParams, {
-            from: STABLECOIN_WHALE,
-        });
-        const optionId = transaction.logs[0].args[0];
-        const option = await optionsMarket.getOption(optionId);
-        assert.equal(option[0], optionParams[1], "Expiry times do not match");
+        expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
+        const putOptionParams = ["put", expiry, TOKEN, 10, 20];
+        const putTransaction = await optionsMarket.writeOption(
+            ...putOptionParams,
+            {
+                from: STABLECOIN_WHALE,
+            }
+        );
+        const putOptionId = putTransaction.logs[0].args[0];
+        const putOption = await optionsMarket.getOption(putOptionId);
         assert.equal(
-            option[2].toString().toLowerCase(),
+            putOption[0],
+            putOptionParams[1],
+            "Expiry times do not match"
+        );
+        assert.equal(
+            putOption[2].toString().toLowerCase(),
             STABLECOIN_WHALE.toString().toLowerCase(),
             "Option writers do not match"
         );
         assert.equal(
-            option[3].toString().toLowerCase(),
-            optionParams[2].toString().toLowerCase(),
+            putOption[3].toString().toLowerCase(),
+            putOptionParams[2].toString().toLowerCase(),
             "Tokens do not match"
         );
         assert.equal(
-            option[4].toString(),
-            optionParams[3].toString(),
+            putOption[4].toString(),
+            putOptionParams[3].toString(),
             "Option token amounts do not match"
         );
         assert.equal(
-            option[5].toString(),
-            optionParams[4].toString(),
+            putOption[5].toString(),
+            putOptionParams[4].toString(),
             "Prices do not match"
         );
         assert.equal(
-            option[6].toString(),
-            optionParams[0].toString(),
+            putOption[6].toString(),
+            putOptionParams[0].toString(),
             "Option types do not match"
+        );
+
+        // Verify that the balances of the writers were updated
+        assert.equal(
+            (await token.balanceOf(TOKEN_WHALE)).toString(),
+            tokenT.sub(new BN(callOptionParams[3])),
+            "Failed to remove tokens from call option writer"
+        );
+        assert.equal(
+            (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
+            stableCoinSC.sub(new BN(putOptionParams[4])).toString(),
+            "Failed to remove funds from put option writer"
         );
     });
 
