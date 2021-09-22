@@ -1,5 +1,6 @@
 const OptionsMarket = artifacts.require("OptionsMarket");
 const IERC20 = artifacts.require("IERC20");
+const { BN } = require("@openzeppelin/test-helpers");
 
 contract("OptionsMarket", (accounts) => {
     // Load addresses
