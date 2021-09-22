@@ -215,7 +215,7 @@ contract("OptionsMarket", (accounts) => {
         );
         assert.equal(
             (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
-            stableCoinSC.sub(new BN(tradeParams[0])).toString(),
+            stableCoinSC.sub(new BN(tradeParams[1])).toString(),
             "Failed to update buyers funds"
         );
         assert.equal(
