@@ -319,6 +319,7 @@ contract("OptionsMarket", (accounts) => {
         stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
         stableCoinT = await token.balanceOf(STABLECOIN_WHALE);
 
+        // Exercise the put option
         await optionsMarket.exerciseOption(putOptionId, { from: TOKEN_WHALE });
         assert.equal(
             (await token.balanceOf(TOKEN_WHALE)).toString(),
