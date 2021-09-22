@@ -266,9 +266,12 @@ contract("OptionsMarket", (accounts) => {
         // Execute the trade
         await optionsMarket.executeTrade(tradeId, { from: TOKEN_WHALE });
 
+        // Get the call option
+        const option = await optionsMarket.getOption(0);
+
         // Exercise the options
         await optionsMarket.exerciseOption(0, { from: STABLECOIN_WHALE });
+        assert.equal();
         await optionsMarket.exerciseOption(1, { from: TOKEN_WHALE });
-        // **** Now I just need to check the balances of the exercised options
     });
 });
