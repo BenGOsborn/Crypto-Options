@@ -364,5 +364,28 @@ contract("OptionsMarket", (accounts) => {
             { from: STABLECOIN_WHALE }
         );
         const putOptionId = putTransaction.logs[0].args[0];
+
+        // Get the balances of the whales before redemption
+        const tokenT = await token.balanceOf(TOKEN_WHALE);
+        const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
+
+        // Collect the expired options
+        await optionsMarket.collectOption(callOptionId, {
+            from: TOKEN_WHALE,
+        });
+        assert.equal(
+            (await token.balanceOf(TOKEN_WHALE)).toString(),
+            tokenT.add(new BN(callOptionParams[3])),
+            "Failed to collect tokens from call option"
+        );
+
+        await optionsMarket.collectOption(putOptionId, {
+            from: STABLECOIN_WHALE,
+        });
+        assert.equal(
+            await stableCoin.balanceOf(STABLECOIN_WHALE).toString(),
+            stableCoinSC.add(new BN(putOptionParams[4])),
+            "Failed to collect funds from put option"
+        );
     });
 });
