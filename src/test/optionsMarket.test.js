@@ -53,12 +53,7 @@ contract("OptionsMarket", (accounts) => {
         const optionsMarket = await OptionsMarket.deployed();
 
         // Set the options expiry as one day
-        const today = new Date();
-        const expiry = new Date(
-            today.getFullYear(),
-            today.getMonth(),
-            today.getDate() + 1
-        ).getTime();
+        const expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
 
         // Write a new call option and verify it was successful
         const optionParams = ["call", expiry, TOKEN, 10, 20];
@@ -101,11 +96,7 @@ contract("OptionsMarket", (accounts) => {
 
         // Set the options expiry as one day
         const today = new Date();
-        const expiry = new Date(
-            today.getFullYear(),
-            today.getMonth(),
-            today.getDate() + 1
-        ).getTime();
+        const expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
 
         // Write a new put option and verify it was successful
         const optionParams = ["put", expiry, TOKEN, 10, 20];
