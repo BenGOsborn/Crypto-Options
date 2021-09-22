@@ -338,4 +338,31 @@ contract("OptionsMarket", (accounts) => {
         }
         assert.equal(!exercised, true, "Exercised exercised put option");
     });
+
+    it("should collect the expired options", async () => {
+        // Get the contract and tokens
+        const optionsMarket = await OptionsMarket.deployed();
+        const stableCoin = await IERC20.at(STABLECOIN);
+        const token = await IERC20.at(TOKEN);
+
+        // Write a new call option
+        let expiry = Math.floor((Date.now() + 1000) / 1000); // Has to be seconds for block.timestamp
+        const callOptionParams = ["call", expiry, TOKEN, 10, 20];
+        const callTransaction = await optionsMarket.writeOption(
+            ...callOptionParams,
+            {
+                from: TOKEN_WHALE,
+            }
+        );
+        const callOptionId = callTransaction.logs[0].args[0];
+
+        // Write a new put option
+        expiry = Math.floor((Date.now() + 1000) / 1000); // Has to be seconds for block.timestamp
+        const putOptionParams = ["put", expiry, TOKEN, 10, 20];
+        const putTransaction = await optionsMarket.writeOption(
+            ...putOptionParams,
+            { from: STABLECOIN_WHALE }
+        );
+        const putOptionId = putTransaction.logs[0].args[0];
+    });
 });

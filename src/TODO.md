@@ -2,3 +2,4 @@
 -   Test on Kovan
 -   Maybe seperate contracts into a trade contract and an option contract
 -   Clean up spaghetti code tests + add new lines between tests
+-   Test expiry of option somehow ?
