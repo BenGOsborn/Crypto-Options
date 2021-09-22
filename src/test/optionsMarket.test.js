@@ -263,15 +263,40 @@ contract("OptionsMarket", (accounts) => {
             from: STABLECOIN_WHALE,
         });
 
+        // Get the balances of the accounts
+        const tokenSC = await stableCoin.balanceOf(TOKEN_WHALE);
+        const tokenT = await token.balanceOf(TOKEN_WHALE);
+        const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        const stableCoinT = await token.balanceOf(STABLECOIN_WHALE);
+
+        // Get the call option
+        const callOptionId = 0;
+        const putOptionId = 1;
+        const callOption = await optionsMarket.getOption(callOptionId);
+        const putOption = await optionsMarket.getOption(putOptionId);
+
         // Execute the trade
         await optionsMarket.executeTrade(tradeId, { from: TOKEN_WHALE });
 
-        // Get the call option
-        const option = await optionsMarket.getOption(0);
-
         // Exercise the options
-        await optionsMarket.exerciseOption(0, { from: STABLECOIN_WHALE });
-        assert.equal();
-        await optionsMarket.exerciseOption(1, { from: TOKEN_WHALE });
+        await optionsMarket.exerciseOption(callOptionId, {
+            from: STABLECOIN_WHALE,
+        });
+        assert.equal(
+            (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
+            stableCoinSC - callOption[5],
+            "Failed to remove funds from exerciser during call option exercised"
+        );
+        assert.equal(
+            (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
+            tokenSC + callOption[5],
+            "Failed to add funds to writer during call option exercised"
+        );
+        assert.equal(
+            (await token.balanceOf(STABLECOIN_WHALE)).toString(),
+            stableCoinT + callOption[4],
+            "Failed to move tokens to exerciser during call option"
+        );
+        await optionsMarket.exerciseOption(putOptionId, { from: TOKEN_WHALE });
     });
 });
