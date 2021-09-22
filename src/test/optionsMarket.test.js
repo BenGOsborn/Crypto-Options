@@ -314,5 +314,7 @@ contract("OptionsMarket", (accounts) => {
             stableCoinSC + putOption[5],
             "Failed to add funds to exerciser when put option exercised"
         );
+
+        // Check that the options may not be exercised again
     });
 });
