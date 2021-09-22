@@ -181,7 +181,7 @@ contract OptionsMarket {
         require(_compareStrings(trade.status, "open"), "Only open trades may be executed");
 
         // Transfer the option
-        optionOwners[_tradeId] = msg.sender;
+        optionOwners[trade.optionId] = msg.sender;
 
         // Charge the recipient and pay a fee to the owner
         uint256 fee = trade.price * 3 / 100; 
