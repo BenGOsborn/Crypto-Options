@@ -38,6 +38,7 @@ contract("OptionsMarket", (accounts) => {
             stableCoinSC.toString(),
             "Failed to transfer correct amount of stablecoins"
         );
+
         const tokenAllowance = await token.allowance(
             TOKEN_WHALE,
             optionsMarket.address
