@@ -277,7 +277,7 @@ contract("OptionsMarket", (accounts) => {
         // **** MOVE THE FOLLOWING TO NUMBERS - IT IS DOING STRING CONCATENATION
         assert.equal(
             (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
-            stableCoinSC - callOption[5],
+            stableCoinSC.sub(callOption[5]),
             "Failed to remove funds from exerciser when call option exercised"
         );
         assert.equal(
