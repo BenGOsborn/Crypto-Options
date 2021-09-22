@@ -107,7 +107,7 @@ contract OptionsMarket {
         Option memory option = options[_optionId];
 
         // Check that the option may be exercised
-        require(option.expiry > block.timestamp, "Option has expired");
+        require(option.expiry >= block.timestamp, "Option has expired");
         require(_compareStrings(option.status, "none"), "Option has already been exercised");
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may exercise it");
 
@@ -132,7 +132,7 @@ contract OptionsMarket {
         Option memory option = options[_optionId];
 
         // Check that the option may be collected
-        require(option.expiry <= block.timestamp, "Option has not expired yet");
+        require(option.expiry < block.timestamp, "Option has not expired yet");
         require(_compareStrings(option.status, "none"), "Option has already been exercised or collected");
         require(option.writer == msg.sender, "Only the writer may collect an expired option");
 
