@@ -4,4 +4,4 @@
 -   Maybe seperate contracts into a trade contract and an option contract
 -   Repeat the same test for a put option
 -   Move the toString to the asserts in the tests
--   Clean up spaghetti code tests
+-   Clean up spaghetti code tests + add new lines between tests
