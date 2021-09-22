@@ -16,10 +16,8 @@ contract("OptionsMarket", (accounts) => {
         const token = await IERC20.at(TOKEN);
 
         // Get the balance of the whales
-        const stableCoinBal = (
-            await stableCoin.balanceOf(STABLECOIN_WHALE)
-        ).toString();
-        const tokenBal = (await token.balanceOf(TOKEN_WHALE)).toString();
+        const stableCoinBal = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        const tokenBal = await token.balanceOf(TOKEN_WHALE);
 
         // Approve the contract to use tokens
         await stableCoin.approve(optionsMarket.address, stableCoinBal, {
@@ -30,17 +28,19 @@ contract("OptionsMarket", (accounts) => {
         });
 
         // Check that the approval was successful
-        const stableCoinAllowance = (
-            await stableCoin.allowance(STABLECOIN_WHALE, optionsMarket.address)
-        ).toString();
+        const stableCoinAllowance = await stableCoin.allowance(
+            STABLECOIN_WHALE,
+            optionsMarket.address
+        );
         assert.equal(
             stableCoinAllowance,
             stableCoinBal,
             "Failed to transfer correct amount of stablecoins"
         );
-        const tokenAllowance = (
-            await token.allowance(TOKEN_WHALE, optionsMarket.address)
-        ).toString();
+        const tokenAllowance = await token.allowance(
+            TOKEN_WHALE,
+            optionsMarket.address
+        );
         assert.equal(
             tokenAllowance,
             tokenBal,
@@ -60,33 +60,25 @@ contract("OptionsMarket", (accounts) => {
         const transaction = await optionsMarket.writeOption(...optionParams, {
             from: TOKEN_WHALE,
         });
-        const optionId = transaction.logs[0].args[0].toString();
+        const optionId = transaction.logs[0].args[0];
         const option = await optionsMarket.getOption(optionId);
+        assert.equal(option[0], optionParams[1], "Expiry times do not match");
         assert.equal(
-            option[0].toString(),
-            optionParams[1],
-            "Expiry times do not match"
-        );
-        assert.equal(
-            option[2].toString().toLowerCase(),
+            option[2].toLowerCase(),
             TOKEN_WHALE.toLowerCase(),
             "Option writers do not match"
         );
         assert.equal(
-            option[3].toString().toLowerCase(),
+            option[3].toLowerCase(),
             optionParams[2].toLowerCase(),
             "Tokens do not match"
         );
         assert.equal(
-            option[4].toString(),
+            option[4],
             optionParams[3],
             "Option token amounts do not match"
         );
-        assert.equal(
-            option[5].toString(),
-            optionParams[4],
-            "Prices do not match"
-        );
+        assert.equal(option[5], optionParams[4], "Prices do not match");
         assert.equal(option[6], optionParams[0], "Option types do not match");
     });
 
@@ -103,33 +95,25 @@ contract("OptionsMarket", (accounts) => {
         const transaction = await optionsMarket.writeOption(...optionParams, {
             from: STABLECOIN_WHALE,
         });
-        const optionId = transaction.logs[0].args[0].toString();
+        const optionId = transaction.logs[0].args[0];
         const option = await optionsMarket.getOption(optionId);
+        assert.equal(option[0], optionParams[1], "Expiry times do not match");
         assert.equal(
-            option[0].toString(),
-            optionParams[1],
-            "Expiry times do not match"
-        );
-        assert.equal(
-            option[2].toString().toLowerCase(),
+            option[2].toLowerCase(),
             STABLECOIN_WHALE.toLowerCase(),
             "Option writers do not match"
         );
         assert.equal(
-            option[3].toString().toLowerCase(),
+            option[3].toLowerCase(),
             optionParams[2].toLowerCase(),
             "Tokens do not match"
         );
         assert.equal(
-            option[4].toString(),
+            option[4],
             optionParams[3],
             "Option token amounts do not match"
         );
-        assert.equal(
-            option[5].toString(),
-            optionParams[4],
-            "Prices do not match"
-        );
+        assert.equal(option[5], optionParams[4], "Prices do not match");
         assert.equal(option[6], optionParams[0], "Option types do not match");
     });
 
@@ -142,35 +126,23 @@ contract("OptionsMarket", (accounts) => {
         const transaction = await optionsMarket.openTrade(...tradeParams, {
             from: TOKEN_WHALE,
         });
-        const tradeId = transaction.logs[0].args[0].toString();
+        const tradeId = transaction.logs[0].args[0];
         const trade = await optionsMarket.getTrade(tradeId);
         assert.equal(
-            trade[0].toString().toLowerCase(),
+            trade[0].toLowerCase(),
             TOKEN_WHALE.toLowerCase(),
             "Trade poster is different"
         );
-        assert.equal(
-            trade[1].toString(),
-            tradeParams[0],
-            "OptionId is different"
-        );
-        assert.equal(
-            trade[2].toString(),
-            tradeParams[1],
-            "Trade price is different"
-        );
-        assert.equal(trade[3].toString(), "open", "Failed to open trade");
+        assert.equal(trade[1], tradeParams[0], "OptionId is different");
+        assert.equal(trade[2], tradeParams[1], "Trade price is different");
+        assert.equal(trade[3], "open", "Failed to open trade");
 
         // Cancel the trade
         await optionsMarket.cancelTrade(tradeId, {
             from: TOKEN_WHALE,
         });
         const cancelledTrade = await optionsMarket.getTrade(tradeId);
-        assert.equal(
-            cancelledTrade[3].toString(),
-            "cancelled",
-            "Failed to cancel trade"
-        );
+        assert.equal(cancelledTrade[3], "cancelled", "Failed to cancel trade");
 
         // Try and execute the cancelled trade
         let executed;
@@ -191,36 +163,34 @@ contract("OptionsMarket", (accounts) => {
         const stableCoin = await IERC20.at(STABLECOIN);
 
         // Get the balance of the whales
-        const stableCoinSC = (
-            await stableCoin.balanceOf(STABLECOIN_WHALE)
-        ).toString();
-        const tokenSC = (await stableCoin.balanceOf(TOKEN_WHALE)).toString();
+        const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        const tokenSC = await stableCoin.balanceOf(TOKEN_WHALE);
 
         // Open a new trade for the call option
         const tradeParams = [0, 200];
         const transaction = await optionsMarket.openTrade(...tradeParams, {
             from: TOKEN_WHALE,
         });
-        const tradeId = transaction.logs[0].args[0].toString();
+        const tradeId = transaction.logs[0].args[0];
 
         // Execute the trade
         await optionsMarket.executeTrade(tradeId, { from: STABLECOIN_WHALE });
-        const optionOwner = (
-            await optionsMarket.getOptionOwner(tradeParams[0])
-        ).toString();
+        const optionOwner = await optionsMarket.getOptionOwner(tradeParams[0]);
         assert.equal(
             optionOwner.toLowerCase(),
             STABLECOIN_WHALE.toLowerCase(),
             "Failed to transfer option to buyer"
         );
         assert.equal(
-            (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
-            stableCoinSC - tradeParams[0],
+            await stableCoin.balanceOf(STABLECOIN_WHALE),
+            stableCoinSC.sub(tradeParams[0]),
             "Failed to update buyers tokens"
         );
         assert.equal(
-            (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
-            tokenSC + tradeParams[1] - Math.floor((tradeParams[1] * 3) / 100)
+            await stableCoin.balanceOf(TOKEN_WHALE),
+            tokenSC
+                .add(tradeParams[1])
+                .sub(Math.floor((tradeParams[1] * 3) / 100))
         );
 
         // Try and execute the closed trade
@@ -247,7 +217,7 @@ contract("OptionsMarket", (accounts) => {
         const transaction = await optionsMarket.openTrade(...tradeParams, {
             from: STABLECOIN_WHALE,
         });
-        const tradeId = transaction.logs[0].args[0].toString();
+        const tradeId = transaction.logs[0].args[0];
 
         // Transfer stable coins to token whale, allow the contract to spend, and close the trade
         await stableCoin.transfer(TOKEN_WHALE, tradeParams[1], {
@@ -274,37 +244,36 @@ contract("OptionsMarket", (accounts) => {
         await optionsMarket.exerciseOption(callOptionId, {
             from: STABLECOIN_WHALE,
         });
-        // **** MOVE THE FOLLOWING TO NUMBERS - IT IS DOING STRING CONCATENATION
         assert.equal(
-            (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
+            await stableCoin.balanceOf(STABLECOIN_WHALE),
             stableCoinSC.sub(callOption[5]),
             "Failed to remove funds from exerciser when call option exercised"
         );
         assert.equal(
-            (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
-            tokenSC + callOption[5],
+            await stableCoin.balanceOf(TOKEN_WHALE),
+            tokenSC.add(callOption[5]),
             "Failed to add funds to writer when call option exercised"
         );
         assert.equal(
-            (await token.balanceOf(STABLECOIN_WHALE)).toString(),
-            stableCoinT + callOption[4],
+            await token.balanceOf(STABLECOIN_WHALE),
+            stableCoinT.add(callOption[4]),
             "Failed to move tokens to exerciser when call option exercised"
         );
 
         await optionsMarket.exerciseOption(putOptionId, { from: TOKEN_WHALE });
         assert.equal(
-            (await token.balanceOf(TOKEN_WHALE)).toString(),
-            tokenT - putOption[4],
+            await token.balanceOf(TOKEN_WHALE),
+            tokenT.sub(putOption[4]),
             "Failed to remove tokens from exerciser when put option exercised"
         );
         assert.equal(
-            (await token.balanceOf(STABLECOIN_WHALE)).toString(),
-            stableCoinT + putOption[4],
+            await token.balanceOf(STABLECOIN_WHALE),
+            stableCoinT.add(putOption[4]),
             "Failed to move tokens to writer when put option exercised"
         );
         asset.equal(
-            (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
-            stableCoinSC + putOption[5],
+            await stableCoin.balanceOf(TOKEN_WHALE),
+            stableCoinSC.add(putOption[5]),
             "Failed to add funds to exerciser when put option exercised"
         );
 
