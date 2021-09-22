@@ -269,10 +269,10 @@ contract("OptionsMarket", (accounts) => {
         const putOption = await optionsMarket.getOption(putOptionId);
 
         // Get the balances of the accounts
-        const tokenSC = await stableCoin.balanceOf(TOKEN_WHALE);
-        const tokenT = await token.balanceOf(TOKEN_WHALE);
-        const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
-        const stableCoinT = await token.balanceOf(STABLECOIN_WHALE);
+        let tokenSC = await stableCoin.balanceOf(TOKEN_WHALE);
+        let tokenT = await token.balanceOf(TOKEN_WHALE);
+        let stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        let stableCoinT = await token.balanceOf(STABLECOIN_WHALE);
 
         // Exercise the call option
         await optionsMarket.exerciseOption(callOptionId, {
@@ -293,6 +293,12 @@ contract("OptionsMarket", (accounts) => {
             stableCoinT.add(callOption[4]).toString(),
             "Failed to move tokens to exerciser when call option exercised"
         );
+
+        // Update the balances of the accounts
+        tokenSC = await stableCoin.balanceOf(TOKEN_WHALE);
+        tokenT = await token.balanceOf(TOKEN_WHALE);
+        stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        stableCoinT = await token.balanceOf(STABLECOIN_WHALE);
 
         await optionsMarket.exerciseOption(putOptionId, { from: TOKEN_WHALE });
         assert.equal(
