@@ -249,19 +249,14 @@ contract("OptionsMarket", (accounts) => {
         });
         const tradeId = transaction.logs[0].args[0].toString();
 
-        // Transfer stable coins to token whale and allow contract to spend
+        // Transfer stable coins to token whale, allow the contract to spend, and close the trade
         await stableCoin.transfer(TOKEN_WHALE, tradeParams[1], {
             from: STABLECOIN_WHALE,
         });
         await stableCoin.approve(optionsMarket.address, tradeParams[1], {
             from: TOKEN_WHALE,
         });
-
-        // Get the balances of the accounts
-        const tokenSC = await stableCoin.balanceOf(TOKEN_WHALE);
-        const tokenT = await token.balanceOf(TOKEN_WHALE);
-        const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
-        const stableCoinT = await token.balanceOf(STABLECOIN_WHALE);
+        await optionsMarket.executeTrade(tradeId, { from: TOKEN_WHALE });
 
         // Get the call option
         const callOptionId = 0;
@@ -269,10 +264,13 @@ contract("OptionsMarket", (accounts) => {
         const callOption = await optionsMarket.getOption(callOptionId);
         const putOption = await optionsMarket.getOption(putOptionId);
 
-        // Execute the trade
-        await optionsMarket.executeTrade(tradeId, { from: TOKEN_WHALE });
+        // Get the balances of the accounts
+        const tokenSC = await stableCoin.balanceOf(TOKEN_WHALE);
+        const tokenT = await token.balanceOf(TOKEN_WHALE);
+        const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        const stableCoinT = await token.balanceOf(STABLECOIN_WHALE);
 
-        // Exercise the options
+        // Exercise the call option
         await optionsMarket.exerciseOption(callOptionId, {
             from: STABLECOIN_WHALE,
         });
@@ -283,7 +281,7 @@ contract("OptionsMarket", (accounts) => {
         );
         assert.equal(
             (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
-            tokenSC - tradeParams[1] + callOption[5],
+            tokenSC + callOption[5],
             "Failed to add funds to writer when call option exercised"
         );
         assert.equal(
