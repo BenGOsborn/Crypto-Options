@@ -318,5 +318,24 @@ contract("OptionsMarket", (accounts) => {
         );
 
         // Check that the options may not be exercised again
+        let exercised;
+        try {
+            await optionsMarket.exerciseOption(callOptionId, {
+                from: STABLECOIN_WHALE,
+            });
+            exercised = true;
+        } catch {
+            exercised = false;
+        }
+        assert.equal(!exercised, true, "Exercised exercised call option");
+        try {
+            await optionsMarket.exerciseOption(putOptionId, {
+                from: TOKEN_WHALE,
+            });
+            exercised = true;
+        } catch {
+            exercised = false;
+        }
+        assert.equal(!exercised, true, "Exercised exercised put option");
     });
 });
