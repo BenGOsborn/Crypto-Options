@@ -258,9 +258,12 @@ contract("OptionsMarket", (accounts) => {
         });
         const tradeId = transaction.logs[0].args[0].toString();
 
-        // Transfer stable coins to token whale
+        // Transfer stable coins to token whale and allow contract to spend
         await stableCoin.transfer(TOKEN_WHALE, tradeParams[1], {
             from: STABLECOIN_WHALE,
+        });
+        await stableCoin.approve(optionsMarket.address, tradeParams[1], {
+            from: TOKEN_WHALE,
         });
 
         // Get the balances of the accounts
