@@ -311,7 +311,7 @@ contract("OptionsMarket", (accounts) => {
             stableCoinT.add(putOption[4]).toString(),
             "Failed to move tokens to writer when put option exercised"
         );
-        asset.equal(
+        assert.equal(
             (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
             stableCoinSC.add(putOption[5]).toString(),
             "Failed to add funds to exerciser when put option exercised"
