@@ -386,7 +386,7 @@ contract("OptionsMarket", (accounts) => {
             from: STABLECOIN_WHALE,
         });
         assert.equal(
-            await stableCoin.balanceOf(STABLECOIN_WHALE).toString(),
+            (await stableCoin.balanceOf(STABLECOIN_WHALE)).toString(),
             stableCoinSC.add(new BN(putOptionParams[4])),
             "Failed to collect funds from put option"
         );
