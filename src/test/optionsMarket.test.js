@@ -221,8 +221,8 @@ contract("OptionsMarket", (accounts) => {
         assert.equal(
             (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
             tokenSC
-                .add(tradeParams[1])
-                .sub(Math.floor((tradeParams[1] * 3) / 100))
+                .add(new BN(tradeParams[1]))
+                .sub(new BN(Math.floor((tradeParams[1] * 3) / 100)))
                 .toString(),
             "Failed to update posters funds"
         );
