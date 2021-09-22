@@ -283,7 +283,7 @@ contract("OptionsMarket", (accounts) => {
         );
         assert.equal(
             (await stableCoin.balanceOf(TOKEN_WHALE)).toString(),
-            tokenSC + callOption[5],
+            tokenSC - tradeParams[1] + callOption[5],
             "Failed to add funds to writer when call option exercised"
         );
         assert.equal(
