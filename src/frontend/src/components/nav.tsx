@@ -53,7 +53,7 @@ function Nav() {
         <div className="Nav">
             <div className="p-5 w-5/6 mx-auto flex flex-row justify-between items-center">
                 <h1 className="text-xl uppercase font-medium">Hello world</h1>
-                <div className="whitespace-nowrap">
+                <div className="whitespace-nowrap truncate ...">
                     {active ? (
                         <button
                             className="transition duration-100 bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-3 mx-2"
@@ -70,7 +70,7 @@ function Nav() {
                         </button>
                     )}
                     {active ? (
-                        <span className="mx-2 truncate ...">{account}</span>
+                        <span className="mx-2 text-gray-400">{account}</span>
                     ) : null}
                 </div>
             </div>
