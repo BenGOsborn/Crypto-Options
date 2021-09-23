@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
-import { injected } from "../components/wallet/connectors";
+import { injected } from "./components/wallet/connectors";
 
 function App() {
     const { active, account, library, connector, activate, deactivate } =
