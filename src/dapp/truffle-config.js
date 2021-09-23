@@ -22,9 +22,7 @@ require("dotenv").config();
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const infuraKey = process.env.INFURA;
-
-const fs = require("fs");
-const mnemonic = fs.readFileSync(".secret").toString().trim();
+const mnemonic = process.env.MNEMONIC;
 
 module.exports = {
     /**
