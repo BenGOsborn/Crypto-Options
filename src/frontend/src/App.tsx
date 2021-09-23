@@ -3,12 +3,10 @@ import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { injected } from "./components/wallet/connectors";
 import OptionsMarket from "./abi/OptionsMarket.json";
-
-interface ContractData {
-    networkId: number;
-    deployedNetwork: any;
-    instance: any;
-}
+import {
+    ContractData,
+    contractDataCtx,
+} from "./components/contexts/contractData";
 
 function App() {
     const { active, account, activate, deactivate } = useWeb3React();
@@ -56,12 +54,14 @@ function App() {
 
     return (
         <div className="App">
-            {active ? (
-                <button onClick={disconnect}>Disconnect wallet</button>
-            ) : (
-                <button onClick={connect}>Connect wallet</button>
-            )}
-            {active ? account : <span>Not connected</span>}
+            <contractDataCtx.Provider value={[contractData, setContractData]}>
+                {active ? (
+                    <button onClick={disconnect}>Disconnect wallet</button>
+                ) : (
+                    <button onClick={connect}>Connect wallet</button>
+                )}
+                {active ? account : <span>Not connected</span>}
+            </contractDataCtx.Provider>
         </div>
     );
 }
