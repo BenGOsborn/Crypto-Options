@@ -5,12 +5,30 @@ function App() {
     const { active, account, library, connector, activate, deactivate } =
         useWeb3React();
 
-    function connect() {}
+    async function connect() {
+        try {
+            await activate(injected);
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+
+    async function disconnect() {
+        try {
+            deactivate();
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
 
     return (
         <div className="App">
-            <button onClick={connect}>Connect wallet</button>
-            <span>Not connected</span>
+            {active ? (
+                <button onClick={disconnect}>Disconnect wallet</button>
+            ) : (
+                <button onClick={connect}>Connect wallet</button>
+            )}
+            {active ? account : <span>Not connected</span>}
         </div>
     );
 }
