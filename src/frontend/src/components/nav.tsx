@@ -51,9 +51,9 @@ function Nav() {
 
     return (
         <div className="Nav">
-            <div className="p-5 w-5/6 mx-auto flex flex-row justify-between items-center">
+            <div className="p-5 w-5/6 mx-auto flex sm:flex-row flex-col justify-between items-center">
                 <h1 className="text-xl uppercase font-medium">Hello world</h1>
-                <div className="flex justify-center items-center">
+                <div className="flex sm:flex-row flex-col justify-center items-center sm:my-0 my-3">
                     {active ? (
                         <button
                             className="transition duration-100 bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-3 mx-2"
@@ -70,8 +70,8 @@ function Nav() {
                         </button>
                     )}
                     {active ? (
-                        <span className="mx-2 text-gray-600">
-                            {account?.slice(0, 14)}...
+                        <span className="mx-2 text-gray-600 sm:my-0 my-3">
+                            {account?.slice(0, 16)}...
                         </span>
                     ) : null}
                 </div>
