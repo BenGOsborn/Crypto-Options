@@ -51,13 +51,27 @@ function Nav() {
 
     return (
         <div className="Nav">
-            <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
-                {active ? (
-                    <button onClick={disconnect}>Disconnect wallet</button>
-                ) : (
-                    <button onClick={connect}>Connect wallet</button>
-                )}
-                {active ? account : <span>Not connected</span>}
+            <div className="p-5 w-5/6 mx-auto">
+                <div className="">
+                    {active ? (
+                        <button
+                            className="transition duration-100 bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-3"
+                            onClick={disconnect}
+                        >
+                            Disconnect wallet
+                        </button>
+                    ) : (
+                        <button
+                            className="transition duration-100 bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-3"
+                            onClick={connect}
+                        >
+                            Connect wallet
+                        </button>
+                    )}
+                    {active ? (
+                        <span className="truncate ...">{account}</span>
+                    ) : null}
+                </div>
             </div>
         </div>
     );
