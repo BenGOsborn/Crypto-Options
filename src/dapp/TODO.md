@@ -3,3 +3,4 @@
 -   Maybe seperate contracts into a trade contract and an option contract
 -   Frontend
 -	Deploy to multiple networks with the same ABI
+- Change events
