@@ -2,14 +2,14 @@ import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { injected } from "./components/wallet/connectors";
-import OptionsMarket from "../../dapp/build/contracts/OptionsMarket.json";
+import OptionsMarket from "./abi/OptionsMarket.json";
 
-interface Web3Data {}
+interface ContractData {}
 
 function App() {
     const { active, account, activate, deactivate } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
-    const [web3Data, setWeb3Data] = useState<Web3Data | null>(null);
+    const [contractData, setContractData] = useState<ContractData | null>(null);
 
     async function connect() {
         try {
@@ -17,9 +17,14 @@ function App() {
             await activate(injected);
             localStorage.setItem("connected", "true");
 
-            // Get the web3 data and store it in the state
+            // Get the contract and store it in the state
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = OptionsMarket.networks[networkId];
+            const deployedNetwork = (OptionsMarket.networks as any)[networkId];
+            const instance = new web3.eth.Contract(
+                OptionsMarket.abi as any,
+                deployedNetwork && deployedNetwork.address
+            );
+            console.log(instance);
         } catch (ex) {
             console.log(ex);
         }
