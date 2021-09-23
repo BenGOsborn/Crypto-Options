@@ -2,7 +2,7 @@
     "name": "src",
     "version": "1.0.0",
     "scripts": {
-        "compile": "npx truffle compile",
+        "compile": "npx truffle compile && cp ./build/contracts/* ../frontend/src/abi",
         "fork": "npx ganache-cli --fork https://mainnet.infura.io/v3/$INFURA --unlock $STABLECOIN_WHALE --unlock $TOKEN_WHALE --networkId 999",
         "test": "npx truffle test --network mainnet_fork",
         "test:event": "npx truffle test --network mainnet_fork --show-events",
