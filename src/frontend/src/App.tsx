@@ -35,7 +35,7 @@ function App() {
             };
             setContractData(state);
         } catch (ex) {
-            console.log(ex);
+            console.error(ex);
         }
     }
 
@@ -44,7 +44,7 @@ function App() {
             deactivate();
             localStorage.removeItem("connected");
         } catch (ex) {
-            console.log(ex);
+            console.error(ex);
         }
     }
 
