@@ -6,7 +6,7 @@
         "fork": "npx ganache-cli --fork https://mainnet.infura.io/v3/$INFURA --unlock $STABLECOIN_WHALE --unlock $TOKEN_WHALE --networkId 999",
         "test": "npx truffle test --network mainnet_fork",
         "test:event": "npx truffle test --network mainnet_fork --show-events",
-        "deploy:ropsten": "npx truffle migrate --network ropsten"
+        "deploy:ropsten": "npx truffle migrate --network ropsten --reset"
     },
     "devDependencies": {
         "@openzeppelin/contracts": "^4.3.2",
