@@ -2,9 +2,10 @@ import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
 import Web3 from "web3";
 import { injected } from "./components/wallet/connectors";
+import OptionsMarket from "../../dapp/build/contracts/OptionsMarket.json";
 
 function App() {
-    const { active, account, connector, activate, deactivate } = useWeb3React();
+    const { active, account, activate, deactivate } = useWeb3React();
     const library: Web3 = useWeb3React().library;
 
     async function connect() {
