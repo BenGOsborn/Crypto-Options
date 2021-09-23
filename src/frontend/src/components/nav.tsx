@@ -52,7 +52,7 @@ function Nav() {
     return (
         <div className="Nav">
             <div className="p-5 w-5/6 mx-auto">
-                <div className="">
+                <div className="flex flex-row justify-evenly items-center">
                     {active ? (
                         <button
                             className="transition duration-100 bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-3"
