@@ -41,6 +41,7 @@ function App() {
 
     async function disconnect() {
         try {
+            // Deactive wallet connection and remove state from local storage
             deactivate();
             localStorage.removeItem("connected");
         } catch (ex) {
@@ -49,6 +50,7 @@ function App() {
     }
 
     useEffect(() => {
+        // Connect to wallet if state stored in local storage, and repeat whenever web3 is updated
         if (localStorage.getItem("connected") === "true") connect();
     }, [web3]);
 
