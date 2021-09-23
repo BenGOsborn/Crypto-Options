@@ -56,21 +56,21 @@ function Nav() {
                 <div className="flex flex-row justify-evenly items-center">
                     {active ? (
                         <button
-                            className="transition duration-100 bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-3"
+                            className="transition duration-100 bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-3 mx-2"
                             onClick={disconnect}
                         >
                             Disconnect wallet
                         </button>
                     ) : (
                         <button
-                            className="transition duration-100 bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-3"
+                            className="transition duration-100 bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-3 mx-2"
                             onClick={connect}
                         >
                             Connect wallet
                         </button>
                     )}
                     {active ? (
-                        <span className="truncate ...">{account}</span>
+                        <span className="mx-2 truncate ...">{account}</span>
                     ) : null}
                 </div>
             </div>
