@@ -52,7 +52,7 @@ function Nav() {
     return (
         <div className="Nav">
             <div className="p-5 w-5/6 mx-auto flex flex-row justify-between items-center">
-                <h1 className="text-xl uppercase">Hello world</h1>
+                <h1 className="text-xl uppercase font-medium">Hello world</h1>
                 <div className="flex flex-row justify-evenly items-center">
                     {active ? (
                         <button
