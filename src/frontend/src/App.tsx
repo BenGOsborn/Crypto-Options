@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
+import { useEffect } from "react";
 import Web3 from "web3";
 import { injected } from "./components/wallet/connectors";
 
@@ -9,6 +10,7 @@ function App() {
     async function connect() {
         try {
             await activate(injected);
+            localStorage.setItem("connected", "true");
         } catch (ex) {
             console.log(ex);
         }
@@ -17,10 +19,15 @@ function App() {
     async function disconnect() {
         try {
             deactivate();
+            localStorage.removeItem("connected");
         } catch (ex) {
             console.log(ex);
         }
     }
+
+    useEffect(() => {
+        if (localStorage.getItem("connected") === "true") connect();
+    }, []);
 
     return (
         <div className="App">
