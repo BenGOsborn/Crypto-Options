@@ -4,11 +4,15 @@ import Web3 from "web3";
 import { injected } from "./components/wallet/connectors";
 import OptionsMarket from "./abi/OptionsMarket.json";
 
-interface ContractData {}
+interface ContractData {
+    networkId: number;
+    deployedNetwork: any;
+    instance: any;
+}
 
 function App() {
     const { active, account, activate, deactivate } = useWeb3React();
-    const web3: Web3 = useWeb3React().library;
+    let web3: Web3 = useWeb3React().library;
     const [contractData, setContractData] = useState<ContractData | null>(null);
 
     async function connect() {
@@ -24,7 +28,12 @@ function App() {
                 OptionsMarket.abi as any,
                 deployedNetwork && deployedNetwork.address
             );
-            console.log(instance);
+            const state: ContractData = {
+                networkId,
+                deployedNetwork,
+                instance,
+            };
+            setContractData(state);
         } catch (ex) {
             console.log(ex);
         }
@@ -41,7 +50,7 @@ function App() {
 
     useEffect(() => {
         if (localStorage.getItem("connected") === "true") connect();
-    }, []);
+    }, [web3]);
 
     return (
         <div className="App">
