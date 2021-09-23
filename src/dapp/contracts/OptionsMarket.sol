@@ -213,4 +213,8 @@ contract OptionsMarket {
         // Cancel the trade
         trades[_tradeId].status = "cancelled";
     }
+
+    function test() public {
+
+    }
 }
