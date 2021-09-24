@@ -34,11 +34,13 @@ function Options() {
                     const newOption = {
                         id: option.optionId,
                         writer: option.writer,
-                        type: web3.utils.toAscii(option.optionType),
+                        type: web3.utils.hexToAscii(option.optionType),
                         tokenAddress: option.tokenAddress,
                     };
                     setOptions((prev) => [...prev, newOption]);
                 });
+
+        // Also add in transferred options soon too (how can I transfer this)
     }, [contractData]);
 
     return (
@@ -62,8 +64,6 @@ function Options() {
                                     tokenPrice
                                 )
                                 .send({ from: account });
-
-                            // Also add in transferred options soon too (how can I transfer this)
 
                             // @ts-ignore
                             // e.target.reset();
