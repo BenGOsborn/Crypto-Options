@@ -4,5 +4,5 @@
 -   Frontend
 -   Deploy to multiple networks with the same ABI
 -   Change events
--   Throws an exception with the different amounts of tokens ????
+-   Throws an exception with the different amounts of tokens ???? - THIS IS BECAUSE I NEED TO CALL APPROVE ON THE TOKENS BEFORE I CAN USE IT - GET THE AMOUNT ALLOCATED FIRST BEFORE ASKING ???
 -   MIgrate contract to external, calldata, storage for better gas costs
