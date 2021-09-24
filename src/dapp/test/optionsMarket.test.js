@@ -164,7 +164,14 @@ contract("OptionsMarket", (accounts) => {
             "OptionWritten"
         );
         for (const event of optionsWrittenEvt) {
-            console.log(event.returnValues.optionType);
+            const tx = await web3.eth.getTransactionReceipt(
+                event.transactionHash
+            );
+            console.log(tx.logs[0]);
+            // console.log(event);
+            // const optionTypeRaw = event.returnValues.optionType;
+            // const decoded = Web3.utils.hexToAscii(optionTypeRaw);
+            // console.log(decoded);
         }
     });
 
