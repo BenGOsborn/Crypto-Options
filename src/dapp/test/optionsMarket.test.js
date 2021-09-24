@@ -159,7 +159,7 @@ contract("OptionsMarket", (accounts) => {
     });
 
     it("should log the events created by the contracts", async () => {
-        const base = "hello";
+        const base = "call";
         const encoded = web3.utils.toHex(base);
         console.log(encoded);
         const decoded = web3.utils.toAscii(encoded);
