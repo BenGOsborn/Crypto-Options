@@ -41,7 +41,7 @@ contract OptionsMarket {
     }
 
     // Declare events for logging data
-    event OptionWritten(uint256 optionId, address indexed writer, string optionType, uint256 expiry, address tokenAddress, uint256 amount, uint256 price);
+    event OptionWritten(uint256 optionId, address indexed writer);
     event OptionExercised(uint256 optionId, address indexed writer, address indexed exerciser);
     event TradeOpened(uint256 tradeId, uint256 indexed optionId, address indexed poster);
     event TradeExecuted(uint256 tradeId, uint256 indexed optionId, address indexed buyer);
@@ -86,7 +86,7 @@ contract OptionsMarket {
         optionId++;
 
         // Emit an event and return the id of the option
-        emit OptionWritten(optionId - 1, msg.sender, optionType, tokenAddress);
+        emit OptionWritten(optionId - 1, msg.sender);
         return optionId - 1;
     }
 
