@@ -160,7 +160,12 @@ contract("OptionsMarket", (accounts) => {
 
     it("should log the events created by the contracts", async () => {
         const optionsMarket = await OptionsMarket.deployed();
-        console.log(await optionsMarket.getPastEvents("OptionWritten"));
+        const optionsWrittenEvt = await optionsMarket.getPastEvents(
+            "OptionWritten"
+        );
+        for (const event of optionsWrittenEvt) {
+            console.log(event.returnValues.optionType);
+        }
     });
 
     // it("should open a trade and then cancel it", async () => {
