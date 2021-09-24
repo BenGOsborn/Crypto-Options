@@ -1,7 +1,7 @@
 // Uninstall web3
 require("dotenv").config();
 const Web3 = require("web3");
-const OptionsMarket = require("../build/contracts/OptionsMarket.json");
+const OptionsMarket = require("../../build/contracts/OptionsMarket.json");
 
 const init = async () => {
     // const web3 = new Web3(`https://ropsten.infura.io/v3/${process.env.INFURA}`);
