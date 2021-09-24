@@ -3,6 +3,17 @@ import { useContext, useEffect, useState } from "react";
 import Web3 from "web3";
 import { contractDataCtx } from "./contexts/contractData";
 
+interface Option {
+    id: number;
+    expiry: number;
+    status: string;
+    writer: string;
+    tokenAddress: string;
+    amount: number;
+    price: number;
+    type: string;
+}
+
 function Options() {
     const [contractData, setContractData] = useContext(contractDataCtx);
     const { account } = useWeb3React();
@@ -16,9 +27,7 @@ function Options() {
     const [tokenPrice, setTokenPrice] = useState<number>(0);
 
     // Store the existing written options by the account
-    const [options, setOptions] = useState<
-        { id: number; writer: string; type: string; tokenAddress: string }[]
-    >([]);
+    const [options, setOptions] = useState<Option[]>([]);
 
     useEffect(() => {
         if (contractData !== null)
@@ -29,15 +38,23 @@ function Options() {
                         writer: account,
                     },
                 })
-                .on("data", (event: any) => {
+                .on("data", async (event: any) => {
                     // Try and test with ethereum and see if it returns any different results
 
-                    const option = event.returnValues;
-                    const newOption = {
-                        id: option.optionId,
-                        writer: option.writer,
-                        type: web3.utils.hexToAscii(option.optionType),
-                        tokenAddress: option.tokenAddress,
+                    const optionId = event.returnValues.optionId;
+                    const option = await contractData.instance.methods
+                        .getOption(optionId)
+                        .call();
+
+                    const newOption: Option = {
+                        id: optionId,
+                        expiry: option[0] * 1000,
+                        status: option[1],
+                        writer: option[2],
+                        tokenAddress: option[3],
+                        amount: option[4],
+                        price: option[5],
+                        type: option[6],
                     };
                     setOptions((prev) => [...prev, newOption]);
                 });
@@ -203,18 +220,26 @@ function Options() {
                 <thead>
                     <tr>
                         <td>ID</td>
+                        <td>Expiry</td>
+                        <td>Status</td>
                         <td>Writer</td>
-                        <td>Type</td>
                         <td>Token Address</td>
+                        <td>Amount</td>
+                        <td>Price</td>
+                        <td>Type</td>
                     </tr>
                 </thead>
                 <tbody>
                     {options.map((option, index) => (
                         <tr key={index}>
                             <td>{option.id}</td>
+                            <td>{option.expiry}</td>
+                            <td>{option.status}</td>
                             <td>{option.writer}</td>
-                            <td>{option.type}</td>
                             <td>{option.tokenAddress}</td>
+                            <td>{option.amount}</td>
+                            <td>{option.price}</td>
+                            <td>{option.type}</td>
                         </tr>
                     ))}
                 </tbody>
