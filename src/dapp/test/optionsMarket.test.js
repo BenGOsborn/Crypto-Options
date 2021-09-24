@@ -165,8 +165,9 @@ contract("OptionsMarket", (accounts) => {
         );
         for (const event of optionsWrittenEvt) {
             const optionTypeRaw = event.returnValues.optionType;
-            const decoded = Web3.utils.toAscii(optionTypeRaw);
-            console.log(decoded);
+            console.log(optionTypeRaw);
+            // const decoded = Web3.utils.toAscii(optionTypeRaw);
+            // console.log(decoded);
         }
     });
 
