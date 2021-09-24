@@ -216,30 +216,65 @@ function Options() {
                     </div>
                 </form>
             </div>
-            <table className="container mx-auto mt-10 w-2/5 min-w-min rounded-xl shadow-md p-6">
+            <table className="container mx-auto mt-16 w-3/5 min-w-min rounded-xl shadow-md p-6 table-fixed">
                 <thead>
-                    <tr>
-                        <td>ID</td>
-                        <td>Expiry</td>
-                        <td>Status</td>
-                        <td>Writer</td>
-                        <td>Token Address</td>
-                        <td>Amount</td>
-                        <td>Price</td>
-                        <td>Type</td>
+                    <tr className="font-bold text-gray-900 border-b-2 border-green-300">
+                        <th className="px-3 py-2 break-words w-1/12">ID</th>
+                        <th className="px-3 py-2 break-words w-1/12">Expiry</th>
+                        <th className="px-3 py-2 break-words w-1/12">Status</th>
+                        <th className="px-3 py-2 break-words w-3/12">
+                            Token Address
+                        </th>
+                        <th className="px-3 py-2 break-words w-1/12">Amount</th>
+                        <th className="px-3 py-2 break-words w-1/12">Price</th>
+                        <th className="px-3 py-2 break-words w-1/12">Type</th>
                     </tr>
                 </thead>
                 <tbody>
                     {options.map((option, index) => (
-                        <tr key={index}>
-                            <td>{option.id}</td>
-                            <td>{option.expiry}</td>
-                            <td>{option.status}</td>
-                            <td>{option.writer}</td>
-                            <td>{option.tokenAddress}</td>
-                            <td>{option.amount}</td>
-                            <td>{option.price}</td>
-                            <td>{option.type}</td>
+                        <tr key={index} className="border-b-2 border-green-100">
+                            <th
+                                className="truncate ... font-bold text-gray-900 px-3 py-4"
+                                title={option.id.toString()}
+                            >
+                                {option.id}
+                            </th>
+                            <td
+                                className="truncate ... px-3 py-2"
+                                title={new Date(option.expiry).toString()}
+                            >
+                                {new Date(option.expiry).toLocaleDateString()}
+                            </td>
+                            <td
+                                className="truncate ... px-3 py-4"
+                                title={option.status.toString()}
+                            >
+                                {option.status}
+                            </td>
+                            <td
+                                className="truncate ... px-3 py-4"
+                                title={option.tokenAddress.toString()}
+                            >
+                                {option.tokenAddress}
+                            </td>
+                            <td
+                                className="truncate ... px-3 py-4"
+                                title={option.amount.toString()}
+                            >
+                                {option.amount}
+                            </td>
+                            <td
+                                className="truncate ... px-3 py-4"
+                                title={option.price.toString()}
+                            >
+                                {option.price}
+                            </td>
+                            <td
+                                className="truncate ... px-3 py-4"
+                                title={option.type.toString()}
+                            >
+                                {option.type}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
