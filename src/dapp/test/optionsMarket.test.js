@@ -159,20 +159,22 @@ contract("OptionsMarket", (accounts) => {
     });
 
     it("should log the events created by the contracts", async () => {
-        const optionsMarket = await OptionsMarket.deployed();
-        const optionsWrittenEvt = await optionsMarket.getPastEvents(
-            "OptionWritten"
-        );
-        for (const event of optionsWrittenEvt) {
-            const tx = await web3.eth.getTransactionReceipt(
-                event.transactionHash
-            );
-            console.log(tx.logs[0]);
-            // console.log(event);
-            // const optionTypeRaw = event.returnValues.optionType;
-            // const decoded = Web3.utils.hexToAscii(optionTypeRaw);
-            // console.log(decoded);
-        }
+        const base = "hello";
+        const encoded = web3.utils.toHex(base);
+        console.log(encoded);
+        const decoded = web3.utils.toAscii(encoded);
+        console.log(decoded);
+
+        // const optionsMarket = await OptionsMarket.deployed();
+        // const optionsWrittenEvt = await optionsMarket.getPastEvents(
+        //     "OptionWritten"
+        // );
+        // for (const event of optionsWrittenEvt) {
+        //     console.log(event);
+        //     const optionTypeRaw = event.returnValues.optionType;
+        //     const decoded = Web3.utils.hexToAscii(optionTypeRaw);
+        //     console.log(decoded);
+        // }
     });
 
     // it("should open a trade and then cancel it", async () => {
