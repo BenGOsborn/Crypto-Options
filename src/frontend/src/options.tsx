@@ -13,6 +13,11 @@ function Options() {
     const [tokenAmount, setTokenAmount] = useState<number>(0);
     const [tokenPrice, setTokenPrice] = useState<number>(0);
 
+    // Store the existing written options by the account
+    const [options, setOptions] = useState<
+        { id: number; writer: string; type: string; tokenAddress: string }[]
+    >([]);
+
     useEffect(() => {
         if (contractData !== null)
             contractData.instance.events
@@ -37,16 +42,18 @@ function Options() {
                         // Only submit if contract data loaded
                         if (contractData !== null) {
                             // Create the new option
-                            await contractData.instance.methods.writeOption(
-                                optionType,
-                                expiry,
-                                tokenAddress,
-                                tokenAmount,
-                                tokenPrice
-                            );
+                            await contractData.instance.methods
+                                .writeOption(
+                                    optionType,
+                                    expiry,
+                                    tokenAddress,
+                                    tokenAmount,
+                                    tokenPrice
+                                )
+                                .send({ from: account });
 
                             // @ts-ignore
-                            e.target.reset();
+                            // e.target.reset();
                         }
                     }}
                 >
