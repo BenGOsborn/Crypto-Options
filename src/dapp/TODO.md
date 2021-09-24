@@ -2,7 +2,7 @@
 -   Test on Rinkeby
 -   Maybe seperate contracts into a trade contract and an option contract
 -   Frontend
--	Deploy to multiple networks with the same ABI
-- Change events
-- Option type event is emitting msg.sender instead of the option type
-- Throws an exception with the different amounts of tokens ????
+-   Deploy to multiple networks with the same ABI
+-   Change events
+-   Throws an exception with the different amounts of tokens ????
+-   MIgrate contract to external, calldata, storage for better gas costs
