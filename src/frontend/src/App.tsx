@@ -6,7 +6,7 @@ import {
 } from "./components/contexts/contractData";
 import Nav from "./components/nav";
 import Trades from "./components/trades";
-import Options from "./options";
+import Options from "./components/options";
 
 function App() {
     const { active } = useWeb3React();

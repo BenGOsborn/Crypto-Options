@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useContext, useEffect, useState } from "react";
 import Web3 from "web3";
-import { contractDataCtx } from "./components/contexts/contractData";
+import { contractDataCtx } from "./contexts/contractData";
 
 function Options() {
     const [contractData, setContractData] = useContext(contractDataCtx);
