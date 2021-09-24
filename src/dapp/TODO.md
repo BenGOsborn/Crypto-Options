@@ -5,3 +5,4 @@
 -	Deploy to multiple networks with the same ABI
 - Change events
 - Option type event is emitting msg.sender instead of the option type
+- Throws an exception with the different amounts of tokens ????
