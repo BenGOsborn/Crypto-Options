@@ -1,10 +1,12 @@
 import { useWeb3React } from "@web3-react/core";
 import { useContext, useEffect, useState } from "react";
+import Web3 from "web3";
 import { contractDataCtx } from "./components/contexts/contractData";
 
 function Options() {
     const [contractData, setContractData] = useContext(contractDataCtx);
     const { account } = useWeb3React();
+    const web3: Web3 = useWeb3React().library;
 
     // Store the create option state
     const [optionType, setOptionType] = useState<string>("call");
@@ -27,8 +29,17 @@ function Options() {
                         writer: account,
                     },
                 })
-                .on("data", (event: any) => console.log(event));
-    }, [contractData, account]);
+                .on("data", (event: any) => {
+                    const option = event.returnValues;
+                    const newOption = {
+                        id: option.optionId,
+                        writer: option.writer,
+                        type: web3.utils.toAscii(option.optionType),
+                        tokenAddress: option.tokenAddress,
+                    };
+                    setOptions([...options, newOption]);
+                });
+    }, [contractData]);
 
     return (
         <div className="MyOptions">
@@ -51,6 +62,8 @@ function Options() {
                                     tokenPrice
                                 )
                                 .send({ from: account });
+
+                            // Also add in transferred options soon too (how can I transfer this)
 
                             // @ts-ignore
                             // e.target.reset();
@@ -184,6 +197,26 @@ function Options() {
                     </div>
                 </form>
             </div>
+            <table className="container mx-auto mt-10 w-2/5 min-w-min rounded-xl shadow-md p-6">
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>Writer</td>
+                        <td>Type</td>
+                        <td>Token Address</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {options.map((option, index) => (
+                        <tr key={index}>
+                            <td>{option.id}</td>
+                            <td>{option.writer}</td>
+                            <td>{option.type}</td>
+                            <td>{option.tokenAddress}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 }
