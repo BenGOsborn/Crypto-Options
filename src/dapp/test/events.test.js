@@ -16,7 +16,10 @@ const init = async () => {
     const results = await contract.getPastEvents("OptionWritten", {
         fromBlock: 0,
     });
-    console.log(results);
+    for (const result of results) {
+        const ascii = web3.utils.toAscii(result.returnValues.optionType);
+        console.log(ascii);
+    }
 };
 
 init();
