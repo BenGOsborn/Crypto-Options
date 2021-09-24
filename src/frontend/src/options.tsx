@@ -65,6 +65,7 @@ function Options() {
                             type="text"
                             name="tokenAddress"
                             id="tokenAddress"
+                            placeholder="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         />
                     </fieldset>
@@ -78,6 +79,41 @@ function Options() {
                         </label>
                         <input type="datetime-local" id="expiry" />
                     </fieldset>
+
+                    <div className="flex space-x-3 justify-between">
+                        <fieldset className="flex flex-col">
+                            <label
+                                className="text-gray-900 font-bold whitespace-nowrap"
+                                htmlFor="tokenAddress"
+                            >
+                                Token Amount
+                            </label>
+                            <input
+                                type="number"
+                                name="tokenAmount"
+                                id="tokenAmount"
+                                placeholder="100"
+                                min={0}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                        </fieldset>
+                        <fieldset className="flex flex-col">
+                            <label
+                                className="text-gray-900 font-bold whitespace-nowrap"
+                                htmlFor="tokenAddress"
+                            >
+                                Token Price
+                            </label>
+                            <input
+                                type="number"
+                                name="tokenPrice"
+                                id="tokenPrice"
+                                placeholder="100"
+                                min={0}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                        </fieldset>
+                    </div>
                 </form>
             </div>
         </div>
