@@ -30,16 +30,17 @@ function Options() {
             <div className="container mx-auto w-2/5 min-w-min rounded-xl shadow-md p-6">
                 <form
                     className="flex flex-col space-y-6"
-                    onSubmit={(e) => {
+                    onSubmit={async (e) => {
                         // Prevent the page from reloading
                         e.preventDefault();
 
                         // Only submit if contract data loaded
                         if (contractData !== null) {
-                            console.log(
+                            // Create the new option
+                            await contractData.instance.methods.writeOption(
                                 optionType,
-                                tokenAddress,
                                 expiry,
+                                tokenAddress,
                                 tokenAmount,
                                 tokenPrice
                             );
