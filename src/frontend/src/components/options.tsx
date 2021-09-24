@@ -216,7 +216,7 @@ function Options() {
                     </div>
                 </form>
             </div>
-            {/* **** I NEED TO ADD SOME FORM OF OPTION TO MANUALLY EXPIRE IT HERE */}
+            {/* **** I NEED TO ADD SOME FORM OF OPTION TO MANUALLY EXPIRE IT HERE + INTEGRATE BOUGHT CONTRACTS */}
             <div className="overflow-x-auto w-4/5 mx-auto mt-16 rounded-xl shadow-md">
                 <table
                     className="mx-auto table-fixed"
