@@ -66,6 +66,7 @@ function Options() {
                             name="tokenAddress"
                             id="tokenAddress"
                             placeholder="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+                            required
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         />
                     </fieldset>
@@ -77,7 +78,7 @@ function Options() {
                         >
                             Expiry
                         </label>
-                        <input type="datetime-local" id="expiry" />
+                        <input type="datetime-local" id="expiry" required />
                     </fieldset>
 
                     <div className="flex space-x-3 justify-between">
@@ -94,6 +95,7 @@ function Options() {
                                 id="tokenAmount"
                                 placeholder="100"
                                 min={0}
+                                required
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                         </fieldset>
@@ -110,9 +112,22 @@ function Options() {
                                 id="tokenPrice"
                                 placeholder="100"
                                 min={0}
+                                required
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                         </fieldset>
+                    </div>
+                    <div className="flex flex-row justify-between">
+                        <input
+                            className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-8"
+                            type="submit"
+                            value="Write"
+                        />
+                        <input
+                            className="transition duration-100 cursor-pointer bg-transparent border-gray-500 border hover:border-gray-700 text-gray-500 hover:text-gray-700 font-bold rounded py-2 px-8"
+                            type="reset"
+                            value="Reset"
+                        />
                     </div>
                 </form>
             </div>
