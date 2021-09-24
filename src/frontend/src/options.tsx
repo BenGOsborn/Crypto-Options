@@ -37,7 +37,7 @@ function Options() {
                         type: web3.utils.toAscii(option.optionType),
                         tokenAddress: option.tokenAddress,
                     };
-                    setOptions([...options, newOption]);
+                    setOptions((prev) => [...prev, newOption]);
                 });
     }, [contractData]);
 
