@@ -36,6 +36,14 @@ function Options() {
 
                         // Only submit if contract data loaded
                         if (contractData !== null) {
+                            console.log(
+                                optionType,
+                                tokenAddress,
+                                expiry,
+                                tokenAmount,
+                                tokenPrice
+                            );
+
                             // @ts-ignore
                             e.target.reset();
                         }
@@ -103,12 +111,11 @@ function Options() {
                         <input
                             type="datetime-local"
                             id="expiry"
-                            onChange={(e) =>
+                            onChange={(e) => {
                                 setExpiry(
-                                    (e.target.valueAsDate?.getTime() as number) /
-                                        1000
-                                )
-                            }
+                                    new Date(e.target.value).getTime() / 1000
+                                );
+                            }}
                             required
                         />
                     </fieldset>
