@@ -1,10 +1,17 @@
 import { useWeb3React } from "@web3-react/core";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { contractDataCtx } from "./components/contexts/contractData";
 
 function Options() {
     const [contractData, setContractData] = useContext(contractDataCtx);
     const { account } = useWeb3React();
+
+    // Store the create option state
+    const [optionType, setOptionType] = useState<string>("call");
+    const [tokenAddress, setTokenAddress] = useState<string>("");
+    const [expiry, setExpiry] = useState<number>(0);
+    const [tokenAmount, setTokenAmount] = useState<number>(0);
+    const [tokenPrice, setTokenPrice] = useState<number>(0);
 
     useEffect(() => {
         if (contractData !== null)
@@ -20,8 +27,20 @@ function Options() {
 
     return (
         <div className="MyOptions">
-            <div className="container mx-auto w-1/3 min-w-min rounded-xl shadow-md p-6">
-                <form className="flex flex-col space-y-6">
+            <div className="container mx-auto w-2/5 min-w-min rounded-xl shadow-md p-6">
+                <form
+                    className="flex flex-col space-y-6"
+                    onSubmit={(e) => {
+                        // Prevent the page from reloading
+                        e.preventDefault();
+
+                        // Only submit if contract data loaded
+                        if (contractData !== null) {
+                            // @ts-ignore
+                            e.target.reset();
+                        }
+                    }}
+                >
                     <fieldset className="flex flex-col space-y-1">
                         <label
                             className="text-gray-900 font-bold"
@@ -35,6 +54,7 @@ function Options() {
                                 name="type"
                                 id="call"
                                 value="call"
+                                onChange={(e) => setOptionType(e.target.value)}
                                 defaultChecked
                             />
                             <label className="ml-3" htmlFor="call">
@@ -47,6 +67,7 @@ function Options() {
                                 name="type"
                                 id="put"
                                 value="put"
+                                onChange={(e) => setOptionType(e.target.value)}
                             />
                             <label className="ml-3" htmlFor="put">
                                 Put
@@ -68,6 +89,7 @@ function Options() {
                             placeholder="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
                             required
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            onChange={(e) => setTokenAddress(e.target.value)}
                         />
                     </fieldset>
 
@@ -78,7 +100,17 @@ function Options() {
                         >
                             Expiry
                         </label>
-                        <input type="datetime-local" id="expiry" required />
+                        <input
+                            type="datetime-local"
+                            id="expiry"
+                            onChange={(e) =>
+                                setExpiry(
+                                    (e.target.valueAsDate?.getTime() as number) /
+                                        1000
+                                )
+                            }
+                            required
+                        />
                     </fieldset>
 
                     <div className="flex space-x-3 justify-between">
@@ -95,6 +127,9 @@ function Options() {
                                 id="tokenAmount"
                                 placeholder="100"
                                 min={0}
+                                onChange={(e) =>
+                                    setTokenAmount(e.target.valueAsNumber)
+                                }
                                 required
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
@@ -112,6 +147,9 @@ function Options() {
                                 id="tokenPrice"
                                 placeholder="100"
                                 min={0}
+                                onChange={(e) =>
+                                    setTokenPrice(e.target.valueAsNumber)
+                                }
                                 required
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
