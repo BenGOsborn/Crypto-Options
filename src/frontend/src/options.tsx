@@ -30,6 +30,8 @@ function Options() {
                     },
                 })
                 .on("data", (event: any) => {
+                    // Try and test with ethereum and see if it returns any different results
+
                     const option = event.returnValues;
                     const newOption = {
                         id: option.optionId,
