@@ -6,7 +6,7 @@ import {
 } from "./components/contexts/contractData";
 import Nav from "./components/nav";
 import Trades from "./components/trades";
-import MyOptions from "./myOptions";
+import Options from "./options";
 
 function App() {
     const { active } = useWeb3React();
@@ -18,7 +18,7 @@ function App() {
                 <Nav />
                 <div className="Switch">
                     <Trades />
-                    <MyOptions />
+                    <Options />
                 </div>
             </contractDataCtx.Provider>
         </div>

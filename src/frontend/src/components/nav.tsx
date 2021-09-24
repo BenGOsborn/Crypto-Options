@@ -51,7 +51,7 @@ function Nav() {
 
     return (
         <div className="Nav">
-            <div className="p-5 w-5/6 mx-auto flex sm:flex-row flex-col justify-between items-center">
+            <div className="p-5 w-5/6 mx-auto mb-8 flex sm:flex-row flex-col justify-between items-center">
                 <h1 className="text-xl uppercase font-medium">Hello world</h1>
                 <div className="flex sm:flex-row flex-col justify-center items-center sm:my-0 my-3">
                     {active ? (
