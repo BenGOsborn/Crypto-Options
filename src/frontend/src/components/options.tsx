@@ -326,70 +326,82 @@ function Options() {
                         </tr>
                     </thead>
                     <tbody>
-                        {options
-                            .filter((option) => option.owner == account)
-                            .map((option, index) => (
-                                <tr
-                                    key={index}
-                                    className={`${
-                                        index < options.length - 1
-                                            ? "border-b-2 border-green-100"
-                                            : ""
-                                    }`}
+                        {options.map((option, index) => (
+                            <tr
+                                key={index}
+                                className={`${
+                                    index < options.length - 1
+                                        ? "border-b-2 border-green-100"
+                                        : ""
+                                }`}
+                            >
+                                <th
+                                    className="font-bold text-gray-900 px-3 py-4"
+                                    title={option.id.toString()}
                                 >
-                                    <th
-                                        className="font-bold text-gray-900 px-3 py-4"
-                                        title={option.id.toString()}
-                                    >
-                                        {option.id}
-                                    </th>
-                                    <td
-                                        className="px-3 py-2"
-                                        title={new Date(
-                                            option.expiry
-                                        ).toString()}
-                                    >
-                                        {new Date(
-                                            option.expiry
-                                        ).toLocaleDateString()}
-                                    </td>
-                                    <td
-                                        className="px-3 py-4"
-                                        title={option.status.toString()}
-                                    >
-                                        {option.status}
-                                    </td>
-                                    <td
-                                        className="px-3 py-4"
-                                        title={option.tokenAddress.toString()}
-                                    >
-                                        {option.tokenAddress.slice(0, 8)}...
-                                    </td>
-                                    <td
-                                        className="px-3 py-4"
-                                        title={option.amount.toString()}
-                                    >
-                                        {option.amount}
-                                    </td>
-                                    <td
-                                        className="px-3 py-4"
-                                        title={option.price.toString()}
-                                    >
-                                        {option.price}
-                                    </td>
-                                    <td
-                                        className="px-3 py-4"
-                                        title={option.type.toString()}
-                                    >
-                                        {option.type}
-                                    </td>
-                                    <td className="px-3 py-4 text-center">
-                                        <button className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4">
-                                            Exercise
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                                    {option.id}
+                                </th>
+                                <td
+                                    className="px-3 py-2"
+                                    title={new Date(option.expiry).toString()}
+                                >
+                                    {new Date(
+                                        option.expiry
+                                    ).toLocaleDateString()}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={option.status.toString()}
+                                >
+                                    {option.status}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={option.tokenAddress.toString()}
+                                >
+                                    {option.tokenAddress.slice(0, 8)}...
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={option.amount.toString()}
+                                >
+                                    {option.amount}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={option.price.toString()}
+                                >
+                                    {option.price}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={option.type.toString()}
+                                >
+                                    {option.type}
+                                </td>
+                                <td className="px-3 py-4 text-center">
+                                    {option.owner == account ? (
+                                        option.status == "none" ? (
+                                            option.expiry >= Date.now() ? (
+                                                <button
+                                                    className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                                    onClick={(e) => {}}
+                                                >
+                                                    Exercise
+                                                </button>
+                                            ) : option.writer == account ? (
+                                                <button
+                                                    className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                                    onClick={(e) => {}}
+                                                >
+                                                    Collect
+                                                </button>
+                                            ) : null
+                                        ) : null
+                                    ) : null}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
