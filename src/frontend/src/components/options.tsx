@@ -1,9 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { getContract } from "./helpers";
-import OptionsMarket from "../abi/OptionsMarket.json";
-import IERC20 from "../abi/IERC20.json";
+import { getOptionsMarketContract, getERC20Contract } from "./helpers";
 
 interface Option {
     id: number;
@@ -34,7 +32,7 @@ function Options() {
     useEffect(() => {
         if (active) {
             // Store the options market contract
-            getContract(web3, OptionsMarket)
+            getOptionsMarketContract(web3)
                 .then((contract) => {
                     // Store the contract in the state
                     setOptionsMarket(contract);
@@ -85,8 +83,9 @@ function Options() {
                         // Only submit if contract data loaded
                         if (optionsMarket !== null) {
                             // First check the ERC20
-                            if (optionType === "call") {
+                            if (optionType === "put") {
                                 // Check the trade currency
+                                const contract = getERC20Contract(web3, ""); // **** ADD IN THE ADDRESS HERE
                             }
 
                             // Create the new option
