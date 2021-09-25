@@ -32,13 +32,13 @@ function Options() {
 
     useEffect(() => {
         if (active) {
-            // Store the options market contract
+            // Store the options market contract and listen for events
             getOptionsMarketContract(web3)
                 .then((contract) => {
                     // Store the contract in the state
                     setOptionsMarket(contract);
 
-                    // Add event listener
+                    // Add event listener for options written by the user
                     contract.events
                         .OptionWritten({
                             fromBlock: 0,
@@ -70,6 +70,9 @@ function Options() {
                             };
                             setOptions((prev) => [...prev, newOption]);
                         });
+
+                    // Add events for options traded that belong to the user
+                    // **** Maybe I can just do this instead of the top part and then it will be easier (nah but what if theyre not traded)
                 })
                 .catch((err: any) => console.log(err));
             // Also add in transferred options soon too (how can I transfer this)
