@@ -11,6 +11,14 @@ contract("OptionsMarket", (accounts) => {
     const TOKEN = process.env.TOKEN;
     const TOKEN_WHALE = process.env.TOKEN_WHALE;
 
+    it("should get the trade currency of the contract", async () => {
+        // Get the contract
+        const optionsMarket = await OptionsMarket.deployed();
+
+        // Get the trade currency and compare it to the stable coin
+        const tradeCurrency = await optionsMarket.getTradeCurrency();
+    });
+
     it("should get the balance of the whales and approve the contract as a spender", async () => {
         // Get the contract and tokens
         const optionsMarket = await OptionsMarket.deployed();

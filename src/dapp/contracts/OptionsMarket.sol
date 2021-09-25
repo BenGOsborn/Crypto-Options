@@ -53,8 +53,6 @@ contract OptionsMarket {
         return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
     }
 
-    // ============= Util functions =============
-
     // Get the trade currency of the token
     function getTradeCurrency() public view returns (address) {
         return tradeCurrency;
