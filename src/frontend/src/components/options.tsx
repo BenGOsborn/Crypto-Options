@@ -344,6 +344,9 @@ function Options() {
                 >
                     <thead>
                         <tr className="font-bold text-gray-900">
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Trade
+                            </th>
                             <th className="px-3 py-2 break-words w-1/12">ID</th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Expiry
@@ -378,6 +381,14 @@ function Options() {
                                         : ""
                                 }`}
                             >
+                                <td className="px-3 py-4 text-center">
+                                    <button
+                                        className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                        onClick={(e) => {}}
+                                    >
+                                        Sell
+                                    </button>
+                                </td>
                                 <th
                                     className="font-bold text-gray-900 px-3 py-4"
                                     title={option.id.toString()}
@@ -427,14 +438,14 @@ function Options() {
                                         option.status == "none" ? (
                                             option.expiry >= Date.now() ? (
                                                 <button
-                                                    className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                                    className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
                                                     onClick={(e) => {}}
                                                 >
                                                     Exercise
                                                 </button>
                                             ) : option.writer == account ? (
                                                 <button
-                                                    className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                                    className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
                                                     onClick={(e) => {}}
                                                 >
                                                     Collect
