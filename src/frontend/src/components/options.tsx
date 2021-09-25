@@ -372,7 +372,9 @@ function Options() {
                                 <td className="px-3 py-4 text-center">
                                     <button
                                         className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
-                                        onClick={(e) => {}}
+                                        onClick={(e) => {
+                                            // Here we will create a popup that will allow a user to place a trade
+                                        }}
                                     >
                                         Sell
                                     </button>
