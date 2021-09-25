@@ -32,7 +32,8 @@ function Options() {
     const [options, setOptions] = useState<Option[]>([]);
 
     useEffect(() => {
-        if (active)
+        if (active) {
+            // Store the options market contract
             getContract(web3, OptionsMarket)
                 .then((contract) => {
                     // Store the contract in the state
@@ -68,7 +69,8 @@ function Options() {
                         });
                 })
                 .catch((err: any) => console.log(err));
-        // Also add in transferred options soon too (how can I transfer this)
+            // Also add in transferred options soon too (how can I transfer this)
+        }
     }, [active]);
 
     return (
@@ -83,6 +85,9 @@ function Options() {
                         // Only submit if contract data loaded
                         if (optionsMarket !== null) {
                             // First check the ERC20
+                            if (optionType === "call") {
+                                // Check the trade currency
+                            }
 
                             // Create the new option
                             await optionsMarket.methods
