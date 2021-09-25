@@ -107,7 +107,9 @@ function Options() {
                                     await tradeCurrency.methods
                                         .approve(
                                             optionsMarketAddress,
-                                            allowance - tokenPrice
+                                            web3.utils
+                                                .toBN(tokenPrice)
+                                                .sub(web3.utils.toBN(allowance))
                                         )
                                         .send({ from: account });
                                 }
@@ -128,7 +130,9 @@ function Options() {
                                     await token.methods
                                         .approve(
                                             optionsMarketAddress,
-                                            allowance - tokenAmount
+                                            web3.utils
+                                                .toBN(tokenAmount)
+                                                .sub(web3.utils.toBN(allowance))
                                         )
                                         .send({ from: account });
                                 }
