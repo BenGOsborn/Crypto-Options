@@ -1,7 +1,9 @@
 import { useWeb3React } from "@web3-react/core";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { contractDataCtx } from "./contexts/contractData";
+import { getContract } from "./helpers";
+import OptionsMarket from "../abi/OptionsMarket.json";
+import IERC20 from "../abi/IERC20.json";
 
 interface Option {
     id: number;
@@ -15,8 +17,8 @@ interface Option {
 }
 
 function Options() {
-    const [contractData, setContractData] = useContext(contractDataCtx);
-    const { account } = useWeb3React();
+    const [optionsMarket, setOptionsMarket] = useState<any | null>(null);
+    const { active, account } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
 
     // Store the create option state
@@ -30,37 +32,44 @@ function Options() {
     const [options, setOptions] = useState<Option[]>([]);
 
     useEffect(() => {
-        if (contractData !== null)
-            contractData.instance.events
-                .OptionWritten({
-                    fromBlock: 0,
-                    filter: {
-                        writer: account,
-                    },
+        if (active)
+            getContract(undefined, OptionsMarket)
+                .then((contract) => {
+                    // Store the contract in the state
+                    setOptionsMarket(contract);
+
+                    // Add event listener
+                    contract.events
+                        .OptionWritten({
+                            fromBlock: 0,
+                            filter: {
+                                writer: account,
+                            },
+                        })
+                        .on("data", async (event: any) => {
+                            // Try and test with ethereum and see if it returns any different results
+
+                            const optionId = event.returnValues.optionId;
+                            const option = await contract.methods
+                                .getOption(optionId)
+                                .call();
+
+                            const newOption: Option = {
+                                id: optionId,
+                                expiry: option[0] * 1000,
+                                status: option[1],
+                                writer: option[2],
+                                tokenAddress: option[3],
+                                amount: option[4],
+                                price: option[5],
+                                type: option[6],
+                            };
+                            setOptions((prev) => [...prev, newOption]);
+                        });
                 })
-                .on("data", async (event: any) => {
-                    // Try and test with ethereum and see if it returns any different results
-
-                    const optionId = event.returnValues.optionId;
-                    const option = await contractData.instance.methods
-                        .getOption(optionId)
-                        .call();
-
-                    const newOption: Option = {
-                        id: optionId,
-                        expiry: option[0] * 1000,
-                        status: option[1],
-                        writer: option[2],
-                        tokenAddress: option[3],
-                        amount: option[4],
-                        price: option[5],
-                        type: option[6],
-                    };
-                    setOptions((prev) => [...prev, newOption]);
-                });
-
+                .catch((err: any) => console.log(err));
         // Also add in transferred options soon too (how can I transfer this)
-    }, [contractData]);
+    }, [active]);
 
     return (
         <div className="MyOptions">
@@ -72,11 +81,11 @@ function Options() {
                         e.preventDefault();
 
                         // Only submit if contract data loaded
-                        if (contractData !== null) {
+                        if (optionsMarket !== null) {
                             // First check the ERC20
 
                             // Create the new option
-                            await contractData.instance.methods
+                            await optionsMarket.methods
                                 .writeOption(
                                     optionType,
                                     expiry,
@@ -254,7 +263,11 @@ function Options() {
                         {options.map((option, index) => (
                             <tr
                                 key={index}
-                                className="border-b-2 border-green-100"
+                                className={`${
+                                    index < options.length - 1
+                                        ? "border-b-2 border-green-100"
+                                        : ""
+                                }`}
                             >
                                 <th
                                     className="font-bold text-gray-900 px-3 py-4"

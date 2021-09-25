@@ -1,34 +1,17 @@
-import { useContext, useEffect } from "react";
-import { ContractData, contractDataCtx } from "./contexts/contractData";
+import { useEffect } from "react";
 import { injected } from "./wallet/connectors";
-import OptionsMarket from "../abi/OptionsMarket.json";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 
 function Nav() {
-    const [contractData, setContractData] = useContext(contractDataCtx);
     const { active, account, activate, deactivate } = useWeb3React();
-    let web3: Web3 = useWeb3React().library;
+    const web3: Web3 = useWeb3React().library;
 
     async function connect() {
         try {
             // Connect to wallet and store state
             await activate(injected);
             localStorage.setItem("connected", "true");
-
-            // Get the contract and store it in the state
-            const networkId = await web3.eth.net.getId();
-            const deployedNetwork = (OptionsMarket.networks as any)[networkId];
-            const instance = new web3.eth.Contract(
-                OptionsMarket.abi as any,
-                deployedNetwork && deployedNetwork.address
-            );
-            const state: ContractData = {
-                networkId,
-                deployedNetwork,
-                instance,
-            };
-            setContractData(state);
         } catch (ex) {
             console.error(ex);
         }
