@@ -488,7 +488,7 @@ function Options() {
                                                 </button>
                                             ) : option.writer === account ? (
                                                 <button
-                                                    className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
+                                                    className="transition duration-100 cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded py-2 px-4"
                                                     onClick={async (e) => {
                                                         // Collect the tokens / funds stored in the option
                                                         await optionsMarket.methods
