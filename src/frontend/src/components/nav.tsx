@@ -40,7 +40,6 @@ function Nav() {
                 <h1 className="text-xl uppercase font-medium text-gray-900">
                     Crypto Options
                 </h1>
-                {/* **** Maybe use a spacing tag for this because the vertical spacing is bad - fix flex with this */}
                 <div className="flex sm:flex-row flex-col justify-center items-center sm:space-x-6 space-y-2">
                     <button
                         className={`transition duration-100 cursor-pointer text-gray-700 hover:text-gray-900 font-bold py-2 px-4 ${
