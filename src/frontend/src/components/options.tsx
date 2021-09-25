@@ -47,8 +47,7 @@ function Options() {
                             },
                         })
                         .on("data", async (event: any) => {
-                            // Try and test with ethereum and see if it returns any different results
-
+                            // Get the option and add it to the list
                             const optionId = event.returnValues.optionId;
                             const option = await contract.methods
                                 .getOption(optionId)
@@ -72,7 +71,48 @@ function Options() {
                         });
 
                     // Add events for options traded that belong to the user
-                    // **** Maybe I can just do this instead of the top part and then it will be easier (nah but what if theyre not traded)
+                    contract.events
+                        .TradeExecuted({
+                            fromBlock: 0,
+                            filter: {
+                                buyer: account,
+                            },
+                        })
+                        .on("data", async (event: any) => {
+                            // Get the option and add it to the list
+                            const optionId = event.returnValues.optionId;
+                            const option = await contract.methods
+                                .getOption(optionId)
+                                .call();
+                            const owner = await contract.methods
+                                .getOptionOwner(optionId)
+                                .call();
+
+                            // Only add the option if it is owned and the id is not within the list
+                            if (owner == account) {
+                                let contains = false;
+                                for (const opt of options) {
+                                    if (opt.id == optionId) {
+                                        contains = true;
+                                        break;
+                                    }
+                                }
+                                if (!contains) {
+                                    const newOption: Option = {
+                                        id: optionId,
+                                        expiry: option[0] * 1000,
+                                        status: option[1],
+                                        writer: option[2],
+                                        owner,
+                                        tokenAddress: option[3],
+                                        amount: option[4],
+                                        price: option[5],
+                                        type: option[6],
+                                    };
+                                    setOptions((prev) => [...prev, newOption]);
+                                }
+                            }
+                        });
                 })
                 .catch((err: any) => console.log(err));
             // Also add in transferred options soon too (how can I transfer this)
