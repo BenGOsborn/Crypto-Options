@@ -73,6 +73,8 @@ function Options() {
 
                         // Only submit if contract data loaded
                         if (contractData !== null) {
+                            // First check the ERC20
+
                             // Create the new option
                             await contractData.instance.methods
                                 .writeOption(
@@ -217,7 +219,7 @@ function Options() {
                 </form>
             </div>
             {/* **** I NEED TO ADD SOME FORM OF OPTION TO MANUALLY EXPIRE IT HERE + INTEGRATE BOUGHT CONTRACTS */}
-            <div className="overflow-x-auto w-4/5 mx-auto mt-16 rounded-xl shadow-md">
+            <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <table
                     className="mx-auto table-fixed"
                     style={{ minWidth: 500 }}
@@ -231,7 +233,7 @@ function Options() {
                             <th className="px-3 py-2 break-words w-1/12">
                                 Status
                             </th>
-                            <th className="px-3 py-2 break-words w-3/12">
+                            <th className="px-3 py-2 break-words w-1/12">
                                 Token Address
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
@@ -243,6 +245,9 @@ function Options() {
                             <th className="px-3 py-2 break-words w-1/12">
                                 Type
                             </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Option
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -252,13 +257,13 @@ function Options() {
                                 className="border-b-2 border-green-100"
                             >
                                 <th
-                                    className="truncate ... font-bold text-gray-900 px-3 py-4"
+                                    className="font-bold text-gray-900 px-3 py-4"
                                     title={option.id.toString()}
                                 >
                                     {option.id}
                                 </th>
                                 <td
-                                    className="truncate ... px-3 py-2"
+                                    className="px-3 py-2"
                                     title={new Date(option.expiry).toString()}
                                 >
                                     {new Date(
@@ -266,34 +271,39 @@ function Options() {
                                     ).toLocaleDateString()}
                                 </td>
                                 <td
-                                    className="truncate ... px-3 py-4"
+                                    className="px-3 py-4"
                                     title={option.status.toString()}
                                 >
                                     {option.status}
                                 </td>
                                 <td
-                                    className="truncate ... px-3 py-4"
+                                    className="px-3 py-4"
                                     title={option.tokenAddress.toString()}
                                 >
-                                    {option.tokenAddress}
+                                    {option.tokenAddress.slice(0, 16)}...
                                 </td>
                                 <td
-                                    className="truncate ... px-3 py-4"
+                                    className="px-3 py-4"
                                     title={option.amount.toString()}
                                 >
                                     {option.amount}
                                 </td>
                                 <td
-                                    className="truncate ... px-3 py-4"
+                                    className="px-3 py-4"
                                     title={option.price.toString()}
                                 >
                                     {option.price}
                                 </td>
                                 <td
-                                    className="truncate ... px-3 py-4"
+                                    className="px-3 py-4"
                                     title={option.type.toString()}
                                 >
                                     {option.type}
+                                </td>
+                                <td className="px-3 py-4 text-center">
+                                    <button className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4">
+                                        Exercise
+                                    </button>
                                 </td>
                             </tr>
                         ))}
