@@ -82,26 +82,56 @@ function Options() {
 
                         // Only submit if contract data loaded
                         if (optionsMarket !== null) {
-                            // First check the ERC20
+                            // Get contract address
+                            const optionsMarketAddress = optionsMarket._address;
+
+                            // Check the ERC20 allowances
                             if (optionType === "put") {
                                 // Check the trade currency and allocate funds
-                                const tradeCurrency =
+                                const tradeCurrencyAddress =
                                     await optionsMarket.methods
                                         .getTradeCurrency()
                                         .call();
-                                const contract = await getERC20Contract(
+                                const tradeCurrency = await getERC20Contract(
                                     web3,
-                                    tradeCurrency
+                                    tradeCurrencyAddress
                                 );
 
-                                // **** Check the balance of this bad boy
+                                // Check the allowance of the contract
+                                const allowance = await tradeCurrency.methods
+                                    .allowance(account, optionsMarketAddress)
+                                    .call();
+
+                                // If the allowance of the contract is not enough allocate it more funds
+                                if (allowance < tokenPrice) {
+                                    await tradeCurrency.methods
+                                        .approve(
+                                            optionsMarketAddress,
+                                            allowance - tokenPrice
+                                        )
+                                        .send({ from: account });
+                                }
                             } else {
-                                const contract = await getERC20Contract(
+                                // Get the contract of the token
+                                const token = await getERC20Contract(
                                     web3,
                                     tokenAddress
                                 );
 
-                                // **** Check the balance of this bad boy
+                                // Check the allowance of the contract
+                                const allowance = await token.methods
+                                    .allowance(account, optionsMarketAddress)
+                                    .call();
+
+                                // Appove funds to the contract
+                                if (allowance < tokenAmount) {
+                                    await token.methods
+                                        .approve(
+                                            optionsMarketAddress,
+                                            allowance - tokenAmount
+                                        )
+                                        .send({ from: account });
+                                }
                             }
 
                             // Create the new option
