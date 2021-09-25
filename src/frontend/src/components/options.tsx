@@ -8,6 +8,7 @@ interface Option {
     expiry: number;
     status: string;
     writer: string;
+    owner: string;
     tokenAddress: string;
     amount: number;
     price: number;
@@ -52,12 +53,16 @@ function Options() {
                             const option = await contract.methods
                                 .getOption(optionId)
                                 .call();
+                            const owner = await contract.methods
+                                .getOptionOwner(optionId)
+                                .call();
 
                             const newOption: Option = {
                                 id: optionId,
                                 expiry: option[0] * 1000,
                                 status: option[1],
                                 writer: option[2],
+                                owner,
                                 tokenAddress: option[3],
                                 amount: option[4],
                                 price: option[5],
@@ -321,66 +326,70 @@ function Options() {
                         </tr>
                     </thead>
                     <tbody>
-                        {options.map((option, index) => (
-                            <tr
-                                key={index}
-                                className={`${
-                                    index < options.length - 1
-                                        ? "border-b-2 border-green-100"
-                                        : ""
-                                }`}
-                            >
-                                <th
-                                    className="font-bold text-gray-900 px-3 py-4"
-                                    title={option.id.toString()}
+                        {options
+                            .filter((option) => option.owner == account)
+                            .map((option, index) => (
+                                <tr
+                                    key={index}
+                                    className={`${
+                                        index < options.length - 1
+                                            ? "border-b-2 border-green-100"
+                                            : ""
+                                    }`}
                                 >
-                                    {option.id}
-                                </th>
-                                <td
-                                    className="px-3 py-2"
-                                    title={new Date(option.expiry).toString()}
-                                >
-                                    {new Date(
-                                        option.expiry
-                                    ).toLocaleDateString()}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.status.toString()}
-                                >
-                                    {option.status}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.tokenAddress.toString()}
-                                >
-                                    {option.tokenAddress.slice(0, 16)}...
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.amount.toString()}
-                                >
-                                    {option.amount}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.price.toString()}
-                                >
-                                    {option.price}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.type.toString()}
-                                >
-                                    {option.type}
-                                </td>
-                                <td className="px-3 py-4 text-center">
-                                    <button className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4">
-                                        Exercise
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    <th
+                                        className="font-bold text-gray-900 px-3 py-4"
+                                        title={option.id.toString()}
+                                    >
+                                        {option.id}
+                                    </th>
+                                    <td
+                                        className="px-3 py-2"
+                                        title={new Date(
+                                            option.expiry
+                                        ).toString()}
+                                    >
+                                        {new Date(
+                                            option.expiry
+                                        ).toLocaleDateString()}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.status.toString()}
+                                    >
+                                        {option.status}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.tokenAddress.toString()}
+                                    >
+                                        {option.tokenAddress.slice(0, 8)}...
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.amount.toString()}
+                                    >
+                                        {option.amount}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.price.toString()}
+                                    >
+                                        {option.price}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.type.toString()}
+                                    >
+                                        {option.type}
+                                    </td>
+                                    <td className="px-3 py-4 text-center">
+                                        <button className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4">
+                                            Exercise
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>
