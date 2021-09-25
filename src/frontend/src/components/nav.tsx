@@ -43,9 +43,9 @@ function Nav() {
                 {/* **** Maybe use a spacing tag for this because the vertical spacing is bad - fix flex with this */}
                 <div className="flex sm:flex-row flex-col justify-center items-center sm:my-0 my-3">
                     <button
-                        className={`transition duration-100 cursor-pointer text-gray-700 hover:text-gray-900 font-bold rounded py-2 px-4 mx-2 ${
+                        className={`transition duration-100 cursor-pointer text-gray-700 hover:text-gray-900 font-bold py-2 px-4 mx-2 ${
                             selector == "trades"
-                                ? "text-green-500 hover:text-green-500"
+                                ? "border-b-2 border-green-500"
                                 : ""
                         }`}
                         onClick={(e) => setSelector("trades")}
@@ -53,9 +53,9 @@ function Nav() {
                         Trades
                     </button>
                     <button
-                        className={`transition duration-100 cursor-pointer text-gray-700 hover:text-gray-900 font-bold rounded py-2 px-4 mx-2 ${
+                        className={`transition duration-100 cursor-pointer text-gray-700 hover:text-gray-900 font-bold py-2 px-4 mx-2 ${
                             selector == "options"
-                                ? "text-green-500 hover:text-green-500"
+                                ? "border-b-2 border-green-500"
                                 : ""
                         }`}
                         onClick={(e) => setSelector("options")}
