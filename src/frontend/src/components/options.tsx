@@ -139,18 +139,18 @@ function Options() {
                             }
 
                             // Create the new option
-                            // await optionsMarket.methods
-                            //     .writeOption(
-                            //         optionType,
-                            //         expiry,
-                            //         tokenAddress,
-                            //         tokenAmount,
-                            //         tokenPrice
-                            //     )
-                            //     .send({ from: account });
+                            await optionsMarket.methods
+                                .writeOption(
+                                    optionType,
+                                    expiry,
+                                    tokenAddress,
+                                    tokenAmount,
+                                    tokenPrice
+                                )
+                                .send({ from: account });
 
                             // @ts-ignore
-                            // e.target.reset();
+                            e.target.reset();
                         }
                     }}
                 >
@@ -204,6 +204,13 @@ function Options() {
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             onChange={(e) => setTokenAddress(e.target.value)}
                         />
+                        <label
+                            className="text-gray-500 text-sm italic mt-2"
+                            htmlFor="tokenAddress"
+                        >
+                            It is recommended you pre-approve the tokens you
+                            wish to use to save gas fees
+                        </label>
                     </fieldset>
 
                     <fieldset className="flex flex-col">
@@ -229,7 +236,7 @@ function Options() {
                         <fieldset className="flex flex-col">
                             <label
                                 className="text-gray-900 font-bold whitespace-nowrap"
-                                htmlFor="tokenAddress"
+                                htmlFor="tokenAmount"
                             >
                                 Token Amount
                             </label>
@@ -249,7 +256,7 @@ function Options() {
                         <fieldset className="flex flex-col">
                             <label
                                 className="text-gray-900 font-bold whitespace-nowrap"
-                                htmlFor="tokenAddress"
+                                htmlFor="tokenPrice"
                             >
                                 Token Price
                             </label>
