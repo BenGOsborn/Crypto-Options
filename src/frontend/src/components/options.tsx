@@ -84,20 +84,36 @@ function Options() {
                         if (optionsMarket !== null) {
                             // First check the ERC20
                             if (optionType === "put") {
-                                // Check the trade currency
-                                const contract = getERC20Contract(web3, ""); // **** ADD IN THE ADDRESS HERE
+                                // Check the trade currency and allocate funds
+                                const tradeCurrency =
+                                    await optionsMarket.methods
+                                        .getTradeCurrency()
+                                        .call();
+                                const contract = await getERC20Contract(
+                                    web3,
+                                    tradeCurrency
+                                );
+
+                                // **** Check the balance of this bad boy
+                            } else {
+                                const contract = await getERC20Contract(
+                                    web3,
+                                    tokenAddress
+                                );
+
+                                // **** Check the balance of this bad boy
                             }
 
                             // Create the new option
-                            await optionsMarket.methods
-                                .writeOption(
-                                    optionType,
-                                    expiry,
-                                    tokenAddress,
-                                    tokenAmount,
-                                    tokenPrice
-                                )
-                                .send({ from: account });
+                            // await optionsMarket.methods
+                            //     .writeOption(
+                            //         optionType,
+                            //         expiry,
+                            //         tokenAddress,
+                            //         tokenAmount,
+                            //         tokenPrice
+                            //     )
+                            //     .send({ from: account });
 
                             // @ts-ignore
                             // e.target.reset();
