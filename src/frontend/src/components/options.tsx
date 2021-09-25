@@ -33,7 +33,7 @@ function Options() {
 
     useEffect(() => {
         if (active)
-            getContract(undefined, OptionsMarket)
+            getContract(web3, OptionsMarket)
                 .then((contract) => {
                     // Store the contract in the state
                     setOptionsMarket(contract);
