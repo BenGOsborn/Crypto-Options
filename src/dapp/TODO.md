@@ -1,8 +1,4 @@
 -   Implement the market with some kind of stable coin (what would be the problem with trading using ETH if ETH's price fluctuates ?)
--   Test on Rinkeby
 -   Maybe seperate contracts into a trade contract and an option contract
--   Frontend
 -   Deploy to multiple networks with the same ABI
--   Change events
--   Throws an exception with the different amounts of tokens ???? - THIS IS BECAUSE I NEED TO CALL APPROVE ON THE TOKENS BEFORE I CAN USE IT - GET THE AMOUNT ALLOCATED FIRST BEFORE ASKING ???
 -   MIgrate contract to external, calldata, storage for better gas costs

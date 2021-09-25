@@ -434,16 +434,116 @@ function Options() {
                                     {option.type}
                                 </td>
                                 <td className="px-3 py-4 text-center">
-                                    {option.owner == account ? (
-                                        option.status == "none" ? (
+                                    {option.owner === account ? (
+                                        option.status === "none" ? (
                                             option.expiry >= Date.now() ? (
                                                 <button
                                                     className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
-                                                    onClick={(e) => {}}
+                                                    onClick={async (e) => {
+                                                        // Get contract address
+                                                        const optionsMarketAddress =
+                                                            optionsMarket._address;
+
+                                                        // Check the ERC20 allowances
+                                                        if (
+                                                            optionType === "put"
+                                                        ) {
+                                                            // Check the trade currency and allocate funds
+                                                            const tradeCurrencyAddress =
+                                                                await optionsMarket.methods
+                                                                    .getTradeCurrency()
+                                                                    .call();
+                                                            const tradeCurrency =
+                                                                await getERC20Contract(
+                                                                    web3,
+                                                                    tradeCurrencyAddress
+                                                                );
+
+                                                            // Check the allowance of the contract
+                                                            const allowance =
+                                                                await tradeCurrency.methods
+                                                                    .allowance(
+                                                                        account,
+                                                                        optionsMarketAddress
+                                                                    )
+                                                                    .call();
+
+                                                            // If the allowance of the contract is not enough allocate it more funds
+                                                            if (
+                                                                allowance <
+                                                                tokenPrice
+                                                            ) {
+                                                                await tradeCurrency.methods
+                                                                    .approve(
+                                                                        optionsMarketAddress,
+                                                                        web3.utils
+                                                                            .toBN(
+                                                                                tokenPrice
+                                                                            )
+                                                                            .sub(
+                                                                                web3.utils.toBN(
+                                                                                    allowance
+                                                                                )
+                                                                            )
+                                                                    )
+                                                                    .send({
+                                                                        from: account,
+                                                                    });
+                                                            }
+                                                        } else {
+                                                            // Get the contract of the token
+                                                            const token =
+                                                                await getERC20Contract(
+                                                                    web3,
+                                                                    tokenAddress
+                                                                );
+
+                                                            // Check the allowance of the contract
+                                                            const allowance =
+                                                                await token.methods
+                                                                    .allowance(
+                                                                        account,
+                                                                        optionsMarketAddress
+                                                                    )
+                                                                    .call();
+
+                                                            // Appove funds to the contract
+                                                            if (
+                                                                allowance <
+                                                                tokenAmount
+                                                            ) {
+                                                                await token.methods
+                                                                    .approve(
+                                                                        optionsMarketAddress,
+                                                                        web3.utils
+                                                                            .toBN(
+                                                                                tokenAmount
+                                                                            )
+                                                                            .sub(
+                                                                                web3.utils.toBN(
+                                                                                    allowance
+                                                                                )
+                                                                            )
+                                                                    )
+                                                                    .send({
+                                                                        from: account,
+                                                                    });
+                                                            }
+                                                        }
+
+                                                        // Attempt to exercise the option
+                                                        await optionsMarket.methods
+                                                            .exerciseOption(
+                                                                option.id
+                                                            )
+                                                            .send({
+                                                                from: account,
+                                                            });
+                                                    }}
                                                 >
                                                     Exercise
                                                 </button>
-                                            ) : option.writer == account ? (
+                                            ) : option.writer === account ? (
                                                 <button
                                                     className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
                                                     onClick={(e) => {}}
