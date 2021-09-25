@@ -18,3 +18,28 @@ export async function getERC20Contract(web3: Web3, address: string) {
     const contract = new web3.eth.Contract(IERC20.abi as any, address);
     return contract;
 }
+
+export async function safeTransfer(
+    web3: Web3,
+    contractAddress: string,
+    account: string,
+    price: number,
+    tokenContract: any
+) {
+    // Check the allowance of the contract
+    const allowance = await tokenContract.methods
+        .allowance(account, contractAddress)
+        .call();
+
+    // If the allowance of the contract is not enough allocate it more funds
+    if (allowance < price) {
+        await tokenContract.methods
+            .approve(
+                contractAddress,
+                web3.utils.toBN(price).sub(web3.utils.toBN(allowance))
+            )
+            .send({
+                from: account,
+            });
+    }
+}

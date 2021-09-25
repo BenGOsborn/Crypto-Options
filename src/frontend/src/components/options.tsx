@@ -1,7 +1,11 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { getOptionsMarketContract, getERC20Contract } from "./helpers";
+import {
+    getOptionsMarketContract,
+    getERC20Contract,
+    safeTransfer,
+} from "./helpers";
 
 interface Option {
     id: number;
@@ -145,22 +149,14 @@ function Options() {
                                     tradeCurrencyAddress
                                 );
 
-                                // Check the allowance of the contract
-                                const allowance = await tradeCurrency.methods
-                                    .allowance(account, optionsMarketAddress)
-                                    .call();
-
-                                // If the allowance of the contract is not enough allocate it more funds
-                                if (allowance < tokenPrice) {
-                                    await tradeCurrency.methods
-                                        .approve(
-                                            optionsMarketAddress,
-                                            web3.utils
-                                                .toBN(tokenPrice)
-                                                .sub(web3.utils.toBN(allowance))
-                                        )
-                                        .send({ from: account });
-                                }
+                                // Check that funds are allocated to contract and if not allocate them
+                                await safeTransfer(
+                                    web3,
+                                    optionsMarketAddress,
+                                    account as string,
+                                    tokenPrice,
+                                    tradeCurrency
+                                );
                             } else {
                                 // Get the contract of the token
                                 const token = await getERC20Contract(
@@ -168,22 +164,14 @@ function Options() {
                                     tokenAddress
                                 );
 
-                                // Check the allowance of the contract
-                                const allowance = await token.methods
-                                    .allowance(account, optionsMarketAddress)
-                                    .call();
-
-                                // Appove funds to the contract
-                                if (allowance < tokenAmount) {
-                                    await token.methods
-                                        .approve(
-                                            optionsMarketAddress,
-                                            web3.utils
-                                                .toBN(tokenAmount)
-                                                .sub(web3.utils.toBN(allowance))
-                                        )
-                                        .send({ from: account });
-                                }
+                                // Check that tokens are allocated to contract and if not allocate them
+                                await safeTransfer(
+                                    web3,
+                                    optionsMarketAddress,
+                                    account as string,
+                                    tokenAmount,
+                                    token
+                                );
                             }
 
                             // Create the new option
@@ -446,7 +434,8 @@ function Options() {
 
                                                         // Check the ERC20 allowances
                                                         if (
-                                                            optionType === "put"
+                                                            optionType ===
+                                                            "call"
                                                         ) {
                                                             // Check the trade currency and allocate funds
                                                             const tradeCurrencyAddress =
@@ -459,37 +448,14 @@ function Options() {
                                                                     tradeCurrencyAddress
                                                                 );
 
-                                                            // Check the allowance of the contract
-                                                            const allowance =
-                                                                await tradeCurrency.methods
-                                                                    .allowance(
-                                                                        account,
-                                                                        optionsMarketAddress
-                                                                    )
-                                                                    .call();
-
-                                                            // If the allowance of the contract is not enough allocate it more funds
-                                                            if (
-                                                                allowance <
-                                                                tokenPrice
-                                                            ) {
-                                                                await tradeCurrency.methods
-                                                                    .approve(
-                                                                        optionsMarketAddress,
-                                                                        web3.utils
-                                                                            .toBN(
-                                                                                tokenPrice
-                                                                            )
-                                                                            .sub(
-                                                                                web3.utils.toBN(
-                                                                                    allowance
-                                                                                )
-                                                                            )
-                                                                    )
-                                                                    .send({
-                                                                        from: account,
-                                                                    });
-                                                            }
+                                                            // Check that funds are allocated to contract and if not allocate them
+                                                            await safeTransfer(
+                                                                web3,
+                                                                optionsMarketAddress,
+                                                                account as string,
+                                                                option.price,
+                                                                tradeCurrency
+                                                            );
                                                         } else {
                                                             // Get the contract of the token
                                                             const token =
@@ -498,37 +464,14 @@ function Options() {
                                                                     tokenAddress
                                                                 );
 
-                                                            // Check the allowance of the contract
-                                                            const allowance =
-                                                                await token.methods
-                                                                    .allowance(
-                                                                        account,
-                                                                        optionsMarketAddress
-                                                                    )
-                                                                    .call();
-
-                                                            // Appove funds to the contract
-                                                            if (
-                                                                allowance <
-                                                                tokenAmount
-                                                            ) {
-                                                                await token.methods
-                                                                    .approve(
-                                                                        optionsMarketAddress,
-                                                                        web3.utils
-                                                                            .toBN(
-                                                                                tokenAmount
-                                                                            )
-                                                                            .sub(
-                                                                                web3.utils.toBN(
-                                                                                    allowance
-                                                                                )
-                                                                            )
-                                                                    )
-                                                                    .send({
-                                                                        from: account,
-                                                                    });
-                                                            }
+                                                            // Check that funds are allocated to contract and if not allocate them
+                                                            await safeTransfer(
+                                                                web3,
+                                                                optionsMarketAddress,
+                                                                account as string,
+                                                                option.amount,
+                                                                token
+                                                            );
                                                         }
 
                                                         // Attempt to exercise the option
