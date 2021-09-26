@@ -177,7 +177,7 @@ contract OptionsMarket {
         optionOwners[_optionId] = address(this);
 
         // Emit an event and return the trade id
-        emit TradeOpened(tradeId - 1, _optionId, msg.sender);
+        emit TradeOpened(tradeId - 1, msg.sender);
         return tradeId - 1;
     }
 
@@ -202,11 +202,11 @@ contract OptionsMarket {
         trades[_tradeId].status = "closed";
 
         // Emit an event
-        emit TradeExecuted(_tradeId, trade.optionId, msg.sender);
+        emit TradeExecuted(_tradeId, msg.sender);
     }
 
     // View a trade
-    function getTrade(uint256 _tradeId) public view returns(address, uint256, uint256, string memory) {
+    function getTrade(uint256 _tradeId) public view returns (address, uint256, uint256, string memory) {
         Trade memory trade = trades[_tradeId];
         return (trade.poster, trade.optionId, trade.price, trade.status);
     }
@@ -223,7 +223,10 @@ contract OptionsMarket {
         // Transfer the option back to the poster
         optionOwners[trade.optionId] = msg.sender;
 
-        // Cancel the trade
+        // Set status to cancelled
         trades[_tradeId].status = "cancelled";
+
+        // Emit an event
+        emit TradeCancelled(_tradeId);
     }
 }
