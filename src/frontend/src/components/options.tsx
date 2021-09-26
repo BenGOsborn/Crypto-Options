@@ -21,6 +21,7 @@ interface Option {
 
 function Options() {
     const [optionsMarket, setOptionsMarket] = useState<any | null>(null);
+    const [modal, setModel] = useState<boolean>(false);
     const { active, account } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
 
@@ -124,7 +125,52 @@ function Options() {
     }, [active]);
 
     return (
-        <div className="MyOptions">
+        <div className="Options">
+            <div className="bg-black bg-opacity-50 fixed inset-0 flex items-center justify-center">
+                <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
+                    <h2 className="font-bold text-xl uppercase text-gray-900">
+                        Sell Option
+                    </h2>
+                    <p className="text-gray-500">
+                        When someone buys your option, they will have the right
+                        to exercise that option for the strike price you set for
+                        the option. Note that we will also take a three percent
+                        transaction fee.
+                    </p>
+                    <form>
+                        <fieldset className="flex flex-col my-5">
+                            <label
+                                className="text-gray-900 font-bold whitespace-nowrap"
+                                htmlFor="tokenPrice"
+                            >
+                                Sell Price
+                            </label>
+                            <input
+                                type="number"
+                                name="tokenPrice"
+                                id="tokenPrice"
+                                placeholder="100"
+                                min={0}
+                                onChange={(e) =>
+                                    setTokenPrice(e.target.valueAsNumber)
+                                }
+                                required
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                        </fieldset>
+                        <div className="flex flex-row justify-between items-stretch sm:flex-row flex-col sm:space-y-0 space-y-4">
+                            <input
+                                className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-8"
+                                type="submit"
+                                value="Sell"
+                            />
+                            <button className="transition duration-100 cursor-pointer bg-transparent border-gray-500 border hover:border-gray-700 text-gray-500 hover:text-gray-700 font-bold rounded py-2 px-8">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div className="mx-auto w-2/5 min-w-min rounded-xl shadow-md p-6">
                 <form
                     className="flex flex-col space-y-6"
