@@ -443,12 +443,9 @@ contract("OptionsMarket", (accounts) => {
         const optionId = optionTransaction.logs[0].args[0];
 
         // List the option to be traded
-        const tradeTransaction = await optionsMarket.openTrade(
-            optionId.toString(),
-            {
-                from: STABLECOIN_WHALE,
-            }
-        );
+        const tradeTransaction = await optionsMarket.openTrade(optionId, 20, {
+            from: STABLECOIN_WHALE,
+        });
         const tradeId = tradeTransaction.logs[0].args[0];
 
         // Try and list the option again
