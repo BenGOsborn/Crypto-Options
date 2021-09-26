@@ -449,14 +449,14 @@ function Options() {
                                         Sell
                                     </button>
                                 </td>
-                                <th
-                                    className="font-bold text-gray-900 px-3 py-4"
+                                <td
+                                    className="px-3 py-4"
                                     title={option.id.toString()}
                                 >
                                     {option.id}
-                                </th>
+                                </td>
                                 <td
-                                    className="px-3 py-2"
+                                    className="px-3 py-4"
                                     title={new Date(option.expiry).toString()}
                                 >
                                     {new Date(

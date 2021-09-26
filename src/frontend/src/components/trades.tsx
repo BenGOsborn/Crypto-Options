@@ -72,6 +72,9 @@ function Trades() {
                     <thead>
                         <tr className="font-bold text-gray-900">
                             <th className="px-3 py-2 break-words w-1/12">
+                                View
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
                                 Trade ID
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
@@ -92,20 +95,28 @@ function Trades() {
                                         : ""
                                 }`}
                             >
-                                <th
-                                    className="font-bold text-gray-900 px-3 py-4"
+                                <td className="px-3 py-4 text-center">
+                                    <button
+                                        className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                        onClick={(e) => {}}
+                                    >
+                                        View
+                                    </button>
+                                </td>
+                                <td
+                                    className="px-3 py-4"
                                     title={trade.id.toString()}
                                 >
                                     {trade.id}
-                                </th>
+                                </td>
                                 <td
-                                    className="px-3 py-2"
+                                    className="px-3 py-4"
                                     title={trade.optionId.toString()}
                                 >
                                     {trade.optionId}
                                 </td>
                                 <td
-                                    className="px-3 py-2"
+                                    className="px-3 py-4"
                                     title={trade.price.toString()}
                                 >
                                     {trade.price}
