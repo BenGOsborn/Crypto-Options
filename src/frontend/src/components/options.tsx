@@ -142,9 +142,14 @@ function Options() {
                             a three percent transaction fee.
                         </p>
                         <form
-                            onSubmit={(e) => {
+                            onSubmit={async (e) => {
                                 // Prevent page from reloading
                                 e.preventDefault();
+
+                                // Open an order for the option
+                                await optionsMarket.methods
+                                    .openTrade(sellOptionId, sellOptionPrice)
+                                    .send({ from: account });
                             }}
                         >
                             <fieldset className="flex flex-col my-5">
@@ -195,62 +200,59 @@ function Options() {
                         // Prevent the page from reloading
                         e.preventDefault();
 
-                        // Only submit if contract data loaded
-                        if (optionsMarket !== null) {
-                            // Get contract address
-                            const optionsMarketAddress = optionsMarket._address;
+                        // Get contract address
+                        const optionsMarketAddress = optionsMarket._address;
 
-                            // Check the ERC20 allowances
-                            if (optionType === "put") {
-                                // Check the trade currency and allocate funds
-                                const tradeCurrencyAddress =
-                                    await optionsMarket.methods
-                                        .getTradeCurrency()
-                                        .call();
-                                const tradeCurrency = await getERC20Contract(
-                                    web3,
-                                    tradeCurrencyAddress
-                                );
+                        // Check the ERC20 allowances
+                        if (optionType === "put") {
+                            // Check the trade currency and allocate funds
+                            const tradeCurrencyAddress =
+                                await optionsMarket.methods
+                                    .getTradeCurrency()
+                                    .call();
+                            const tradeCurrency = await getERC20Contract(
+                                web3,
+                                tradeCurrencyAddress
+                            );
 
-                                // Check that funds are allocated to contract and if not allocate them
-                                await safeTransfer(
-                                    web3,
-                                    optionsMarketAddress,
-                                    account as string,
-                                    tokenPrice,
-                                    tradeCurrency
-                                );
-                            } else {
-                                // Get the contract of the token
-                                const token = await getERC20Contract(
-                                    web3,
-                                    tokenAddress
-                                );
+                            // Check that funds are allocated to contract and if not allocate them
+                            await safeTransfer(
+                                web3,
+                                optionsMarketAddress,
+                                account as string,
+                                tokenPrice,
+                                tradeCurrency
+                            );
+                        } else {
+                            // Get the contract of the token
+                            const token = await getERC20Contract(
+                                web3,
+                                tokenAddress
+                            );
 
-                                // Check that tokens are allocated to contract and if not allocate them
-                                await safeTransfer(
-                                    web3,
-                                    optionsMarketAddress,
-                                    account as string,
-                                    tokenAmount,
-                                    token
-                                );
-                            }
-
-                            // Create the new option
-                            await optionsMarket.methods
-                                .writeOption(
-                                    optionType,
-                                    expiry,
-                                    tokenAddress,
-                                    tokenAmount,
-                                    tokenPrice
-                                )
-                                .send({ from: account });
-
-                            // @ts-ignore
-                            e.target.reset();
+                            // Check that tokens are allocated to contract and if not allocate them
+                            await safeTransfer(
+                                web3,
+                                optionsMarketAddress,
+                                account as string,
+                                tokenAmount,
+                                token
+                            );
                         }
+
+                        // Create the new option
+                        await optionsMarket.methods
+                            .writeOption(
+                                optionType,
+                                expiry,
+                                tokenAddress,
+                                tokenAmount,
+                                tokenPrice
+                            )
+                            .send({ from: account });
+
+                        // @ts-ignore
+                        e.target.reset();
                     }}
                 >
                     <fieldset className="flex flex-col space-y-1">
