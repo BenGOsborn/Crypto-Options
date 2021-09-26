@@ -2,10 +2,4 @@
 -   Maybe seperate contracts into a trade contract and an option contract
 -   Deploy to multiple networks with the same ABI
 -   MIgrate contract to external, calldata, storage for better gas costs
--   FLAW IN THE CONTRACT - WHAT IF TWO PEOPLE PLACE A TRADE AT THE SAME TIME - MAKE A CURRENT SELLER LIST - do some sort of lock with the 0 address and the seller where the 0 is sort of like the undefined address
-    -   Have some way of looking this up too - that way I can prevent my option from having another order placed for it
-    -   TEST THIS TRADE LOCK and redeploy contract (+ implement checking feature)
--   Add an option to filter back in time more via the blocks for the frontend
--   Change the indexing on the trade executed
-
--   Make sure that a traded option cannot be exercised or traded (but can still show up ?)
+-   [Add an option to filter back in time more via the blocks for the frontend](https://piyopiyo.medium.com/how-to-get-current-block-number-of-ethereum-blockchain-a4405f77e1b1)
