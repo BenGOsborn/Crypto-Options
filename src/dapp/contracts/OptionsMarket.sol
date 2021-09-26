@@ -220,8 +220,9 @@ contract OptionsMarket {
         // Get the trade
         Trade memory trade = trades[_tradeId];
 
-        // Check that the poster of the trade is the sender
+        // Check that the trade may be cancelled
         require(trade.poster == msg.sender, "Only the poster may cancel a trade");
+        require(!_compareStrings(trade.status, "closed"), "Trade has already been closed");
 
         // Unlock the option from being traded
         tradeLocks[trade.optionId] = false;
