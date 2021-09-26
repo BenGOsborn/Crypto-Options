@@ -1,6 +1,6 @@
 -   Implement the market with some kind of stable coin (what would be the problem with trading using ETH if ETH's price fluctuates ?)
 -   Maybe seperate contracts into a trade contract and an option contract
 -   Deploy to multiple networks with the same ABI
--   MIgrate contract to external, calldata, storage for better gas costs
+-   Migrate contract to external, calldata, storage for better gas costs
 -   [Add an option to filter back in time more via the blocks for the frontend](https://piyopiyo.medium.com/how-to-get-current-block-number-of-ethereum-blockchain-a4405f77e1b1)
-- I also want to  standardize my option platform against regular platforms
+-   I also want to standardize my option platform against regular platforms
