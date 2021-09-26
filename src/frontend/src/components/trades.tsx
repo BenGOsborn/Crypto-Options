@@ -6,6 +6,10 @@ import { getOptionsMarketContract } from "./helpers";
 interface Trade {
     id: number;
     optionId: number;
+    tradePrice: number;
+    expiry: number;
+    tokenAddress: string;
+    amount: number;
     price: number;
 }
 
@@ -42,12 +46,21 @@ function Trades() {
                                 .getTrade(tradeId)
                                 .call();
 
+                            // Get the option from the trade
+                            const option = await contract.methods
+                                .getOption(trade[1])
+                                .call();
+
                             // Make sure the trade is opened
                             if (trade[3] === "open") {
                                 const newTrade: Trade = {
                                     id: tradeId,
                                     optionId: trade[1],
-                                    price: trade[2],
+                                    tradePrice: trade[2],
+                                    expiry: option[0],
+                                    tokenAddress: option[3],
+                                    amount: option[4],
+                                    price: option[5],
                                 };
                                 setTrades((prev) => [...prev, newTrade]);
 
@@ -131,10 +144,13 @@ function Trades() {
                             <th className="px-3 py-2 break-words w-1/12">
                                 Price
                             </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Cancel
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {trades.map((trade, index) => (
+                        {ownedTrades.map((trade, index) => (
                             <tr
                                 key={index}
                                 className={`${
@@ -170,6 +186,14 @@ function Trades() {
                                     title={trade.price.toString()}
                                 >
                                     {trade.price}
+                                </td>
+                                <td className="px-3 py-4 text-center">
+                                    <button
+                                        className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
+                                        onClick={(e) => {}}
+                                    >
+                                        Cancel
+                                    </button>
                                 </td>
                             </tr>
                         ))}
