@@ -61,6 +61,7 @@ function Trades() {
                             }
                         });
 
+                    // Add an event listener to remove executed trades
                     contract.events
                         .TradeExecuted({ fromBlock: 0 })
                         .on("data", async (event: any) => {

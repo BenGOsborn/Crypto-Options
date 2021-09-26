@@ -43,8 +43,9 @@ contract OptionsMarket {
     // Declare events for logging data
     event OptionWritten(uint256 optionId, address indexed writer);
     event OptionExercised(uint256 optionId, address indexed writer, address indexed exerciser);
-    event TradeOpened(uint256 tradeId, uint256 optionId, address indexed poster);
-    event TradeExecuted(uint256 tradeId, uint256 optionId, address indexed buyer);
+    event TradeOpened(uint256 tradeId, address indexed poster);
+    event TradeExecuted(uint256 tradeId, address indexed buyer);
+    event TradeCancelled(uint256 tradeId);
 
     // ============= Util functions =============
 
