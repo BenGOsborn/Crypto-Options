@@ -170,12 +170,6 @@ function Trades() {
                                 Buy
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Trade ID
-                            </th>
-                            <th className="px-3 py-2 break-words w-1/12">
-                                Option ID
-                            </th>
-                            <th className="px-3 py-2 break-words w-1/12">
                                 Trade Price
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
@@ -229,18 +223,6 @@ function Trades() {
                                             Unavailable
                                         </span>
                                     )}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.id.toString()}
-                                >
-                                    {trade.id}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.optionId.toString()}
-                                >
-                                    {trade.optionId}
                                 </td>
                                 <td
                                     className="px-3 py-4"

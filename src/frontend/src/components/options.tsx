@@ -404,9 +404,6 @@ function Options() {
                                 Sell
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Option ID
-                            </th>
-                            <th className="px-3 py-2 break-words w-1/12">
                                 Expiry
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
@@ -454,12 +451,6 @@ function Options() {
                                             Unavailable
                                         </span>
                                     )}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.id.toString()}
-                                >
-                                    {option.id}
                                 </td>
                                 <td
                                     className="px-3 py-4"
