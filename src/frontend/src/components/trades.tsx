@@ -60,28 +60,23 @@ function Trades() {
                                 .getOption(trade[1])
                                 .call();
 
-                            // Make sure the trade is opened
+                            // Add the new trade to the lists
+                            const newTrade: Trade = {
+                                id: tradeId,
+                                optionId: trade[1],
+                                tradePrice: trade[2],
+                                status: trade[3],
+                                expiry: option[0] * 1000,
+                                tokenAddress: option[3],
+                                amount: option[4],
+                                price: option[5],
+                                type: option[6],
+                            };
                             if (trade[3] === "open") {
-                                const newTrade: Trade = {
-                                    id: tradeId,
-                                    optionId: trade[1],
-                                    tradePrice: trade[2],
-                                    status: trade[3],
-                                    expiry: option[0] * 1000,
-                                    tokenAddress: option[3],
-                                    amount: option[4],
-                                    price: option[5],
-                                    type: option[6],
-                                };
                                 setTrades((prev) => [...prev, newTrade]);
-
-                                // If the trade belongs to the user then add it to the owned list
-                                if (trade[0] === account) {
-                                    setOwnedTrades((prev) => [
-                                        ...prev,
-                                        newTrade,
-                                    ]);
-                                }
+                            }
+                            if (trade[0] === account) {
+                                setOwnedTrades((prev) => [...prev, newTrade]);
                             }
                         });
 
@@ -178,6 +173,9 @@ function Trades() {
                                 Trade ID
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
+                                Option ID
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
                                 Trade Price
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
@@ -214,23 +212,31 @@ function Trades() {
                                 }`}
                             >
                                 <td className="px-3 py-4 text-center">
-                                    <button
-                                        className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
-                                        onClick={(e) => {
-                                            setBuyTrade({
-                                                id: trade.optionId,
-                                                price: trade.tradePrice,
-                                            });
-                                        }}
-                                    >
-                                        Buy
-                                    </button>
+                                    {trade.status === "open" ? (
+                                        <button
+                                            className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                            onClick={(e) => {
+                                                setBuyTrade({
+                                                    id: trade.optionId,
+                                                    price: trade.tradePrice,
+                                                });
+                                            }}
+                                        >
+                                            Buy
+                                        </button>
+                                    ) : null}
                                 </td>
                                 <td
                                     className="px-3 py-4"
                                     title={trade.id.toString()}
                                 >
                                     {trade.id}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.optionId.toString()}
+                                >
+                                    {trade.optionId}
                                 </td>
                                 <td
                                     className="px-3 py-4"
@@ -271,12 +277,19 @@ function Trades() {
                                     {trade.status}
                                 </td>
                                 <td className="px-3 py-4 text-center">
-                                    <button
-                                        className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
-                                        onClick={(e) => {}}
-                                    >
-                                        Cancel
-                                    </button>
+                                    {trade.status === "open" ? (
+                                        <button
+                                            className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
+                                            onClick={async (e) => {
+                                                // Cancel the trade
+                                                await optionsMarket.methods
+                                                    .cancelTrade(trade.id)
+                                                    .send({ from: account });
+                                            }}
+                                        >
+                                            Cancel
+                                        </button>
+                                    ) : null}
                                 </td>
                             </tr>
                         ))}
