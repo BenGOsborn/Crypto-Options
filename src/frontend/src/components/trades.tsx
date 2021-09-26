@@ -5,10 +5,8 @@ import { getOptionsMarketContract } from "./helpers";
 
 interface Trade {
     id: number;
-    poster: string;
     optionId: number;
     price: number;
-    status: string;
 }
 
 function Trades() {
@@ -45,10 +43,8 @@ function Trades() {
                             if (trade[3] === "open") {
                                 const newTrade: Trade = {
                                     id: tradeId,
-                                    poster: trade[0],
                                     optionId: trade[1],
                                     price: trade[2],
-                                    status: trade[3],
                                 };
                                 setTrades((prev) => [...prev, newTrade]);
 
@@ -66,7 +62,61 @@ function Trades() {
         }
     }, [active]);
 
-    return <div className="Trades">{}</div>;
+    return (
+        <div className="Trades">
+            <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
+                <table
+                    className="mx-auto table-fixed"
+                    style={{ minWidth: 500 }}
+                >
+                    <thead>
+                        <tr className="font-bold text-gray-900">
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Trade ID
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Option ID
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Price
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {trades.map((trade, index) => (
+                            <tr
+                                key={index}
+                                className={`${
+                                    index < trades.length - 1
+                                        ? "border-b-2 border-green-100"
+                                        : ""
+                                }`}
+                            >
+                                <th
+                                    className="font-bold text-gray-900 px-3 py-4"
+                                    title={trade.id.toString()}
+                                >
+                                    {trade.id}
+                                </th>
+                                <td
+                                    className="px-3 py-2"
+                                    title={trade.optionId.toString()}
+                                >
+                                    {trade.optionId}
+                                </td>
+                                <td
+                                    className="px-3 py-2"
+                                    title={trade.price.toString()}
+                                >
+                                    {trade.price}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 }
 
 export default Trades;

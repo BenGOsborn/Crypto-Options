@@ -393,7 +393,6 @@ function Options() {
                     </div>
                 </form>
             </div>
-            {/* **** I NEED TO ADD SOME FORM OF OPTION TO MANUALLY EXPIRE IT HERE + INTEGRATE BOUGHT CONTRACTS */}
             <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <table
                     className="mx-auto table-fixed"
@@ -404,7 +403,9 @@ function Options() {
                             <th className="px-3 py-2 break-words w-1/12">
                                 Trade
                             </th>
-                            <th className="px-3 py-2 break-words w-1/12">ID</th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Option ID
+                            </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Expiry
                             </th>
