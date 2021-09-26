@@ -14,7 +14,7 @@ function App() {
             <selectorContext.Provider value={[selector, setSelector]}>
                 <Nav />
             </selectorContext.Provider>
-            <div className="content">
+            <div className="content mb-16">
                 {(() => {
                     if (selector === "trades") {
                         return <Trades />;
