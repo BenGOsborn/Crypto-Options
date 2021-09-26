@@ -7,10 +7,12 @@ interface Trade {
     id: number;
     optionId: number;
     tradePrice: number;
+    status: string;
     expiry: number;
     tokenAddress: string;
     amount: number;
     price: number;
+    type: string;
 }
 
 function Trades() {
@@ -57,10 +59,12 @@ function Trades() {
                                     id: tradeId,
                                     optionId: trade[1],
                                     tradePrice: trade[2],
-                                    expiry: option[0],
+                                    status: trade[3],
+                                    expiry: option[0] * 1000,
                                     tokenAddress: option[3],
                                     amount: option[4],
                                     price: option[5],
+                                    type: option[6],
                                 };
                                 setTrades((prev) => [...prev, newTrade]);
 
@@ -139,10 +143,25 @@ function Trades() {
                                 Trade ID
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Option ID
+                                Trade Price
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Expiry
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Token Address
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Token Amount
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Price
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Type
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Status
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Cancel
@@ -177,15 +196,41 @@ function Trades() {
                                 </td>
                                 <td
                                     className="px-3 py-4"
-                                    title={trade.optionId.toString()}
+                                    title={trade.tradePrice.toString()}
                                 >
-                                    {trade.optionId}
+                                    {trade.tradePrice}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={new Date(trade.expiry).toString()}
+                                >
+                                    {new Date(
+                                        trade.expiry
+                                    ).toLocaleDateString()}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.tokenAddress}
+                                >
+                                    {trade.tokenAddress.slice(0, 8)}...
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.amount.toString()}
+                                >
+                                    {trade.amount}
                                 </td>
                                 <td
                                     className="px-3 py-4"
                                     title={trade.price.toString()}
                                 >
                                     {trade.price}
+                                </td>
+                                <td className="px-3 py-4" title={trade.type}>
+                                    {trade.type}
+                                </td>
+                                <td className="px-3 py-4" title={trade.status}>
+                                    {trade.status}
                                 </td>
                                 <td className="px-3 py-4 text-center">
                                     <button
