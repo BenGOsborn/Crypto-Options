@@ -60,6 +60,16 @@ function Trades() {
                                 }
                             }
                         });
+
+                    contract.events
+                        .TradeExecuted({ fromBlock: 0 })
+                        .on("data", async (event: any) => {
+                            // Remove trades that have been executed
+                            const tradeId = event.returnValues.tradeId;
+                            setTrades((prev) =>
+                                prev.filter((trade) => trade.id !== tradeId)
+                            );
+                        });
                 })
                 .catch((err: any) => console.error(err));
         }
