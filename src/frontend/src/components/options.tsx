@@ -130,7 +130,7 @@ function Options() {
     return (
         <div className="Options">
             {sellOptionId !== null ? (
-                <div className="bg-black bg-opacity-50 fixed inset-0 flex items-center justify-center">
+                <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
                     <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
                         <h2 className="font-bold text-xl uppercase text-gray-900">
                             Sell Option
