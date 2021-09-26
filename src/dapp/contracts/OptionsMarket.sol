@@ -32,7 +32,6 @@ contract OptionsMarket {
 
     uint256 private tradeId;
     mapping(uint256 => Trade) private trades;
-    mapping(uint256 => bool) private tradeLocks;
     address private immutable tradeCurrency;
 
     constructor(address currency) {
@@ -160,7 +159,6 @@ contract OptionsMarket {
     function openTrade(uint256 _optionId, uint256 price) public returns (uint256) {
         // Check that the trade may be opened
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
-        require(!tradeLocks[_optionId], "This option already has an open trade");
 
         // Create a new trade
         Trade memory trade = Trade({
@@ -174,8 +172,8 @@ contract OptionsMarket {
         trades[tradeId] = trade;
         tradeId++;
 
-        // Lock the option from being traded again
-        tradeLocks[_optionId] = true;
+        // Transfer the option to the contract
+        optionOwners[_optionId] = address(this);
 
         // Emit an event and return the trade id
         emit TradeOpened(tradeId - 1, _optionId, msg.sender);
@@ -202,9 +200,6 @@ contract OptionsMarket {
         // Update the status of the trade
         trades[_tradeId].status = "closed";
 
-        // Unlock the option from being traded
-        tradeLocks[trade.optionId] = false;
-
         // Emit an event
         emit TradeExecuted(_tradeId, trade.optionId, msg.sender);
     }
@@ -213,11 +208,6 @@ contract OptionsMarket {
     function getTrade(uint256 _tradeId) public view returns(address, uint256, uint256, string memory) {
         Trade memory trade = trades[_tradeId];
         return (trade.poster, trade.optionId, trade.price, trade.status);
-    }
-
-    // Check if an option is trade locked
-    function checkTradeLock(uint256 _optionId) public view returns(bool) {
-        return tradeLocks[_optionId];
     }
 
     // Cancel a trade
@@ -229,8 +219,8 @@ contract OptionsMarket {
         require(trade.poster == msg.sender, "Only the poster may cancel a trade");
         require(!_compareStrings(trade.status, "closed"), "Trade has already been closed");
 
-        // Unlock the option from being traded
-        tradeLocks[trade.optionId] = false;
+        // Transfer the option back to the poster
+        optionOwners[trade.optionId] = msg.sender;
 
         // Cancel the trade
         trades[_tradeId].status = "cancelled";

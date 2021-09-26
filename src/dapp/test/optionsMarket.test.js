@@ -421,4 +421,6 @@ contract("OptionsMarket", (accounts) => {
             "Failed to collect funds from put option"
         );
     });
+
+    it("trade an already traded option", async () => {});
 });
