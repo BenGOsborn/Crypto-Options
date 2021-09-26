@@ -422,5 +422,52 @@ contract("OptionsMarket", (accounts) => {
         );
     });
 
-    it("trade an already traded option", async () => {});
+    it("should not trade a listed option", async () => {
+        // Get the contract
+        const optionsMarket = await OptionsMarket.deployed();
+
+        // Write a new option
+        let expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
+        const optionParams = ["put", expiry, TOKEN, 10, 20];
+        const optionTransaction = await optionsMarket.writeOption(
+            ...optionParams,
+            {
+                from: STABLECOIN_WHALE,
+            }
+        );
+        const optionId = optionTransaction.logs[0].args[0];
+
+        // List the option to be traded
+        const tradeTransaction = await optionsMarket.openTrade(optionId, {
+            from: STABLECOIN_WHALE,
+        });
+        const tradeId = tradeTransaction.logs[0].args[0];
+
+        // Try and list the option again
+        let executed;
+        try {
+            await optionsMarket.openTrade(optionId, {
+                from: STABLECOIN_WHALE,
+            });
+            executed = true;
+        } catch {
+            executed = false;
+        }
+        assert.equal(
+            !executed,
+            true,
+            "Allowed a listed option to be listed again"
+        );
+
+        // Cancel the trade and check that it may be relisted
+        await optionsMarket.cancelTrade(tradeId, { from: STABLECOIN_WHALE });
+
+        // Get the owner of the option
+        const optionOwner = await optionsMarket.getOptionOwner(optionId);
+        assert.equal(
+            STABLECOIN_WHALE,
+            optionOwner,
+            "Failed to transfer option back to poster when trade cancelled"
+        );
+    });
 });
