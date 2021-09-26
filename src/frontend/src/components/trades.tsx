@@ -224,7 +224,11 @@ function Trades() {
                                         >
                                             Buy
                                         </button>
-                                    ) : null}
+                                    ) : (
+                                        <span className="text-gray-600">
+                                            Unavailable
+                                        </span>
+                                    )}
                                 </td>
                                 <td
                                     className="px-3 py-4"
@@ -289,7 +293,11 @@ function Trades() {
                                         >
                                             Cancel
                                         </button>
-                                    ) : null}
+                                    ) : (
+                                        <span className="text-gray-600">
+                                            Unavailable
+                                        </span>
+                                    )}
                                 </td>
                             </tr>
                         ))}

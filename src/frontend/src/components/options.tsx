@@ -401,7 +401,7 @@ function Options() {
                     <thead>
                         <tr className="font-bold text-gray-900">
                             <th className="px-3 py-2 break-words w-1/12">
-                                Trade
+                                Sell
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Option ID
@@ -449,7 +449,11 @@ function Options() {
                                         >
                                             Sell
                                         </button>
-                                    ) : null}
+                                    ) : (
+                                        <span className="text-gray-600">
+                                            Unavailable
+                                        </span>
+                                    )}
                                 </td>
                                 <td
                                     className="px-3 py-4"
@@ -576,9 +580,21 @@ function Options() {
                                                 >
                                                     Collect
                                                 </button>
-                                            ) : null
-                                        ) : null
-                                    ) : null}
+                                            ) : (
+                                                <span className="text-gray-600">
+                                                    Unavailable
+                                                </span>
+                                            )
+                                        ) : (
+                                            <span className="text-gray-600">
+                                                Unavailable
+                                            </span>
+                                        )
+                                    ) : (
+                                        <span className="text-gray-600">
+                                            Unavailable
+                                        </span>
+                                    )}
                                 </td>
                             </tr>
                         ))}
