@@ -1,7 +1,11 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { getOptionsMarketContract } from "./helpers";
+import {
+    getERC20Contract,
+    getOptionsMarketContract,
+    safeTransfer,
+} from "./helpers";
 
 interface Trade {
     id: number;
@@ -26,7 +30,10 @@ function Trades() {
     const [ownedTrades, setOwnedTrades] = useState<Trade[]>([]);
 
     // Used for showing the buy screen
-    const [buyOptionId, setBuyOptionId] = useState<number | null>(null);
+    const [buyTrade, setBuyTrade] = useState<{
+        id: number;
+        price: number;
+    } | null>(null);
 
     useEffect(() => {
         if (active) {
@@ -104,7 +111,7 @@ function Trades() {
 
     return (
         <div className="Trades">
-            {buyOptionId !== null ? (
+            {buyTrade !== null ? (
                 <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
                     <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
                         <h2 className="font-bold text-xl uppercase text-gray-900">
@@ -116,11 +123,39 @@ function Trades() {
                             expiry you wish.
                         </p>
                         <div className="flex justify-between sm:flex-row flex-col items-stretch sm:space-x-4 sm:space-y-0 space-y-4 mt-5">
-                            <button className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-16">
+                            <button
+                                className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-16"
+                                onClick={async (e) => {
+                                    // Get the trade currency
+                                    const tradeCurrencyAddress =
+                                        await optionsMarket.methods
+                                            .getTradeCurrency()
+                                            .call();
+                                    const tradeCurrency =
+                                        await getERC20Contract(
+                                            web3,
+                                            tradeCurrencyAddress
+                                        );
+
+                                    // Safe allocate funds
+                                    await safeTransfer(
+                                        web3,
+                                        optionsMarket._address,
+                                        account as string,
+                                        buyTrade.price,
+                                        tradeCurrency
+                                    );
+
+                                    // Execute the trade
+                                    await optionsMarket.methods
+                                        .executeTrade(buyTrade.id)
+                                        .send({ from: account });
+                                }}
+                            >
                                 Buy
                             </button>
                             <button
-                                onClick={(e) => setBuyOptionId(null)}
+                                onClick={(e) => setBuyTrade(null)}
                                 className="transition duration-100 cursor-pointer bg-transparent border-gray-500 border hover:border-gray-700 text-gray-500 hover:text-gray-700 font-bold rounded py-2 px-8"
                             >
                                 Cancel
@@ -182,7 +217,10 @@ function Trades() {
                                     <button
                                         className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
                                         onClick={(e) => {
-                                            setBuyOptionId(trade.optionId);
+                                            setBuyTrade({
+                                                id: trade.optionId,
+                                                price: trade.tradePrice,
+                                            });
                                         }}
                                     >
                                         View
