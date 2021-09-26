@@ -470,8 +470,8 @@ contract("OptionsMarket", (accounts) => {
         // Get the owner of the option
         const optionOwner = await optionsMarket.getOptionOwner(optionId);
         assert.equal(
-            STABLECOIN_WHALE,
-            optionOwner.toString(),
+            STABLECOIN_WHALE.toLowerCase(),
+            optionOwner.toString().toLowerCase(),
             "Failed to transfer option back to poster when trade cancelled"
         );
     });
