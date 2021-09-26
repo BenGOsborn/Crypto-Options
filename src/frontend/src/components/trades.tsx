@@ -19,6 +19,9 @@ function Trades() {
     const [trades, setTrades] = useState<Trade[]>([]);
     const [ownedTrades, setOwnedTrades] = useState<Trade[]>([]);
 
+    // Used for showing the buy screen
+    const [buyOptionId, setBuyOptionId] = useState<number | null>(null);
+
     useEffect(() => {
         if (active) {
             // Get the contract
@@ -64,6 +67,31 @@ function Trades() {
 
     return (
         <div className="Trades">
+            {buyOptionId !== null ? (
+                <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
+                    <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
+                        <h2 className="font-bold text-xl uppercase text-gray-900">
+                            Buy Option
+                        </h2>
+                        <p className="text-gray-500">
+                            When you buy an option, you have the right but not
+                            the obligation to exercise it at any time before the
+                            expiry you wish.
+                        </p>
+                        <div className="flex justify-between sm:flex-row flex-col items-stretch sm:space-x-4 sm:space-y-0 space-y-4 mt-5">
+                            <button className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-16">
+                                Buy
+                            </button>
+                            <button
+                                onClick={(e) => setBuyOptionId(null)}
+                                className="transition duration-100 cursor-pointer bg-transparent border-gray-500 border hover:border-gray-700 text-gray-500 hover:text-gray-700 font-bold rounded py-2 px-8"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
             <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <table
                     className="mx-auto table-fixed"
@@ -98,7 +126,9 @@ function Trades() {
                                 <td className="px-3 py-4 text-center">
                                     <button
                                         className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
-                                        onClick={(e) => {}}
+                                        onClick={(e) => {
+                                            setBuyOptionId(trade.optionId);
+                                        }}
                                     >
                                         View
                                     </button>

@@ -43,7 +43,7 @@ function Nav() {
                 <div className="flex sm:flex-row flex-col justify-center items-center sm:space-x-6 space-y-2">
                     <button
                         className={`transition duration-100 cursor-pointer text-gray-700 hover:text-gray-900 font-bold py-2 px-4 ${
-                            selector == "trades"
+                            selector === "trades"
                                 ? "sm:border-b-2 border-green-500"
                                 : ""
                         }`}
@@ -53,7 +53,7 @@ function Nav() {
                     </button>
                     <button
                         className={`transition duration-100 cursor-pointer text-gray-700 hover:text-gray-900 font-bold py-2 px-4 ${
-                            selector == "options"
+                            selector === "options"
                                 ? "sm:border-b-2 border-green-500"
                                 : ""
                         }`}

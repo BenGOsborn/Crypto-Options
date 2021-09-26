@@ -16,9 +16,9 @@ function App() {
             </selectorContext.Provider>
             <div className="content">
                 {(() => {
-                    if (selector == "trades") {
+                    if (selector === "trades") {
                         return <Trades />;
-                    } else if (selector == "options") {
+                    } else if (selector === "options") {
                         return <Options />;
                     }
                 })()}

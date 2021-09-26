@@ -98,10 +98,10 @@ function Options() {
                                 .call();
 
                             // Only add the option if it is owned and the id is not within the list
-                            if (owner == account) {
+                            if (owner === account) {
                                 let contains = false;
                                 for (const opt of options) {
-                                    if (opt.id == optionId) {
+                                    if (opt.id === optionId) {
                                         contains = true;
                                         break;
                                     }
