@@ -206,8 +206,8 @@ function Trades() {
                             <tr
                                 key={index}
                                 className={`${
-                                    index < trades.length - 1
-                                        ? "border-b-2 border-green-100"
+                                    index < ownedTrades.length - 1
+                                        ? "border-b-2 border-gray-100"
                                         : ""
                                 }`}
                             >

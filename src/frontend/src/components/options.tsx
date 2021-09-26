@@ -435,7 +435,7 @@ function Options() {
                                 key={index}
                                 className={`${
                                     index < options.length - 1
-                                        ? "border-b-2 border-green-100"
+                                        ? "border-b-2 border-gray-100"
                                         : ""
                                 }`}
                             >
