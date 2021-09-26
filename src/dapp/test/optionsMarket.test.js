@@ -438,9 +438,12 @@ contract("OptionsMarket", (accounts) => {
         const optionId = optionTransaction.logs[0].args[0];
 
         // List the option to be traded
-        const tradeTransaction = await optionsMarket.openTrade(optionId, {
-            from: STABLECOIN_WHALE,
-        });
+        const tradeTransaction = await optionsMarket.openTrade(
+            optionId.toString(),
+            {
+                from: STABLECOIN_WHALE,
+            }
+        );
         const tradeId = tradeTransaction.logs[0].args[0];
 
         // Try and list the option again
@@ -466,7 +469,7 @@ contract("OptionsMarket", (accounts) => {
         const optionOwner = await optionsMarket.getOptionOwner(optionId);
         assert.equal(
             STABLECOIN_WHALE,
-            optionOwner,
+            optionOwner.toString(),
             "Failed to transfer option back to poster when trade cancelled"
         );
     });
