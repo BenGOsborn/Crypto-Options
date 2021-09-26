@@ -20,6 +20,7 @@ interface Option {
 }
 
 function Options() {
+    // Store the web3 data
     const [optionsMarket, setOptionsMarket] = useState<any | null>(null);
     const { active, account } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
@@ -122,7 +123,7 @@ function Options() {
                             }
                         });
                 })
-                .catch((err: any) => console.log(err));
+                .catch((err: any) => console.error(err));
             // Also add in transferred options soon too (how can I transfer this)
         }
     }, [active]);
@@ -150,6 +151,9 @@ function Options() {
                                 await optionsMarket.methods
                                     .openTrade(sellOptionId, sellOptionPrice)
                                     .send({ from: account });
+
+                                // Close the modal
+                                setSellOptionId(null);
                             }}
                         >
                             <fieldset className="flex flex-col my-5">
