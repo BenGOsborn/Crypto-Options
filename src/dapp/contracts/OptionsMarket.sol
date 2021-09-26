@@ -44,8 +44,8 @@ contract OptionsMarket {
     // Declare events for logging data
     event OptionWritten(uint256 optionId, address indexed writer);
     event OptionExercised(uint256 optionId, address indexed writer, address indexed exerciser);
-    event TradeOpened(uint256 tradeId, uint256 indexed optionId, address indexed poster);
-    event TradeExecuted(uint256 tradeId, uint256 indexed optionId, address indexed buyer);
+    event TradeOpened(uint256 tradeId, uint256 optionId, address indexed poster);
+    event TradeExecuted(uint256 tradeId, uint256 optionId, address indexed buyer);
 
     // ============= Util functions =============
 
@@ -158,6 +158,9 @@ contract OptionsMarket {
 
     // Open a new trade for selling an option
     function openTrade(uint256 _optionId, uint256 price) public returns (uint256) {
+        // Get the option
+        Option memory option = options[_optionId];
+
         // Check that the trade may be opened
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
         require(!tradeLocks[_optionId], "This option already has an open trade");
