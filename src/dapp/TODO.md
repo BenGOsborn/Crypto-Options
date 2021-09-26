@@ -3,4 +3,5 @@
 -   Deploy to multiple networks with the same ABI
 -   Migrate contract to external, calldata, storage for better gas costs
 -   [Add an option to filter back in time more via the blocks for the frontend](https://piyopiyo.medium.com/how-to-get-current-block-number-of-ethereum-blockchain-a4405f77e1b1)
+
 -   I also want to standardize my option platform against regular platforms
