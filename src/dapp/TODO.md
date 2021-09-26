@@ -7,3 +7,4 @@
     -   TEST THIS TRADE LOCK and redeploy contract (+ implement checking feature)
 -   Add an option to filter back in time more via the blocks for the frontend
 -   Change the indexing on the trade executed
+-   I should also have a better way of filtering trades by option id for example
