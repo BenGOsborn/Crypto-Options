@@ -32,6 +32,7 @@ contract OptionsMarket {
 
     uint256 private tradeId;
     mapping(uint256 => Trade) private trades;
+    mapping(uint256 => bool) private tradeLocks;
     address private immutable tradeCurrency;
 
     constructor(address currency) {
@@ -159,6 +160,7 @@ contract OptionsMarket {
     function openTrade(uint256 _optionId, uint256 price) public returns (uint256) {
         // Check that the trade may be opened
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
+        require(!tradeLocks[_optionId], "This option already has an open trade");
 
         // Create a new trade
         Trade memory trade = Trade({
@@ -171,6 +173,9 @@ contract OptionsMarket {
         // Store the new trade
         trades[tradeId] = trade;
         tradeId++;
+
+        // Lock the option from being traded again
+        tradeLocks[_optionId] = true;
 
         // Emit an event and return the trade id
         emit TradeOpened(tradeId - 1, _optionId, msg.sender);
@@ -197,6 +202,9 @@ contract OptionsMarket {
         // Update the status of the trade
         trades[_tradeId].status = "closed";
 
+        // Unlock the option from being traded
+        tradeLocks[trade.optionId] = false;
+
         // Emit an event
         emit TradeExecuted(_tradeId, trade.optionId, msg.sender);
     }
@@ -214,6 +222,9 @@ contract OptionsMarket {
 
         // Check that the poster of the trade is the sender
         require(trade.poster == msg.sender, "Only the poster may cancel a trade");
+
+        // Unlock the option from being traded
+        tradeLocks[trade.optionId] = false;
 
         // Cancel the trade
         trades[_tradeId].status = "cancelled";
