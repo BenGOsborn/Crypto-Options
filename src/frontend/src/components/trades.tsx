@@ -172,7 +172,7 @@ function Trades() {
                     <thead>
                         <tr className="font-bold text-gray-900">
                             <th className="px-3 py-2 break-words w-1/12">
-                                View
+                                Buy
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Trade ID
@@ -223,7 +223,7 @@ function Trades() {
                                             });
                                         }}
                                     >
-                                        View
+                                        Buy
                                     </button>
                                 </td>
                                 <td
