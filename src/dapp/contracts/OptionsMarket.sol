@@ -215,6 +215,11 @@ contract OptionsMarket {
         return (trade.poster, trade.optionId, trade.price, trade.status);
     }
 
+    // Check if an option is trade locked
+    function checkTradeLock(uint256 _optionId) public view returns(bool) {
+        return tradeLocks[_optionId];
+    }
+
     // Cancel a trade
     function cancelTrade(uint256 _tradeId) public {
         // Get the trade
