@@ -2,3 +2,4 @@
 -   Maybe seperate contracts into a trade contract and an option contract
 -   Deploy to multiple networks with the same ABI
 -   MIgrate contract to external, calldata, storage for better gas costs
+-   FLAW IN THE CONTRACT - WHAT IF TWO PEOPLE PLACE A TRADE AT THE SAME TIME - MAKE A CURRENT SELLER LIST ???
