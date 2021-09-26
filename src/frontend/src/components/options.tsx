@@ -437,7 +437,9 @@ function Options() {
                                 }`}
                             >
                                 <td className="px-3 py-4 text-center">
-                                    {option.owner === account ? (
+                                    {option.owner === account &&
+                                    option.expiry >= Date.now() &&
+                                    option.status === "none" ? (
                                         <button
                                             className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
                                             onClick={(e) => {

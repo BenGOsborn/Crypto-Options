@@ -5,3 +5,4 @@
 -   [Add an option to filter back in time more via the blocks for the frontend](https://piyopiyo.medium.com/how-to-get-current-block-number-of-ethereum-blockchain-a4405f77e1b1)
 
 -   I also want to standardize my option platform against regular platforms
+    -   Add ways of filtering options
