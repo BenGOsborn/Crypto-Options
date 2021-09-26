@@ -61,11 +61,20 @@ function Trades() {
                             }
                         });
 
-                    // Add an event listener to remove executed trades
+                    // Add an event listener to remove executed or cancelled trades
                     contract.events
                         .TradeExecuted({ fromBlock: 0 })
                         .on("data", async (event: any) => {
                             // Remove trades that have been executed
+                            const tradeId = event.returnValues.tradeId;
+                            setTrades((prev) =>
+                                prev.filter((trade) => trade.id !== tradeId)
+                            );
+                        });
+                    contract.events
+                        .TradeCancelled({ fromBlock: 0 })
+                        .on("data", async (event: any) => {
+                            // Remove trades that have been cancelled
                             const tradeId = event.returnValues.tradeId;
                             setTrades((prev) =>
                                 prev.filter((trade) => trade.id !== tradeId)
