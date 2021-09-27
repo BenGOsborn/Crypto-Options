@@ -394,18 +394,13 @@ function Options() {
                 </form>
             </div>
             <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
-                <form
-                    className="mx-auto w-3/5 mb-6 flex justify-evenly items-center"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                    }}
-                >
+                <form className="mx-auto w-3/5 mb-6 flex justify-evenly items-center space-x-4">
                     <fieldset className="flex space-x-3 items-center">
                         <label
                             htmlFor="type"
                             className="text-gray-900 font-bold"
                         >
-                            Type
+                            Option Type
                         </label>
                         <select
                             id="type"

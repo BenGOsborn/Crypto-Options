@@ -36,11 +36,11 @@ function Nav() {
 
     return (
         <div className="Nav">
-            <div className="p-5 w-5/6 mx-auto mb-8 flex sm:flex-row flex-col justify-between items-center sm:space-x-6 space-y-2">
+            <div className="p-5 w-5/6 mx-auto mb-8 flex sm:flex-row flex-col justify-between items-center sm:space-x-6 sm:space-y-0 space-y-2">
                 <h1 className="text-xl uppercase font-medium text-gray-900">
                     Crypto Options
                 </h1>
-                <div className="flex sm:flex-row flex-col justify-center items-center sm:space-x-6 space-y-2">
+                <div className="flex sm:flex-row flex-col items-center sm:space-x-3 sm:space-y-0 space-y-3">
                     <button
                         className={`transition duration-100 cursor-pointer text-gray-700 hover:text-gray-900 font-bold py-2 px-4 ${
                             selector === "trades"

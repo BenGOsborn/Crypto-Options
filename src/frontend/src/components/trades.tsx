@@ -72,7 +72,7 @@ function Trades() {
                                 price: option[5],
                                 type: option[6],
                             };
-                            if (trade[3] === "open") {
+                            if (trade[3] === "open" && trade[0] !== account) {
                                 setTrades((prev) => [...prev, newTrade]);
                             }
                             if (trade[0] === account) {
@@ -160,6 +160,41 @@ function Trades() {
                 </div>
             ) : null}
             <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
+                <form className="mx-auto w-3/5 mb-6 flex justify-evenly items-center space-x-4">
+                    <fieldset className="flex space-x-3 items-center">
+                        <label
+                            htmlFor="type"
+                            className="text-gray-900 font-bold"
+                        >
+                            Option Type
+                        </label>
+                        <select
+                            id="type"
+                            className="bg-green-500 text-white font-bold rounded py-1 px-3"
+                        >
+                            <option value="call">Call</option>
+                            <option value="put">Put</option>
+                        </select>
+                    </fieldset>
+                    <fieldset className="flex space-x-3 items-center">
+                        <label
+                            htmlFor="available"
+                            className="text-gray-900 font-bold"
+                        >
+                            Available
+                        </label>
+                        <input
+                            type="checkbox"
+                            id="available"
+                            name="available"
+                        />
+                    </fieldset>
+                    <input
+                        type="submit"
+                        value="Display"
+                        className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-1 px-3"
+                    />
+                </form>
                 <table
                     className="mx-auto table-fixed"
                     style={{ minWidth: 500 }}
@@ -197,6 +232,171 @@ function Trades() {
                     </thead>
                     <tbody>
                         {ownedTrades.map((trade, index) => (
+                            <tr
+                                key={index}
+                                className={`${
+                                    index < ownedTrades.length - 1
+                                        ? "border-b-2 border-gray-100"
+                                        : ""
+                                }`}
+                            >
+                                <td className="px-3 py-4 text-center">
+                                    {trade.tradeStatus === "open" ? (
+                                        <button
+                                            className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                            onClick={(e) => {
+                                                setBuyTrade({
+                                                    id: trade.optionId,
+                                                    price: trade.tradePrice,
+                                                });
+                                            }}
+                                        >
+                                            Buy
+                                        </button>
+                                    ) : (
+                                        <span className="text-gray-600">
+                                            Unavailable
+                                        </span>
+                                    )}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.tradePrice.toString()}
+                                >
+                                    {trade.tradePrice}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={new Date(trade.expiry).toString()}
+                                >
+                                    {new Date(
+                                        trade.expiry
+                                    ).toLocaleDateString()}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.tokenAddress}
+                                >
+                                    {trade.tokenAddress.slice(0, 8)}...
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.amount.toString()}
+                                >
+                                    {trade.amount}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.price.toString()}
+                                >
+                                    {trade.price}
+                                </td>
+                                <td className="px-3 py-4" title={trade.type}>
+                                    {trade.type}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.tradeStatus}
+                                >
+                                    {trade.tradeStatus}
+                                </td>
+                                <td className="px-3 py-4 text-center">
+                                    {trade.tradeStatus === "open" ? (
+                                        <button
+                                            className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
+                                            onClick={async (e) => {
+                                                // Cancel the trade
+                                                await optionsMarket.methods
+                                                    .cancelTrade(trade.id)
+                                                    .send({ from: account });
+                                            }}
+                                        >
+                                            Cancel
+                                        </button>
+                                    ) : (
+                                        <span className="text-gray-600">
+                                            Unavailable
+                                        </span>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
+                <form className="mx-auto w-3/5 mb-6 flex justify-evenly items-center space-x-4">
+                    <fieldset className="flex space-x-3 items-center">
+                        <label
+                            htmlFor="type"
+                            className="text-gray-900 font-bold"
+                        >
+                            Option Type
+                        </label>
+                        <select
+                            id="type"
+                            className="bg-green-500 text-white font-bold rounded py-1 px-3"
+                        >
+                            <option value="call">Call</option>
+                            <option value="put">Put</option>
+                        </select>
+                    </fieldset>
+                    <fieldset className="flex space-x-3 items-center">
+                        <label
+                            htmlFor="available"
+                            className="text-gray-900 font-bold"
+                        >
+                            Available
+                        </label>
+                        <input
+                            type="checkbox"
+                            id="available"
+                            name="available"
+                        />
+                    </fieldset>
+                    <input
+                        type="submit"
+                        value="Display"
+                        className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-1 px-3"
+                    />
+                </form>
+                <table
+                    className="mx-auto table-fixed"
+                    style={{ minWidth: 500 }}
+                >
+                    <thead>
+                        <tr className="font-bold text-gray-900">
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Buy
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Trade Price
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Expiry
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Token Address
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Token Amount
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Price
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Type
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Trade Status
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Cancel
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {trades.map((trade, index) => (
                             <tr
                                 key={index}
                                 className={`${
