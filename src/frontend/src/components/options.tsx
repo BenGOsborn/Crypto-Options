@@ -20,7 +20,7 @@ interface Option {
 }
 
 interface SearchFilter {
-    optionType: string;
+    optionType: "call" | "put" | "any";
     tokenAddress: string;
     showUnavailable: boolean;
     writtenByUser: "true" | "false" | "any";
@@ -50,7 +50,7 @@ function Options() {
 
     // Used for filtering
     const [searchFilter, setSearchFilter] = useState<SearchFilter>({
-        optionType: "call",
+        optionType: "any",
         showUnavailable: false,
         tokenAddress: "",
         writtenByUser: "any",
@@ -422,11 +422,12 @@ function Options() {
                             onChange={(e) =>
                                 setSearchFilter((prev) => {
                                     const newPrev = { ...prev };
-                                    newPrev.optionType = e.target.value;
+                                    newPrev.optionType = e.target.value as any;
                                     return newPrev;
                                 })
                             }
                         >
+                            <option value="any">Any</option>
                             <option value="call">Call</option>
                             <option value="put">Put</option>
                         </select>
@@ -562,7 +563,10 @@ function Options() {
                         {options
                             .filter((option) => {
                                 // Filter out option type
-                                if (option.type !== searchFilter.optionType) {
+                                if (
+                                    searchFilter.optionType !== "any" &&
+                                    option.type !== searchFilter.optionType
+                                ) {
                                     return false;
                                 }
 
