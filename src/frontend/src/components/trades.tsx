@@ -141,7 +141,11 @@ function Trades() {
                         </h2>
                         {buyTrade.type === "call" ? (
                             <p className="text-gray-500">
-                                By purchasing this option for{" "}
+                                By purchasing this{" "}
+                                <span className="font-bold">
+                                    {buyTrade.type}
+                                </span>{" "}
+                                option for{" "}
                                 <span className="font-bold">
                                     {buyTrade.tradePrice}
                                 </span>{" "}
@@ -167,9 +171,33 @@ function Trades() {
                             </p>
                         ) : (
                             <p className="text-gray-500">
-                                When you buy an option, you have the right but
-                                not the obligation to exercise it at any time
-                                before the expiry you wish.
+                                By purchasing this{" "}
+                                <span className="font-bold">
+                                    {buyTrade.type}
+                                </span>{" "}
+                                option for{" "}
+                                <span className="font-bold">
+                                    {buyTrade.tradePrice}
+                                </span>{" "}
+                                DAI, you are buying the right but not the
+                                obligation to sell{" "}
+                                <span className="font-bold">
+                                    {buyTrade.amount}
+                                </span>{" "}
+                                of the token with address '
+                                <span
+                                    className="font-bold"
+                                    title={buyTrade.tokenAddress}
+                                >
+                                    {buyTrade.tokenAddress.slice(0, 8)}...
+                                </span>
+                                ' for {buyTrade.price} DAI any time before{" "}
+                                <span className="font-bold">
+                                    {new Date(
+                                        buyTrade.expiry
+                                    ).toLocaleDateString()}
+                                </span>
+                                .
                             </p>
                         )}
                         <div className="flex justify-between sm:flex-row flex-col items-stretch sm:space-x-4 sm:space-y-0 space-y-4 mt-5">

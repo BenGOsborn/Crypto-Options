@@ -8,3 +8,4 @@
 -   Add a way of limiting the size of the tables height
 -   Add labels for the different sections
 -   Add label to buy section (and maybe even sell section ?)
+-   Make new account to test with ?
