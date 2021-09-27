@@ -218,7 +218,7 @@ function Options() {
                 </div>
             ) : null}
             {/* Write new option */}
-            <div className="mx-auto w-2/5 min-w-min rounded-xl shadow-md p-6">
+            <div className="mx-auto w-1/4 min-w-min rounded-xl shadow-md p-6">
                 <form
                     className="flex flex-col space-y-6"
                     onSubmit={async (e) => {
@@ -280,39 +280,47 @@ function Options() {
                         e.target.reset();
                     }}
                 >
-                    <fieldset className="flex flex-col space-y-1">
-                        <label
-                            className="text-gray-900 font-bold"
-                            htmlFor="type"
-                        >
-                            Option Type
-                        </label>
-                        <div>
-                            <input
-                                type="radio"
-                                name="type"
-                                id="call"
-                                value="call"
-                                onChange={(e) => setOptionType(e.target.value)}
-                                defaultChecked
-                            />
-                            <label className="ml-3" htmlFor="call">
-                                Call
+                    <div className="flex space-x-3 justify-between items-center">
+                        <fieldset className="flex flex-col space-y-1">
+                            <label
+                                className="text-gray-900 font-bold"
+                                htmlFor="type"
+                            >
+                                Option Type
                             </label>
-                        </div>
-                        <div>
-                            <input
-                                type="radio"
-                                name="type"
-                                id="put"
-                                value="put"
-                                onChange={(e) => setOptionType(e.target.value)}
-                            />
-                            <label className="ml-3" htmlFor="put">
-                                Put
+                            <div>
+                                <select
+                                    id="type"
+                                    className="bg-green-500 text-white font-bold rounded py-2 px-3"
+                                    onChange={(e) =>
+                                        setOptionType(e.target.value)
+                                    }
+                                >
+                                    <option value="call">Call</option>
+                                    <option value="put">Put</option>
+                                </select>
+                            </div>
+                        </fieldset>
+                        <fieldset className="flex flex-col">
+                            <label
+                                className="text-gray-900 font-bold"
+                                htmlFor="expiry"
+                            >
+                                Expiry
                             </label>
-                        </div>
-                    </fieldset>
+                            <input
+                                type="datetime-local"
+                                id="expiry"
+                                onChange={(e) => {
+                                    setExpiry(
+                                        new Date(e.target.value).getTime() /
+                                            1000
+                                    );
+                                }}
+                                required
+                            />
+                        </fieldset>
+                    </div>
 
                     <fieldset className="flex flex-col">
                         <label
@@ -339,26 +347,7 @@ function Options() {
                         </label>
                     </fieldset>
 
-                    <fieldset className="flex flex-col">
-                        <label
-                            className="text-gray-900 font-bold"
-                            htmlFor="expiry"
-                        >
-                            Expiry
-                        </label>
-                        <input
-                            type="datetime-local"
-                            id="expiry"
-                            onChange={(e) => {
-                                setExpiry(
-                                    new Date(e.target.value).getTime() / 1000
-                                );
-                            }}
-                            required
-                        />
-                    </fieldset>
-
-                    <div className="flex space-x-3 justify-between">
+                    <div className="flex space-x-3 justify-between items-center">
                         <fieldset className="flex flex-col">
                             <label
                                 className="text-gray-900 font-bold whitespace-nowrap"
@@ -420,7 +409,7 @@ function Options() {
                     className="pb-6 mb-6 flex lg:flex-row flex-col lg:space-y-0 space-y-4 justify-evenly lg:items-start items-center lg:space-x-4 border-b-4 border-gray-100"
                     style={{ minWidth: 500 }}
                 >
-                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
+                    <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                         <label
                             htmlFor="type"
                             className="text-gray-900 font-bold"
@@ -429,7 +418,7 @@ function Options() {
                         </label>
                         <select
                             id="type"
-                            className="bg-green-500 text-white font-bold rounded py-1 px-3"
+                            className="bg-green-500 text-white font-bold rounded py-2 px-3"
                             onChange={(e) =>
                                 setSearchFilter((prev) => {
                                     const newPrev = { ...prev };
@@ -442,7 +431,7 @@ function Options() {
                             <option value="put">Put</option>
                         </select>
                     </fieldset>
-                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
+                    <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                         <label
                             htmlFor="type"
                             className="text-gray-900 font-bold"
@@ -451,7 +440,7 @@ function Options() {
                         </label>
                         <select
                             id="type"
-                            className="bg-green-500 text-white font-bold rounded py-1 px-3"
+                            className="bg-green-500 text-white font-bold rounded py-2 px-3"
                             onChange={(e) =>
                                 setSearchFilter((prev) => {
                                     const newPrev = { ...prev };
@@ -466,7 +455,7 @@ function Options() {
                             <option value="false">False</option>
                         </select>
                     </fieldset>
-                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
+                    <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                         <label
                             htmlFor="type"
                             className="text-gray-900 font-bold"
@@ -498,7 +487,7 @@ function Options() {
                             }}
                         />
                     </fieldset>
-                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
+                    <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                         <label
                             htmlFor="tokenAddress"
                             className="text-gray-900 font-bold"
@@ -519,7 +508,7 @@ function Options() {
                             }}
                         />
                     </fieldset>
-                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
+                    <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                         <label
                             htmlFor="available"
                             className="text-gray-900 font-bold"
