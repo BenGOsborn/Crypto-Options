@@ -417,7 +417,7 @@ function Options() {
             {/* Options table */}
             <div className="overflow-x-auto w-4/5 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <form
-                    className="pb-6 mb-6 flex lg:flex-row flex-col lg:space-y-0 space-y-4 justify-start lg:items-start items-center lg:space-x-4 border-b-4 border-gray-100"
+                    className="pb-6 mb-6 flex lg:flex-row flex-col lg:space-y-0 space-y-4 justify-evenly lg:items-start items-center lg:space-x-4 border-b-4 border-gray-100"
                     style={{ minWidth: 500 }}
                 >
                     <fieldset className="flex flex-col space-x-1 justify-center items-center">
