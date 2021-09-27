@@ -7,5 +7,5 @@
 -   Add a price range as a filter
 -   Add a way of limiting the size of the tables height
 -   Add labels for the different sections
--   Add label to buy section (and maybe even sell section ?)
+-   Add label to sell option section
 -   Make new account to test with ?

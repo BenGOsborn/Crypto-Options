@@ -156,12 +156,44 @@ function Options() {
                         <h2 className="font-bold text-xl uppercase text-gray-900">
                             Sell Option
                         </h2>
-                        <p className="text-gray-500">
-                            When someone buys your option, they will have the
-                            right to exercise that option for the strike price
-                            you set for the option. Note that we will also take
-                            a three percent transaction fee.
-                        </p>
+                        {sellOption.type === "call" ? (
+                            sellOption.writer === account ? (
+                                <p className="text-gray-500">
+                                    When someone buys your option, they will
+                                    have the right to exercise that option for
+                                    the strike price you set for the option.
+                                    Note that we will also take a three percent
+                                    transaction of the trade price when the
+                                    trade is executed.
+                                </p>
+                            ) : (
+                                <p className="text-gray-500">
+                                    When someone buys your option, they will
+                                    have the right to exercise that option for
+                                    the strike price you set for the option.
+                                    Note that we will also take a three percent
+                                    transaction of the trade price when the
+                                    trade is executed.
+                                </p>
+                            )
+                        ) : sellOption.writer === account ? (
+                            <p className="text-gray-500">
+                                When someone buys your option, they will have
+                                the right to exercise that option for the strike
+                                price you set for the option. Note that we will
+                                also take a three percent transaction of the
+                                trade price when the trade is executed.
+                            </p>
+                        ) : (
+                            <p className="text-gray-500">
+                                When someone buys your option, they will have
+                                the right to exercise that option for the strike
+                                price you set for the option. Note that we will
+                                also take a three percent transaction of the
+                                trade price when the trade is executed.
+                            </p>
+                        )}
+
                         <form
                             onSubmit={async (e) => {
                                 // Prevent page from reloading
