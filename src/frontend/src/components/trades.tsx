@@ -54,6 +54,14 @@ function Trades() {
         expiryDateStart: 0,
         expiryDateEnd: Date.now() + 3.154e12,
     });
+    const [searchFilter, setSearchFilter] = useState<SearchFilter>({
+        optionType: "any",
+        tradeStatus: "any",
+        tokenAddress: "",
+        writtenByUser: "any",
+        expiryDateStart: 0,
+        expiryDateEnd: Date.now() + 3.154e12,
+    });
 
     useEffect(() => {
         if (active) {
@@ -478,6 +486,111 @@ function Trades() {
             </div>
             {/* Show all trades */}
             <div className="overflow-x-auto sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
+                <form
+                    className="pb-6 mb-6 flex flex-wrap justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100"
+                    style={{ minWidth: 500 }}
+                >
+                    <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
+                        <label
+                            htmlFor="type"
+                            className="text-gray-900 font-bold"
+                        >
+                            Option Type
+                        </label>
+                        <select
+                            id="type"
+                            className="bg-green-500 text-white font-bold rounded py-2 px-3"
+                            onChange={(e) => {
+                                setSearchFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.optionType = e.target.value as any;
+                                    return newPrev;
+                                });
+                            }}
+                        >
+                            <option value="any">Any</option>
+                            <option value="call">Call</option>
+                            <option value="put">Put</option>
+                        </select>
+                    </fieldset>
+                    <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
+                        <label
+                            htmlFor="type"
+                            className="text-gray-900 font-bold"
+                        >
+                            Expiry Range
+                        </label>
+                        <input
+                            type="datetime-local"
+                            onChange={(e) => {
+                                setSearchFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.expiryDateStart = new Date(
+                                        e.target.value
+                                    ).getTime();
+                                    return newPrev;
+                                });
+                            }}
+                        />
+                        <input
+                            type="datetime-local"
+                            onChange={(e) => {
+                                setSearchFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.expiryDateEnd = new Date(
+                                        e.target.value
+                                    ).getTime();
+                                    return newPrev;
+                                });
+                            }}
+                        />
+                    </fieldset>
+                    <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
+                        <label
+                            htmlFor="tokenAddress"
+                            className="text-gray-900 font-bold"
+                        >
+                            Token Address
+                        </label>
+                        <input
+                            type="text"
+                            id="tokenAddress"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+                            onChange={(e) => {
+                                setSearchFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.tokenAddress = e.target.value;
+                                    return newPrev;
+                                });
+                            }}
+                        />
+                    </fieldset>
+                    <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
+                        <label
+                            htmlFor="type"
+                            className="text-gray-900 font-bold"
+                        >
+                            Trade Status
+                        </label>
+                        <select
+                            id="type"
+                            className="bg-green-500 text-white font-bold rounded py-2 px-3"
+                            onChange={(e) => {
+                                setSearchFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.tradeStatus = e.target.value as any;
+                                    return newPrev;
+                                });
+                            }}
+                        >
+                            <option value="any">Any</option>
+                            <option value="open">Open</option>
+                            <option value="closed">Closed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </fieldset>
+                </form>
                 <table
                     className="mx-auto table-fixed"
                     style={{ minWidth: 500 }}
@@ -511,77 +624,124 @@ function Trades() {
                         </tr>
                     </thead>
                     <tbody>
-                        {trades.map((trade, index) => (
-                            <tr
-                                key={index}
-                                className={`${
-                                    index < ownedTrades.length - 1
-                                        ? "border-b-2 border-gray-100"
-                                        : ""
-                                }`}
-                            >
-                                <td className="px-3 py-4 text-center">
-                                    {trade.tradeStatus === "open" ? (
-                                        <button
-                                            className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
-                                            onClick={(e) => {
-                                                setBuyTrade({
-                                                    id: trade.optionId,
-                                                    price: trade.tradePrice,
-                                                });
-                                            }}
-                                        >
-                                            Buy
-                                        </button>
-                                    ) : (
-                                        <span className="text-gray-600">
-                                            Unavailable
-                                        </span>
-                                    )}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.tradePrice.toString()}
+                        {trades
+                            .filter((trade) => {
+                                // Filter out option type
+                                if (
+                                    searchFilter.optionType !== "any" &&
+                                    trade.type !== searchFilter.optionType
+                                ) {
+                                    return false;
+                                }
+
+                                // Filter out trade type
+                                if (
+                                    searchFilter.tradeStatus !== "any" &&
+                                    trade.tradeStatus !==
+                                        searchFilter.tradeStatus
+                                ) {
+                                    return false;
+                                }
+
+                                // Filter token address
+                                if (
+                                    !trade.tokenAddress
+                                        .toLowerCase()
+                                        .startsWith(
+                                            searchFilter.tokenAddress.toLowerCase()
+                                        )
+                                )
+                                    return false;
+
+                                // Filter out of range expiry options
+                                if (
+                                    !(
+                                        searchFilter.expiryDateStart <=
+                                            trade.expiry &&
+                                        trade.expiry <=
+                                            searchFilter.expiryDateEnd
+                                    )
+                                )
+                                    return false;
+
+                                return true;
+                            })
+                            .map((trade, index) => (
+                                <tr
+                                    key={index}
+                                    className={`${
+                                        index < ownedTrades.length - 1
+                                            ? "border-b-2 border-gray-100"
+                                            : ""
+                                    }`}
                                 >
-                                    {trade.tradePrice}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={new Date(trade.expiry).toString()}
-                                >
-                                    {new Date(
-                                        trade.expiry
-                                    ).toLocaleDateString()}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.tokenAddress}
-                                >
-                                    {trade.tokenAddress.slice(0, 8)}...
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.amount.toString()}
-                                >
-                                    {trade.amount}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.price.toString()}
-                                >
-                                    {trade.price}
-                                </td>
-                                <td className="px-3 py-4" title={trade.type}>
-                                    {trade.type}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.tradeStatus}
-                                >
-                                    {trade.tradeStatus}
-                                </td>
-                            </tr>
-                        ))}
+                                    <td className="px-3 py-4 text-center">
+                                        {trade.tradeStatus === "open" ? (
+                                            <button
+                                                className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                                onClick={(e) => {
+                                                    setBuyTrade({
+                                                        id: trade.optionId,
+                                                        price: trade.tradePrice,
+                                                    });
+                                                }}
+                                            >
+                                                Buy
+                                            </button>
+                                        ) : (
+                                            <span className="text-gray-600">
+                                                Unavailable
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={trade.tradePrice.toString()}
+                                    >
+                                        {trade.tradePrice}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={new Date(
+                                            trade.expiry
+                                        ).toString()}
+                                    >
+                                        {new Date(
+                                            trade.expiry
+                                        ).toLocaleDateString()}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={trade.tokenAddress}
+                                    >
+                                        {trade.tokenAddress.slice(0, 8)}...
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={trade.amount.toString()}
+                                    >
+                                        {trade.amount}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={trade.price.toString()}
+                                    >
+                                        {trade.price}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={trade.type}
+                                    >
+                                        {trade.type}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={trade.tradeStatus}
+                                    >
+                                        {trade.tradeStatus}
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>

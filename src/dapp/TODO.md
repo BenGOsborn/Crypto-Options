@@ -5,4 +5,5 @@
 
 -   Prevent the web socket from adding adding the same item more than once ?
 -   Add a price range as a filter
--   Add an ANY option to option type ????
+-   Add a way of limiting the size of the tables height
+-   Add labels for the different sections
