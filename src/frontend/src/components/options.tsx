@@ -21,8 +21,11 @@ interface Option {
 
 interface Filter {
     optionType: string;
-    showUnavailable: boolean;
     tokenAddress: string;
+    showUnavailable: boolean;
+    writtenByUser: "true" | "false" | "any";
+    expiryDateStart: number;
+    expiryDateEnd: number;
 }
 
 function Options() {
@@ -50,6 +53,9 @@ function Options() {
         optionType: "call",
         showUnavailable: false,
         tokenAddress: "",
+        writtenByUser: "any",
+        expiryDateStart: 0,
+        expiryDateEnd: Date.now() + 3.154e12,
     });
 
     useEffect(() => {
@@ -411,10 +417,10 @@ function Options() {
             {/* Options table */}
             <div className="overflow-x-auto w-4/5 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <form
-                    className="pb-6 mb-6 flex justify-evenly items-center space-x-4 border-b-4 border-gray-100"
+                    className="pb-6 mb-6 flex lg:flex-row flex-col lg:space-y-0 space-y-4 justify-start lg:items-start items-center lg:space-x-4 border-b-4 border-gray-100"
                     style={{ minWidth: 500 }}
                 >
-                    <fieldset className="flex space-x-1 justify-center items-center">
+                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
                         <label
                             htmlFor="type"
                             className="text-gray-900 font-bold"
@@ -436,7 +442,41 @@ function Options() {
                             <option value="put">Put</option>
                         </select>
                     </fieldset>
-                    <fieldset className="flex space-x-1 justify-center items-center">
+                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
+                        <label
+                            htmlFor="type"
+                            className="text-gray-900 font-bold"
+                        >
+                            Written By You
+                        </label>
+                        <select
+                            id="type"
+                            className="bg-green-500 text-white font-bold rounded py-1 px-3"
+                            onChange={(e) =>
+                                setSearchFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.writtenByUser = e.target
+                                        .value as any;
+                                    return newPrev;
+                                })
+                            }
+                        >
+                            <option value="any">Any</option>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                        </select>
+                    </fieldset>
+                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
+                        <label
+                            htmlFor="type"
+                            className="text-gray-900 font-bold"
+                        >
+                            Expiry Range
+                        </label>
+                        <input type="datetime-local" />
+                        <input type="datetime-local" />
+                    </fieldset>
+                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
                         <label
                             htmlFor="tokenAddress"
                             className="text-gray-900 font-bold"
@@ -457,7 +497,7 @@ function Options() {
                             }}
                         />
                     </fieldset>
-                    <fieldset className="flex space-x-1 justify-center items-center">
+                    <fieldset className="flex flex-col space-x-1 justify-center items-center">
                         <label
                             htmlFor="available"
                             className="text-gray-900 font-bold"
