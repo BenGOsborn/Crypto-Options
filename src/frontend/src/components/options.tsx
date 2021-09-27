@@ -21,7 +21,7 @@ interface Option {
 
 interface Filter {
     optionType: string;
-    showUsed: boolean;
+    showUnavailable: boolean;
 }
 
 function Options() {
@@ -45,9 +45,9 @@ function Options() {
     const [sellOptionPrice, setSellOptionPrice] = useState<number>(0);
 
     // Used for filtering
-    const [filter, setFilter] = useState<Filter>({
+    const [searchFilter, setSearchFilter] = useState<Filter>({
         optionType: "call",
-        showUsed: false,
+        showUnavailable: false,
     });
 
     useEffect(() => {
@@ -417,7 +417,7 @@ function Options() {
                             id="type"
                             className="bg-green-500 text-white font-bold rounded py-1 px-3"
                             onChange={(e) =>
-                                setFilter((prev) => {
+                                setSearchFilter((prev) => {
                                     const newPrev = { ...prev };
                                     newPrev.optionType = e.target.value;
                                     return newPrev;
@@ -433,16 +433,16 @@ function Options() {
                             htmlFor="available"
                             className="text-gray-900 font-bold"
                         >
-                            Show Used
+                            Show Unavailable
                         </label>
                         <input
                             type="checkbox"
                             id="available"
                             name="available"
                             onChange={(e) => {
-                                setFilter((prev) => {
+                                setSearchFilter((prev) => {
                                     const newPrev = { ...prev };
-                                    newPrev.showUsed = e.target.checked;
+                                    newPrev.showUnavailable = e.target.checked;
                                     return newPrev;
                                 });
                             }}
@@ -482,152 +482,167 @@ function Options() {
                         </tr>
                     </thead>
                     <tbody>
-                        {options.map((option, index) => (
-                            <tr
-                                key={index}
-                                className={`${
-                                    index < options.length - 1
-                                        ? "border-b-2 border-gray-100"
-                                        : ""
-                                }`}
-                            >
-                                <td className="px-3 py-4 text-center">
-                                    {option.owner === account &&
-                                    option.expiry >= Date.now() &&
-                                    option.status === "none" ? (
-                                        <button
-                                            className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
-                                            onClick={(e) => {
-                                                setSellOption(option);
-                                            }}
-                                        >
-                                            Sell
-                                        </button>
-                                    ) : (
-                                        <span className="text-gray-600">
-                                            Unavailable
-                                        </span>
-                                    )}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={new Date(option.expiry).toString()}
+                        {options
+                            .filter((option) => {
+                                return (
+                                    option.type === searchFilter.optionType &&
+                                    searchFilter.showUnavailable
+                                );
+                            })
+                            .map((option, index) => (
+                                <tr
+                                    key={index}
+                                    className={`${
+                                        index < options.length - 1
+                                            ? "border-b-2 border-gray-100"
+                                            : ""
+                                    }`}
                                 >
-                                    {new Date(
-                                        option.expiry
-                                    ).toLocaleDateString()}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.status.toString()}
-                                >
-                                    {option.status}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.tokenAddress.toString()}
-                                >
-                                    {option.tokenAddress.slice(0, 8)}...
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.amount.toString()}
-                                >
-                                    {option.amount}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.price.toString()}
-                                >
-                                    {option.price}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.type.toString()}
-                                >
-                                    {option.type}
-                                </td>
-                                <td className="px-3 py-4 text-center">
-                                    {option.owner === account ? (
+                                    <td className="px-3 py-4 text-center">
+                                        {option.owner === account &&
+                                        option.expiry >= Date.now() &&
                                         option.status === "none" ? (
-                                            option.expiry >= Date.now() ? (
-                                                <button
-                                                    className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
-                                                    onClick={async (e) => {
-                                                        // Get contract address
-                                                        const optionsMarketAddress =
-                                                            optionsMarket._address;
+                                            <button
+                                                className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
+                                                onClick={(e) => {
+                                                    setSellOption(option);
+                                                }}
+                                            >
+                                                Sell
+                                            </button>
+                                        ) : (
+                                            <span className="text-gray-600">
+                                                Unavailable
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={new Date(
+                                            option.expiry
+                                        ).toString()}
+                                    >
+                                        {new Date(
+                                            option.expiry
+                                        ).toLocaleDateString()}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.status.toString()}
+                                    >
+                                        {option.status}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.tokenAddress.toString()}
+                                    >
+                                        {option.tokenAddress.slice(0, 8)}...
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.amount.toString()}
+                                    >
+                                        {option.amount}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.price.toString()}
+                                    >
+                                        {option.price}
+                                    </td>
+                                    <td
+                                        className="px-3 py-4"
+                                        title={option.type.toString()}
+                                    >
+                                        {option.type}
+                                    </td>
+                                    <td className="px-3 py-4 text-center">
+                                        {option.owner === account ? (
+                                            option.status === "none" ? (
+                                                option.expiry >= Date.now() ? (
+                                                    <button
+                                                        className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
+                                                        onClick={async (e) => {
+                                                            // Get contract address
+                                                            const optionsMarketAddress =
+                                                                optionsMarket._address;
 
-                                                        // Check the ERC20 allowances
-                                                        if (
-                                                            optionType ===
-                                                            "call"
-                                                        ) {
-                                                            // Check the trade currency and allocate funds
-                                                            const tradeCurrencyAddress =
-                                                                await optionsMarket.methods
-                                                                    .getTradeCurrency()
-                                                                    .call();
-                                                            const tradeCurrency =
-                                                                await getERC20Contract(
+                                                            // Check the ERC20 allowances
+                                                            if (
+                                                                optionType ===
+                                                                "call"
+                                                            ) {
+                                                                // Check the trade currency and allocate funds
+                                                                const tradeCurrencyAddress =
+                                                                    await optionsMarket.methods
+                                                                        .getTradeCurrency()
+                                                                        .call();
+                                                                const tradeCurrency =
+                                                                    await getERC20Contract(
+                                                                        web3,
+                                                                        tradeCurrencyAddress
+                                                                    );
+
+                                                                // Check that funds are allocated to contract and if not allocate them
+                                                                await safeTransfer(
                                                                     web3,
-                                                                    tradeCurrencyAddress
+                                                                    optionsMarketAddress,
+                                                                    account as string,
+                                                                    option.price,
+                                                                    tradeCurrency
                                                                 );
+                                                            } else {
+                                                                // Get the contract of the token
+                                                                const token =
+                                                                    await getERC20Contract(
+                                                                        web3,
+                                                                        tokenAddress
+                                                                    );
 
-                                                            // Check that funds are allocated to contract and if not allocate them
-                                                            await safeTransfer(
-                                                                web3,
-                                                                optionsMarketAddress,
-                                                                account as string,
-                                                                option.price,
-                                                                tradeCurrency
-                                                            );
-                                                        } else {
-                                                            // Get the contract of the token
-                                                            const token =
-                                                                await getERC20Contract(
+                                                                // Check that funds are allocated to contract and if not allocate them
+                                                                await safeTransfer(
                                                                     web3,
-                                                                    tokenAddress
+                                                                    optionsMarketAddress,
+                                                                    account as string,
+                                                                    option.amount,
+                                                                    token
                                                                 );
+                                                            }
 
-                                                            // Check that funds are allocated to contract and if not allocate them
-                                                            await safeTransfer(
-                                                                web3,
-                                                                optionsMarketAddress,
-                                                                account as string,
-                                                                option.amount,
-                                                                token
-                                                            );
-                                                        }
-
-                                                        // Attempt to exercise the option
-                                                        await optionsMarket.methods
-                                                            .exerciseOption(
-                                                                option.id
-                                                            )
-                                                            .send({
-                                                                from: account,
-                                                            });
-                                                    }}
-                                                >
-                                                    Exercise
-                                                </button>
-                                            ) : option.writer === account ? (
-                                                <button
-                                                    className="transition duration-100 cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded py-2 px-4"
-                                                    onClick={async (e) => {
-                                                        // Collect the tokens / funds stored in the option
-                                                        await optionsMarket.methods
-                                                            .collectExpired(
-                                                                option.id
-                                                            )
-                                                            .send({
-                                                                from: account,
-                                                            });
-                                                    }}
-                                                >
-                                                    Collect
-                                                </button>
+                                                            // Attempt to exercise the option
+                                                            await optionsMarket.methods
+                                                                .exerciseOption(
+                                                                    option.id
+                                                                )
+                                                                .send({
+                                                                    from: account,
+                                                                });
+                                                        }}
+                                                    >
+                                                        Exercise
+                                                    </button>
+                                                ) : option.writer ===
+                                                  account ? (
+                                                    <button
+                                                        className="transition duration-100 cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded py-2 px-4"
+                                                        onClick={async (e) => {
+                                                            // Collect the tokens / funds stored in the option
+                                                            await optionsMarket.methods
+                                                                .collectExpired(
+                                                                    option.id
+                                                                )
+                                                                .send({
+                                                                    from: account,
+                                                                });
+                                                        }}
+                                                    >
+                                                        Collect
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-gray-600">
+                                                        Unavailable
+                                                    </span>
+                                                )
                                             ) : (
                                                 <span className="text-gray-600">
                                                     Unavailable
@@ -637,15 +652,10 @@ function Options() {
                                             <span className="text-gray-600">
                                                 Unavailable
                                             </span>
-                                        )
-                                    ) : (
-                                        <span className="text-gray-600">
-                                            Unavailable
-                                        </span>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>
