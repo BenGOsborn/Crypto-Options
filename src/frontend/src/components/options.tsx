@@ -407,7 +407,10 @@ function Options() {
                         >
                             Type
                         </label>
-                        <select id="type">
+                        <select
+                            id="type"
+                            className="bg-green-500 text-white font-bold rounded py-1 px-3"
+                        >
                             <option value="call">Call</option>
                             <option value="put">Put</option>
                         </select>
