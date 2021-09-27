@@ -36,7 +36,7 @@ function Options() {
     const [options, setOptions] = useState<Option[]>([]);
 
     // Used for selling the option
-    const [sellOptionId, setSellOptionId] = useState<number | null>(null);
+    const [sellOption, setSellOption] = useState<Option | null>(null);
     const [sellOptionPrice, setSellOptionPrice] = useState<number>(0);
 
     useEffect(() => {
@@ -130,7 +130,7 @@ function Options() {
 
     return (
         <div className="Options">
-            {sellOptionId !== null ? (
+            {sellOption !== null ? (
                 <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
                     <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
                         <h2 className="font-bold text-xl uppercase text-gray-900">
@@ -149,11 +149,11 @@ function Options() {
 
                                 // Open an order for the option
                                 await optionsMarket.methods
-                                    .openTrade(sellOptionId, sellOptionPrice)
+                                    .openTrade(sellOption.id, sellOptionPrice)
                                     .send({ from: account });
 
                                 // Close the modal
-                                setSellOptionId(null);
+                                setSellOption(null);
                             }}
                         >
                             <fieldset className="flex flex-col my-5">
@@ -186,7 +186,7 @@ function Options() {
                                 />
                                 <button
                                     onClick={(e) => {
-                                        setSellOptionId(null);
+                                        setSellOption(null);
                                     }}
                                     className="transition duration-100 cursor-pointer bg-transparent border-gray-500 border hover:border-gray-700 text-gray-500 hover:text-gray-700 font-bold rounded py-2 px-8"
                                 >
@@ -478,7 +478,7 @@ function Options() {
                                         <button
                                             className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
                                             onClick={(e) => {
-                                                setSellOptionId(option.id);
+                                                setSellOption(option);
                                             }}
                                         >
                                             Sell
