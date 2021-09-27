@@ -189,11 +189,6 @@ function Trades() {
                             name="available"
                         />
                     </fieldset>
-                    <input
-                        type="submit"
-                        value="Display"
-                        className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-1 px-3"
-                    />
                 </form>
                 <table
                     className="mx-auto table-fixed"
@@ -354,11 +349,6 @@ function Trades() {
                             name="available"
                         />
                     </fieldset>
-                    <input
-                        type="submit"
-                        value="Display"
-                        className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-1 px-3"
-                    />
                 </form>
                 <table
                     className="mx-auto table-fixed"

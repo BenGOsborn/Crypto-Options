@@ -19,6 +19,11 @@ interface Option {
     type: string;
 }
 
+interface Filter {
+    optionType: string;
+    showUsed: boolean;
+}
+
 function Options() {
     // Store the web3 data
     const [optionsMarket, setOptionsMarket] = useState<any | null>(null);
@@ -38,6 +43,12 @@ function Options() {
     // Used for selling the option
     const [sellOption, setSellOption] = useState<Option | null>(null);
     const [sellOptionPrice, setSellOptionPrice] = useState<number>(0);
+
+    // Used for filtering
+    const [filter, setFilter] = useState<Filter>({
+        optionType: "call",
+        showUsed: false,
+    });
 
     useEffect(() => {
         if (active) {
@@ -405,6 +416,13 @@ function Options() {
                         <select
                             id="type"
                             className="bg-green-500 text-white font-bold rounded py-1 px-3"
+                            onChange={(e) =>
+                                setFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.optionType = e.target.value;
+                                    return newPrev;
+                                })
+                            }
                         >
                             <option value="call">Call</option>
                             <option value="put">Put</option>
@@ -415,19 +433,21 @@ function Options() {
                             htmlFor="available"
                             className="text-gray-900 font-bold"
                         >
-                            Available
+                            Show Used
                         </label>
                         <input
                             type="checkbox"
                             id="available"
                             name="available"
+                            onChange={(e) => {
+                                setFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.showUsed = e.target.checked;
+                                    return newPrev;
+                                });
+                            }}
                         />
                     </fieldset>
-                    <input
-                        type="submit"
-                        value="Display"
-                        className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-1 px-3"
-                    />
                 </form>
                 <table
                     className="mx-auto table-fixed"
