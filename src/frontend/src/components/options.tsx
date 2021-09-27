@@ -22,6 +22,7 @@ interface Option {
 interface Filter {
     optionType: string;
     showUnavailable: boolean;
+    tokenAddress: string;
 }
 
 function Options() {
@@ -48,6 +49,7 @@ function Options() {
     const [searchFilter, setSearchFilter] = useState<Filter>({
         optionType: "call",
         showUnavailable: false,
+        tokenAddress: "",
     });
 
     useEffect(() => {
@@ -407,9 +409,9 @@ function Options() {
                 </form>
             </div>
             {/* Options table */}
-            <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
-                <form className="mx-auto w-3/5 mb-6 flex justify-evenly items-center space-x-4">
-                    <fieldset className="flex space-x-3 items-center">
+            <div className="overflow-x-auto w-4/5 mx-auto mt-16 rounded-xl shadow-md p-6">
+                <form className="pb-6 mb-6 flex flex-wrap justify-evenly items-center sm:space-x-4 space-y-3 border-b-4 border-gray-100">
+                    <fieldset className="flex space-x-1 justify-center items-center">
                         <label
                             htmlFor="type"
                             className="text-gray-900 font-bold"
@@ -431,7 +433,28 @@ function Options() {
                             <option value="put">Put</option>
                         </select>
                     </fieldset>
-                    <fieldset className="flex space-x-3 items-center">
+                    <fieldset className="flex space-x-1 justify-center items-center">
+                        <label
+                            htmlFor="tokenAddress"
+                            className="text-gray-900 font-bold"
+                        >
+                            Token Address
+                        </label>
+                        <input
+                            type="text"
+                            id="tokenAddress"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+                            onChange={(e) => {
+                                setSearchFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.tokenAddress = e.target.value;
+                                    return newPrev;
+                                });
+                            }}
+                        />
+                    </fieldset>
+                    <fieldset className="flex space-x-1 justify-center items-center">
                         <label
                             htmlFor="available"
                             className="text-gray-900 font-bold"
@@ -488,7 +511,14 @@ function Options() {
                                     return false;
                                 }
 
-                                if (searchFilter.showUnavailable) {
+                                if (
+                                    !option.tokenAddress.startsWith(
+                                        searchFilter.tokenAddress
+                                    )
+                                )
+                                    return false;
+
+                                if (!searchFilter.showUnavailable) {
                                     if (option.status !== "none") return false;
 
                                     if (
