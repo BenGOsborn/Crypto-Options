@@ -8,4 +8,5 @@
 -   Add a way of limiting the size of the tables height
 -   Add labels for the different sections
 -   Add label to sell option section
--   Make new account to test with ?
+-   Make new account on metamask to test with ?
+-   Write more tests
