@@ -4,3 +4,4 @@
 -   Migrate contract to external, calldata, storage for better gas costs
 
 -   Prevent the web socket from adding adding the same item more than once ?
+-   Add a price range as a filter

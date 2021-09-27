@@ -19,7 +19,7 @@ interface Option {
     type: string;
 }
 
-interface Filter {
+interface SearchFilter {
     optionType: string;
     tokenAddress: string;
     showUnavailable: boolean;
@@ -49,7 +49,7 @@ function Options() {
     const [sellOptionPrice, setSellOptionPrice] = useState<number>(0);
 
     // Used for filtering
-    const [searchFilter, setSearchFilter] = useState<Filter>({
+    const [searchFilter, setSearchFilter] = useState<SearchFilter>({
         optionType: "call",
         showUnavailable: false,
         tokenAddress: "",

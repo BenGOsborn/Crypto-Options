@@ -19,6 +19,15 @@ interface Trade {
     type: string;
 }
 
+interface SearchFilter {
+    optionType: string;
+    tokenAddress: string;
+    tradeStatus: "open" | "closed" | "cancelled" | "any";
+    writtenByUser: "true" | "false" | "any";
+    expiryDateStart: number;
+    expiryDateEnd: number;
+}
+
 function Trades() {
     // Store the web3 data
     const [optionsMarket, setOptionsMarket] = useState<any | null>(null);
@@ -34,6 +43,16 @@ function Trades() {
         id: number;
         price: number;
     } | null>(null);
+
+    // Used for filtering
+    const [searchFilterOwned, setSearchFilterOwned] = useState<SearchFilter>({
+        optionType: "call",
+        tradeStatus: "any",
+        tokenAddress: "",
+        writtenByUser: "any",
+        expiryDateStart: 0,
+        expiryDateEnd: Date.now() + 3.154e12,
+    });
 
     useEffect(() => {
         if (active) {
@@ -176,7 +195,13 @@ function Trades() {
                         <select
                             id="type"
                             className="bg-green-500 text-white font-bold rounded py-2 px-3"
-                            onChange={(e) => {}}
+                            onChange={(e) => {
+                                setSearchFilterOwned((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.optionType = e.target.value;
+                                    return newPrev;
+                                });
+                            }}
                         >
                             <option value="call">Call</option>
                             <option value="put">Put</option>
@@ -221,22 +246,32 @@ function Trades() {
                             id="tokenAddress"
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             placeholder="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
-                            onChange={(e) => {}}
+                            onChange={(e) => {
+                                setSearchFilterOwned((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.tokenAddress = e.target.value;
+                                    return newPrev;
+                                });
+                            }}
                         />
                     </fieldset>
                     <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                         <label
-                            htmlFor="available"
+                            htmlFor="type"
                             className="text-gray-900 font-bold"
                         >
-                            Show Unavailable
+                            Trade Status
                         </label>
-                        <input
-                            type="checkbox"
-                            id="available"
-                            name="available"
+                        <select
+                            id="type"
+                            className="bg-green-500 text-white font-bold rounded py-2 px-3"
                             onChange={(e) => {}}
-                        />
+                        >
+                            <option value="any">Any</option>
+                            <option value="open">Open</option>
+                            <option value="closed">Closed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
                     </fieldset>
                 </form>
                 <table
@@ -259,9 +294,6 @@ function Trades() {
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Price
-                            </th>
-                            <th className="px-3 py-2 break-words w-1/12">
-                                Type
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Trade Status
@@ -313,9 +345,6 @@ function Trades() {
                                 >
                                     {trade.price}
                                 </td>
-                                <td className="px-3 py-4" title={trade.type}>
-                                    {trade.type}
-                                </td>
                                 <td
                                     className="px-3 py-4"
                                     title={trade.tradeStatus}
@@ -348,36 +377,6 @@ function Trades() {
             </div>
             {/* Show all trades */}
             <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
-                <form className="mx-auto w-3/5 mb-6 flex justify-evenly items-center space-x-4">
-                    <fieldset className="flex space-x-3 items-center">
-                        <label
-                            htmlFor="type"
-                            className="text-gray-900 font-bold"
-                        >
-                            Option Type
-                        </label>
-                        <select
-                            id="type"
-                            className="bg-green-500 text-white font-bold rounded py-1 px-3"
-                        >
-                            <option value="call">Call</option>
-                            <option value="put">Put</option>
-                        </select>
-                    </fieldset>
-                    <fieldset className="flex space-x-3 items-center">
-                        <label
-                            htmlFor="available"
-                            className="text-gray-900 font-bold"
-                        >
-                            Available
-                        </label>
-                        <input
-                            type="checkbox"
-                            id="available"
-                            name="available"
-                        />
-                    </fieldset>
-                </form>
                 <table
                     className="mx-auto table-fixed"
                     style={{ minWidth: 500 }}
