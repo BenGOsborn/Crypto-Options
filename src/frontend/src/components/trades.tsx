@@ -182,7 +182,7 @@ function Trades() {
                 </div>
             ) : null}
             {/* Show user trades */}
-            <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
+            <div className="overflow-x-auto sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <form
                     className="pb-6 mb-6 flex flex-wrap justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100"
                     style={{ minWidth: 500 }}
@@ -477,7 +477,7 @@ function Trades() {
                 </table>
             </div>
             {/* Show all trades */}
-            <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
+            <div className="overflow-x-auto sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <table
                     className="mx-auto table-fixed"
                     style={{ minWidth: 500 }}
