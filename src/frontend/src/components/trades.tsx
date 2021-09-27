@@ -106,6 +106,7 @@ function Trades() {
 
     return (
         <div className="Trades">
+            {/* Buy option modal */}
             {buyTrade !== null ? (
                 <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
                     <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
@@ -159,6 +160,7 @@ function Trades() {
                     </div>
                 </div>
             ) : null}
+            {/* Show user trades */}
             <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <form className="mx-auto w-3/5 mb-6 flex justify-evenly items-center space-x-4">
                     <fieldset className="flex space-x-3 items-center">
@@ -319,6 +321,7 @@ function Trades() {
                     </tbody>
                 </table>
             </div>
+            {/* Show all trades */}
             <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <form className="mx-auto w-3/5 mb-6 flex justify-evenly items-center space-x-4">
                     <fieldset className="flex space-x-3 items-center">
