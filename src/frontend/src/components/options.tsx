@@ -156,6 +156,7 @@ function Options() {
                         <h2 className="font-bold text-xl uppercase text-gray-900">
                             Sell Option
                         </h2>
+                        {/* **** I NEED TO WRITE CUSTOM MESSAGES FOR A CALL OPTION AND A PUT OPTION AS AN OPTION WRITER AND NON OPTION WRITER */}
                         {sellOption.type === "call" ? (
                             sellOption.writer === account ? (
                                 <p className="text-gray-500">
