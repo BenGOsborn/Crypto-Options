@@ -515,9 +515,11 @@ function Options() {
                                 }
 
                                 if (
-                                    !option.tokenAddress.startsWith(
-                                        searchFilter.tokenAddress
-                                    )
+                                    !option.tokenAddress
+                                        .toLowerCase()
+                                        .startsWith(
+                                            searchFilter.tokenAddress.toLowerCase()
+                                        )
                                 )
                                     return false;
 
