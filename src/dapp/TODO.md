@@ -2,6 +2,5 @@
 -   Maybe seperate contracts into a trade contract and an option contract
 -   Deploy to multiple networks with the same ABI
 -   Migrate contract to external, calldata, storage for better gas costs
--   [Add an option to filter back in time more via the blocks for the frontend](https://piyopiyo.medium.com/how-to-get-current-block-number-of-ethereum-blockchain-a4405f77e1b1)
 
 -   Prevent the web socket from adding adding the same item more than once ?
