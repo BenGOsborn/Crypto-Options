@@ -394,6 +394,43 @@ function Options() {
                 </form>
             </div>
             <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
+                <form
+                    className="mx-auto w-3/5 mb-6 flex justify-evenly items-center"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                    }}
+                >
+                    <fieldset className="flex space-x-3 items-center">
+                        <label
+                            htmlFor="type"
+                            className="text-gray-900 font-bold"
+                        >
+                            Type
+                        </label>
+                        <select id="type">
+                            <option value="call">Call</option>
+                            <option value="put">Put</option>
+                        </select>
+                    </fieldset>
+                    <fieldset className="flex space-x-3 items-center">
+                        <label
+                            htmlFor="available"
+                            className="text-gray-900 font-bold"
+                        >
+                            Available
+                        </label>
+                        <input
+                            type="checkbox"
+                            id="available"
+                            name="available"
+                        />
+                    </fieldset>
+                    <input
+                        type="submit"
+                        value="Display"
+                        className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-1 px-3"
+                    />
+                </form>
                 <table
                     className="mx-auto table-fixed"
                     style={{ minWidth: 500 }}

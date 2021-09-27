@@ -11,12 +11,13 @@ interface Trade {
     id: number;
     optionId: number;
     tradePrice: number;
-    status: string;
+    tradeStatus: string;
     expiry: number;
     tokenAddress: string;
     amount: number;
     price: number;
     type: string;
+    optionStatus: string;
 }
 
 function Trades() {
@@ -65,12 +66,13 @@ function Trades() {
                                 id: tradeId,
                                 optionId: trade[1],
                                 tradePrice: trade[2],
-                                status: trade[3],
+                                tradeStatus: trade[3],
                                 expiry: option[0] * 1000,
                                 tokenAddress: option[3],
                                 amount: option[4],
                                 price: option[5],
                                 type: option[6],
+                                optionStatus: option[1],
                             };
                             if (trade[3] === "open") {
                                 setTrades((prev) => [...prev, newTrade]);
@@ -188,7 +190,10 @@ function Trades() {
                                 Type
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Status
+                                Trade Status
+                            </th>
+                            <th className="px-3 py-2 break-words w-1/12">
+                                Option Status
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Cancel
@@ -206,7 +211,7 @@ function Trades() {
                                 }`}
                             >
                                 <td className="px-3 py-4 text-center">
-                                    {trade.status === "open" ? (
+                                    {trade.tradeStatus === "open" ? (
                                         <button
                                             className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
                                             onClick={(e) => {
@@ -259,11 +264,20 @@ function Trades() {
                                 <td className="px-3 py-4" title={trade.type}>
                                     {trade.type}
                                 </td>
-                                <td className="px-3 py-4" title={trade.status}>
-                                    {trade.status}
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.tradeStatus}
+                                >
+                                    {trade.tradeStatus}
+                                </td>
+                                <td
+                                    className="px-3 py-4"
+                                    title={trade.optionStatus}
+                                >
+                                    {trade.optionStatus}
                                 </td>
                                 <td className="px-3 py-4 text-center">
-                                    {trade.status === "open" ? (
+                                    {trade.tradeStatus === "open" ? (
                                         <button
                                             className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
                                             onClick={async (e) => {
