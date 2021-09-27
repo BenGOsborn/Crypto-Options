@@ -40,10 +40,7 @@ function Trades() {
     const [ownedTrades, setOwnedTrades] = useState<Trade[]>([]);
 
     // Used for showing the buy screen
-    const [buyTrade, setBuyTrade] = useState<{
-        id: number;
-        price: number;
-    } | null>(null);
+    const [buyTrade, setBuyTrade] = useState<Trade | null>(null);
 
     // Used for filtering
     const [searchFilterOwned, setSearchFilterOwned] = useState<SearchFilter>({
@@ -142,11 +139,39 @@ function Trades() {
                         <h2 className="font-bold text-xl uppercase text-gray-900">
                             Buy Option
                         </h2>
-                        <p className="text-gray-500">
-                            When you buy an option, you have the right but not
-                            the obligation to exercise it at any time before the
-                            expiry you wish.
-                        </p>
+                        {buyTrade.type === "call" ? (
+                            <p className="text-gray-500">
+                                By purchasing this option for{" "}
+                                <span className="font-bold">
+                                    {buyTrade.tradePrice}
+                                </span>{" "}
+                                DAI, you are buying the right but not the
+                                obligation to buy{" "}
+                                <span className="font-bold">
+                                    {buyTrade.amount}
+                                </span>{" "}
+                                of the token with address '
+                                <span
+                                    className="font-bold"
+                                    title={buyTrade.tokenAddress}
+                                >
+                                    {buyTrade.tokenAddress.slice(0, 8)}...
+                                </span>
+                                ' for {buyTrade.price} DAI any time before{" "}
+                                <span className="font-bold">
+                                    {new Date(
+                                        buyTrade.expiry
+                                    ).toLocaleDateString()}
+                                </span>
+                                .
+                            </p>
+                        ) : (
+                            <p className="text-gray-500">
+                                When you buy an option, you have the right but
+                                not the obligation to exercise it at any time
+                                before the expiry you wish.
+                            </p>
+                        )}
                         <div className="flex justify-between sm:flex-row flex-col items-stretch sm:space-x-4 sm:space-y-0 space-y-4 mt-5">
                             <button
                                 className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-16"
@@ -680,10 +705,7 @@ function Trades() {
                                             <button
                                                 className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
                                                 onClick={(e) => {
-                                                    setBuyTrade({
-                                                        id: trade.optionId,
-                                                        price: trade.tradePrice,
-                                                    });
+                                                    setBuyTrade(trade);
                                                 }}
                                             >
                                                 Buy
