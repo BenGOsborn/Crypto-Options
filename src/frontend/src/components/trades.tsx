@@ -331,7 +331,7 @@ function Trades() {
                                 Token Amount
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Price
+                                Price (DAI)
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Trade Status
@@ -500,7 +500,7 @@ function Trades() {
                                 Token Amount
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Price
+                                Price (DAI)
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Type

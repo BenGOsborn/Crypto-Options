@@ -373,7 +373,7 @@ function Options() {
                                 className="text-gray-900 font-bold whitespace-nowrap"
                                 htmlFor="tokenPrice"
                             >
-                                Token Price
+                                Token Price (DAI)
                             </label>
                             <input
                                 type="number"
@@ -404,9 +404,9 @@ function Options() {
                 </form>
             </div>
             {/* Options table */}
-            <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
+            <div className="overflow-x-auto sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <form
-                    className="pb-6 mb-6 flex flex-wrap justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100"
+                    className="pb-6 mb-6 flex flex-wrap min-w-min justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100"
                     style={{ minWidth: 500 }}
                 >
                     <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
@@ -530,10 +530,7 @@ function Options() {
                         />
                     </fieldset>
                 </form>
-                <table
-                    className="mx-auto table-fixed"
-                    style={{ minWidth: 500 }}
-                >
+                <table className="mx-auto table-fixed min-w-min">
                     <thead>
                         <tr className="font-bold text-gray-900">
                             <th className="px-3 py-2 break-words w-1/12">
@@ -552,7 +549,7 @@ function Options() {
                                 Amount
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Price
+                                Price (DAI)
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Option
