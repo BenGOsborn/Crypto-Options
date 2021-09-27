@@ -297,7 +297,13 @@ function Trades() {
                         <select
                             id="type"
                             className="bg-green-500 text-white font-bold rounded py-2 px-3"
-                            onChange={(e) => {}}
+                            onChange={(e) => {
+                                setSearchFilterOwned((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.tradeStatus = e.target.value as any;
+                                    return newPrev;
+                                });
+                            }}
                         >
                             <option value="any">Any</option>
                             <option value="open">Open</option>
