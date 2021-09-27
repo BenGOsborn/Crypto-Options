@@ -187,8 +187,9 @@ contract OptionsMarket {
         // Get the trade
         Trade memory trade = trades[_tradeId];
 
-        // Verify that the trade status is valid
+        // Verify that the trade may be executed
         require(_compareStrings(trade.status, "open"), "Only open trades may be executed");
+        require(msg.sender != trade.poster, "Trade poster may not execute their own trade, use 'cancelTrade' instead");
 
         // Transfer the option
         optionOwners[trade.optionId] = msg.sender;

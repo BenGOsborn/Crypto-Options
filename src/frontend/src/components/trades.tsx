@@ -246,9 +246,6 @@ function Trades() {
                     <thead>
                         <tr className="font-bold text-gray-900">
                             <th className="px-3 py-2 break-words w-1/12">
-                                Buy
-                            </th>
-                            <th className="px-3 py-2 break-words w-1/12">
                                 Trade Price
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
@@ -284,25 +281,6 @@ function Trades() {
                                         : ""
                                 }`}
                             >
-                                <td className="px-3 py-4 text-center">
-                                    {trade.tradeStatus === "open" ? (
-                                        <button
-                                            className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
-                                            onClick={(e) => {
-                                                setBuyTrade({
-                                                    id: trade.optionId,
-                                                    price: trade.tradePrice,
-                                                });
-                                            }}
-                                        >
-                                            Buy
-                                        </button>
-                                    ) : (
-                                        <span className="text-gray-600">
-                                            Unavailable
-                                        </span>
-                                    )}
-                                </td>
                                 <td
                                     className="px-3 py-4"
                                     title={trade.tradePrice.toString()}
