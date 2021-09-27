@@ -160,6 +160,7 @@ contract OptionsMarket {
     function openTrade(uint256 _optionId, uint256 price) public returns (uint256) {
         // Check that the trade may be opened
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
+        require(_compareStrings(options[_optionId].status, "none"), "Cannot list a used option");
 
         // Create a new trade
         Trade memory trade = Trade({

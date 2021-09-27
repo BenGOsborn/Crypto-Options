@@ -17,7 +17,6 @@ interface Trade {
     amount: number;
     price: number;
     type: string;
-    optionStatus: string;
 }
 
 function Trades() {
@@ -72,7 +71,6 @@ function Trades() {
                                 amount: option[4],
                                 price: option[5],
                                 type: option[6],
-                                optionStatus: option[1],
                             };
                             if (trade[3] === "open") {
                                 setTrades((prev) => [...prev, newTrade]);
@@ -193,9 +191,6 @@ function Trades() {
                                 Trade Status
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Option Status
-                            </th>
-                            <th className="px-3 py-2 break-words w-1/12">
                                 Cancel
                             </th>
                         </tr>
@@ -269,12 +264,6 @@ function Trades() {
                                     title={trade.tradeStatus}
                                 >
                                     {trade.tradeStatus}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.optionStatus}
-                                >
-                                    {trade.optionStatus}
                                 </td>
                                 <td className="px-3 py-4 text-center">
                                     {trade.tradeStatus === "open" ? (
