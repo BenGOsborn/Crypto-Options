@@ -473,8 +473,30 @@ function Options() {
                         >
                             Expiry Range
                         </label>
-                        <input type="datetime-local" />
-                        <input type="datetime-local" />
+                        <input
+                            type="datetime-local"
+                            onChange={(e) => {
+                                setSearchFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.expiryDateStart = new Date(
+                                        e.target.value
+                                    ).getTime();
+                                    return newPrev;
+                                });
+                            }}
+                        />
+                        <input
+                            type="datetime-local"
+                            onChange={(e) => {
+                                setSearchFilter((prev) => {
+                                    const newPrev = { ...prev };
+                                    newPrev.expiryDateEnd = new Date(
+                                        e.target.value
+                                    ).getTime();
+                                    return newPrev;
+                                });
+                            }}
+                        />
                     </fieldset>
                     <fieldset className="flex flex-col space-x-1 justify-center items-center">
                         <label
@@ -550,10 +572,12 @@ function Options() {
                     <tbody>
                         {options
                             .filter((option) => {
+                                // Filter out option type
                                 if (option.type !== searchFilter.optionType) {
                                     return false;
                                 }
 
+                                // Filter token address
                                 if (
                                     !option.tokenAddress
                                         .toLowerCase()
@@ -563,12 +587,40 @@ function Options() {
                                 )
                                     return false;
 
+                                // Filter unavailable options
                                 if (!searchFilter.showUnavailable) {
                                     if (option.status !== "none") return false;
 
                                     if (
                                         option.owner !== account &&
                                         option.writer !== account
+                                    )
+                                        return false;
+                                }
+
+                                // Filter out of range expiry options
+                                if (
+                                    !(
+                                        searchFilter.expiryDateStart <=
+                                            option.expiry &&
+                                        option.expiry <=
+                                            searchFilter.expiryDateEnd
+                                    )
+                                )
+                                    return false;
+
+                                // Filter options written by user
+                                if (searchFilter.writtenByUser !== "any") {
+                                    if (
+                                        searchFilter.writtenByUser === "true" &&
+                                        option.writer !== account
+                                    )
+                                        return false;
+
+                                    if (
+                                        searchFilter.writtenByUser ===
+                                            "false" &&
+                                        option.writer === account
                                     )
                                         return false;
                                 }
