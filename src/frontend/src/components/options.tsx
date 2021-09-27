@@ -141,6 +141,7 @@ function Options() {
 
     return (
         <div className="Options">
+            {/* Sell option modal */}
             {sellOption !== null ? (
                 <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
                     <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
@@ -208,6 +209,7 @@ function Options() {
                     </div>
                 </div>
             ) : null}
+            {/* Write new option */}
             <div className="mx-auto w-2/5 min-w-min rounded-xl shadow-md p-6">
                 <form
                     className="flex flex-col space-y-6"
@@ -404,6 +406,7 @@ function Options() {
                     </div>
                 </form>
             </div>
+            {/* Options table */}
             <div className="overflow-x-auto w-3/5 mx-auto mt-16 rounded-xl shadow-md p-6">
                 <form className="mx-auto w-3/5 mb-6 flex justify-evenly items-center space-x-4">
                     <fieldset className="flex space-x-3 items-center">
@@ -474,9 +477,6 @@ function Options() {
                                 Price
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Type
-                            </th>
-                            <th className="px-3 py-2 break-words w-1/12">
                                 Option
                             </th>
                         </tr>
@@ -484,10 +484,21 @@ function Options() {
                     <tbody>
                         {options
                             .filter((option) => {
-                                return (
-                                    option.type === searchFilter.optionType &&
-                                    searchFilter.showUnavailable
-                                );
+                                if (option.type !== searchFilter.optionType) {
+                                    return false;
+                                }
+
+                                if (searchFilter.showUnavailable) {
+                                    if (option.status !== "none") return false;
+
+                                    if (
+                                        option.owner !== account &&
+                                        option.writer !== account
+                                    )
+                                        return false;
+                                }
+
+                                return true;
                             })
                             .map((option, index) => (
                                 <tr
@@ -549,12 +560,6 @@ function Options() {
                                         title={option.price.toString()}
                                     >
                                         {option.price}
-                                    </td>
-                                    <td
-                                        className="px-3 py-4"
-                                        title={option.type.toString()}
-                                    >
-                                        {option.type}
                                     </td>
                                     <td className="px-3 py-4 text-center">
                                         {option.owner === account ? (
