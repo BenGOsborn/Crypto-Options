@@ -319,7 +319,7 @@ function Trades() {
                     <thead>
                         <tr className="font-bold text-gray-900">
                             <th className="px-3 py-2 break-words w-1/12">
-                                Trade Price
+                                Trade Price (DAI)
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Expiry
@@ -488,7 +488,7 @@ function Trades() {
                                 Buy
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
-                                Trade Price
+                                Trade Price (DAI)
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Expiry
@@ -507,9 +507,6 @@ function Trades() {
                             </th>
                             <th className="px-3 py-2 break-words w-1/12">
                                 Trade Status
-                            </th>
-                            <th className="px-3 py-2 break-words w-1/12">
-                                Cancel
                             </th>
                         </tr>
                     </thead>
@@ -582,25 +579,6 @@ function Trades() {
                                     title={trade.tradeStatus}
                                 >
                                     {trade.tradeStatus}
-                                </td>
-                                <td className="px-3 py-4 text-center">
-                                    {trade.tradeStatus === "open" ? (
-                                        <button
-                                            className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
-                                            onClick={async (e) => {
-                                                // Cancel the trade
-                                                await optionsMarket.methods
-                                                    .cancelTrade(trade.id)
-                                                    .send({ from: account });
-                                            }}
-                                        >
-                                            Cancel
-                                        </button>
-                                    ) : (
-                                        <span className="text-gray-600">
-                                            Unavailable
-                                        </span>
-                                    )}
                                 </td>
                             </tr>
                         ))}
