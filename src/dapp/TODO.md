@@ -11,10 +11,5 @@
 -   Make new account on metamask to test with ?
 
 -   Write more tests
-<<<<<<< HEAD
 -   Add in the decimals when specifying token amounts (and round them down from the frontend)
-=======
-
-    -   Check who owns the contract after different purchases
-    -   Check the balance of the owner after every trade
->>>>>>> main
+-   Change date selectors to weeks only AND MAKE SURE THAT THEY WORK
