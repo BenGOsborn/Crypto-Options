@@ -13,8 +13,8 @@ contract OptionsMarket {
         string status; // none, exercised, collected
         address writer;
         address tokenAddress;
-        uint256 amount;
-        uint256 price;
+        uint256 tokenAmount;
+        uint256 strikePrice;
         string optionType; // call, put
     }
 
@@ -26,7 +26,7 @@ contract OptionsMarket {
     struct Trade {
         address poster;
         uint256 optionId;
-        uint256 price;
+        uint256 premium;
         string status; // open, closed, cancelled
     }
 
@@ -62,7 +62,7 @@ contract OptionsMarket {
     // ============= Option functions =============
 
     // Allow the address to create a new option
-    function writeOption(string memory optionType, uint256 expiry, address tokenAddress, uint256 amount, uint256 price) public returns (uint256) {
+    function writeOption(string memory optionType, uint256 expiry, address tokenAddress, uint256 tokenAmount, uint256 strikePrice) public returns (uint256) {
         // Check that the option is valid
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
         require(expiry > block.timestamp, "Expiry must be in the future");
@@ -73,17 +73,17 @@ contract OptionsMarket {
             status: "none",
             writer: msg.sender,
             tokenAddress: tokenAddress,
-            amount: amount,
-            price: price,
+            tokenAmount: tokenAmount,
+            strikePrice: strikePrice,
             optionType: optionType
         });
 
         // If this is a call then transfer the amount of the token to the contract,
         // otherwise if a put then transfer the trade currency to the contract
         if (_compareStrings(optionType, "call")) {
-            IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount); 
+            IERC20(tokenAddress).transferFrom(msg.sender, address(this), tokenAmount); 
         } else {
-            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), price);
+            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), strikePrice * tokenAmount);
         }
 
         // Save the option
@@ -99,7 +99,7 @@ contract OptionsMarket {
     // Get the data of an option
     function getOption(uint256 _optionId) public view returns (uint256, string memory, address, address, uint256, uint256, string memory) {
         Option memory option = options[_optionId];
-        return (option.expiry, option.status, option.writer, option.tokenAddress, option.amount, option.price, option.optionType);
+        return (option.expiry, option.status, option.writer, option.tokenAddress, option.tokenAmount, option.strikePrice, option.optionType);
     }
 
     // Get the owner of an option
@@ -117,14 +117,14 @@ contract OptionsMarket {
         require(_compareStrings(option.status, "none"), "Option has already been exercised");
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may exercise it");
 
-        // If the option is a call, then charge the user the premium to receive the tokens,
+        // If the option is a call, then charge the strike price to receive the tokens,
         // else if the option is a put, transfer their tokens
         if (_compareStrings(option.optionType, "call")) {
-            IERC20(tradeCurrency).transferFrom(msg.sender, option.writer, option.price);
-            IERC20(option.tokenAddress).transfer(msg.sender, option.amount);
+            IERC20(tradeCurrency).transferFrom(msg.sender, option.writer, option.strikePrice * option.tokenAmount);
+            IERC20(option.tokenAddress).transfer(msg.sender, option.tokenAmount);
         } else {
-            IERC20(option.tokenAddress).transferFrom(msg.sender, option.writer, option.amount);
-            IERC20(tradeCurrency).transfer(msg.sender, option.price);
+            IERC20(option.tokenAddress).transferFrom(msg.sender, option.writer, option.tokenAmount);
+            IERC20(tradeCurrency).transfer(msg.sender, option.tokenAmount * option.strikePrice);
         }
 
         // Update the status of the option and emit event
