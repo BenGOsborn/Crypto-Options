@@ -1,3 +1,5 @@
+import { createContext, Dispatch, SetStateAction } from "react";
+
 export interface Trade {
     id: number;
     optionId: number;
@@ -19,3 +21,15 @@ export interface SearchFilter {
     expiryDateStart: number;
     expiryDateEnd: number;
 }
+
+export const tradesContext = createContext<
+    [Trade[], Dispatch<SetStateAction<Trade[]>>]
+>(undefined as any);
+
+export const userTradesContext = createContext<
+    [Trade[], Dispatch<SetStateAction<Trade[]>>]
+>(undefined as any);
+
+export const buyTradeContext = createContext<
+    [Trade | null, Dispatch<SetStateAction<Trade | null>>]
+>(undefined as any);
