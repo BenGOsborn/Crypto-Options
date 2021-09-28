@@ -4,8 +4,9 @@ import Web3 from "web3";
 import {
     getERC20Contract,
     getOptionsMarketContract,
-    safeTransfer,
+    checkTransfer,
 } from "../helpers";
+import { SearchFilter, Trade } from "./helpers";
 
 function Trades() {
     // Store the web3 data

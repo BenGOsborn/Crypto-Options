@@ -2,7 +2,7 @@ import { useEffect, useContext } from "react";
 import { injected } from "./wallet/connectors";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
-import { selectorContext } from "./context";
+import { selectorContext } from "./helpers";
 
 function Nav() {
     const { active, account, activate, deactivate } = useWeb3React();
