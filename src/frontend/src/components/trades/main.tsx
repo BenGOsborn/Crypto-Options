@@ -62,9 +62,8 @@ function Trades() {
                                 expiry: option[0] * 1000,
                                 writer: option[2],
                                 tokenAddress: option[3],
-                                amount: option[4],
-                                price: option[5],
-                                type: option[6],
+                                price: option[4],
+                                type: option[5],
                             };
                             if (trade[3] === "open" && trade[0] !== account) {
                                 setTrades((prev) => [...prev, newTrade]);
@@ -117,11 +116,7 @@ function Trades() {
                                     {buyTrade.tradePrice}
                                 </span>{" "}
                                 DAI, you are buying the right but not the
-                                obligation to buy{" "}
-                                <span className="font-bold">
-                                    {buyTrade.amount}
-                                </span>{" "}
-                                of the token with address '
+                                obligation to buy of the token with address '
                                 <span
                                     className="font-bold"
                                     title={buyTrade.tokenAddress}
@@ -147,11 +142,7 @@ function Trades() {
                                     {buyTrade.tradePrice}
                                 </span>{" "}
                                 DAI, you are buying the right but not the
-                                obligation to sell{" "}
-                                <span className="font-bold">
-                                    {buyTrade.amount}
-                                </span>{" "}
-                                of the token with address '
+                                obligation to sell of the token with address '
                                 <span
                                     className="font-bold"
                                     title={buyTrade.tokenAddress}

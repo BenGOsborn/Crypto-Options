@@ -8,7 +8,6 @@ export interface Trade {
     expiry: number;
     writer: string;
     tokenAddress: string;
-    amount: number;
     price: number;
     type: string;
 }

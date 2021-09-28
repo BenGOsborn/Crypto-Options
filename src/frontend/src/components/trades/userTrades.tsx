@@ -154,9 +154,6 @@ function UserTrades() {
                             Token Address
                         </th>
                         <th className="px-3 py-2 break-words w-1/12">
-                            Token Amount
-                        </th>
-                        <th className="px-3 py-2 break-words w-1/12">
                             Price (DAI)
                         </th>
                         <th className="px-3 py-2 break-words w-1/12">
@@ -249,12 +246,6 @@ function UserTrades() {
                                     title={trade.tokenAddress}
                                 >
                                     {trade.tokenAddress.slice(0, 8)}...
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.amount.toString()}
-                                >
-                                    {trade.amount}
                                 </td>
                                 <td
                                     className="px-3 py-4"
