@@ -210,12 +210,12 @@ function Trades() {
                 </div>
             ) : null}
             <userTradesContext.Provider value={[userTrades, setUserTrades]}>
-                <buyTradeContext.Provider value={[buyTrade, setBuyTrade]}>
-                    <UserTrades />
-                </buyTradeContext.Provider>
+                <UserTrades />
             </userTradesContext.Provider>
             <tradesContext.Provider value={[trades, setTrades]}>
-                <NonUserTrades />
+                <buyTradeContext.Provider value={[buyTrade, setBuyTrade]}>
+                    <NonUserTrades />
+                </buyTradeContext.Provider>
             </tradesContext.Provider>
         </div>
     );
