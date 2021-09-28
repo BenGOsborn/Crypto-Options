@@ -55,14 +55,14 @@ contract OptionsMarket {
     }
 
     // Get the trade currency of the token
-    function getTradeCurrency() public view returns (address) {
+    function getTradeCurrency() external view returns (address) {
         return tradeCurrency;
     }
 
     // ============= Option functions =============
 
     // Allow the address to create a new option
-    function writeOption(string memory optionType, uint256 expiry, address tokenAddress, uint256 tokenAmount, uint256 strikePrice) public returns (uint256) {
+    function writeOption(string calldata optionType, uint256 expiry, address tokenAddress, uint256 tokenAmount, uint256 strikePrice) external returns (uint256) {
         // Check that the option is valid
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
         require(expiry > block.timestamp, "Expiry must be in the future");
@@ -97,18 +97,18 @@ contract OptionsMarket {
     }
 
     // Get the data of an option
-    function getOption(uint256 _optionId) public view returns (uint256, string memory, address, address, uint256, uint256, string memory) {
+    function getOption(uint256 _optionId) external view returns (uint256, string memory, address, address, uint256, uint256, string memory) {
         Option memory option = options[_optionId];
         return (option.expiry, option.status, option.writer, option.tokenAddress, option.tokenAmount, option.strikePrice, option.optionType);
     }
 
     // Get the owner of an option
-    function getOptionOwner(uint256 _optionId) public view returns (address) {
+    function getOptionOwner(uint256 _optionId) external view returns (address) {
         return optionOwners[_optionId];
     }
 
     // Allow a option holder to exercise their option
-    function exerciseOption(uint256 _optionId) public {
+    function exerciseOption(uint256 _optionId) external {
         // Get the data of the option
         Option memory option = options[_optionId];
 
@@ -133,7 +133,7 @@ contract OptionsMarket {
     }
 
     // Allow a writer to collect an expired contract
-    function collectExpired(uint256 _optionId) public {
+    function collectExpired(uint256 _optionId) external {
         // Get the data of the option
         Option memory option = options[_optionId];
 
@@ -157,7 +157,7 @@ contract OptionsMarket {
     // ============= Marketplace functions =============
 
     // Open a new trade for selling an option
-    function openTrade(uint256 _optionId, uint256 premium) public returns (uint256) {
+    function openTrade(uint256 _optionId, uint256 premium) external returns (uint256) {
         // Check that the trade may be opened
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
         require(_compareStrings(options[_optionId].status, "none"), "Cannot list a used option");
@@ -183,7 +183,7 @@ contract OptionsMarket {
     }
 
     // Execute a trade for buying an option
-    function executeTrade(uint256 _tradeId) public {
+    function executeTrade(uint256 _tradeId) external {
         // Get the trade
         Trade memory trade = trades[_tradeId];
 
@@ -208,13 +208,13 @@ contract OptionsMarket {
     }
 
     // View a trade
-    function getTrade(uint256 _tradeId) public view returns (address, uint256, uint256, string memory) {
+    function getTrade(uint256 _tradeId) external view returns (address, uint256, uint256, string memory) {
         Trade memory trade = trades[_tradeId];
         return (trade.poster, trade.optionId, trade.premium, trade.status);
     }
 
     // Cancel a trade
-    function cancelTrade(uint256 _tradeId) public {
+    function cancelTrade(uint256 _tradeId) external {
         // Get the trade
         Trade memory trade = trades[_tradeId];
 
