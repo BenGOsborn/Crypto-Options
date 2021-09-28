@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { getOptionsMarketContract } from "../helpers";
 import DisplayOptions from "./display";
-import { selectorContext, OptionsMarket } from "./helpers";
+import { optionsMarketContext, OptionsMarket } from "./helpers";
 import WriteOption from "./write";
 
 function Options() {
@@ -139,10 +139,12 @@ function Options() {
                     </div>
                 ) : null}
             </div>
-            <selectorContext.Provider value={[optionsMarket, setOptionsMarket]}>
+            <optionsMarketContext.Provider
+                value={[optionsMarket, setOptionsMarket]}
+            >
                 <WriteOption />
                 <DisplayOptions />
-            </selectorContext.Provider>
+            </optionsMarketContext.Provider>
         </div>
     );
 }

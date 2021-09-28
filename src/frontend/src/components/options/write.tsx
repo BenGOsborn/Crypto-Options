@@ -1,56 +1,54 @@
 import { useWeb3React } from "@web3-react/core";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Web3 from "web3";
-import { getOptionsMarketContract } from "../helpers";
+import { checkTransfer, getERC20Contract } from "../helpers";
+import { optionsMarketContext } from "./helpers";
 
 function WriteOption() {
     // Store the web3 data
-    const [optionsMarket, setOptionsMarket] = useState<any | null>(null);
-    const { active, account } = useWeb3React();
+    const [optionsMarket, setOptionsMarket] = useContext(optionsMarketContext);
+    const { account } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
 
-    useEffect(() => {
-        if (active) {
-            getOptionsMarketContract(web3)
-                .then((contract) => {
-                    // Store the contract in the state
-                    setOptionsMarket(contract);
-                })
-                .catch((e) => console.error(e));
-        }
-    }, [active]);
+    // Store the write option state
+    const [optionType, setOptionType] = useState<string>("call");
+    const [tokenAddress, setTokenAddress] = useState<string>("");
+    const [expiry, setExpiry] = useState<number>(0);
+    const [strikePrice, setStrikePrice] = useState<number>(0);
 
     return (
         <div className="mx-auto w-1/4 min-w-min rounded-xl shadow-md p-6">
             <form
                 className="flex flex-col space-y-6"
                 onSubmit={async (e) => {
-                    // Prevent the page from reloading
+                    // Prevent the page from reloading and make sure this function may be called
                     e.preventDefault();
-
-                    // Get contract address
-                    const optionsMarketAddress = optionsMarket._address;
-
-                    // Get the amount of option tokens
-                    // const;
+                    if (optionsMarket === null) return;
 
                     // Check the ERC20 allowances
                     if (optionType === "put") {
                         // Check the trade currency and allocate funds
-                        const tradeCurrencyAddress = await optionsMarket.methods
-                            .getTradeCurrency()
-                            .call();
+                        const tradeCurrencyAddress =
+                            await optionsMarket?.optionsMarket.methods
+                                .getTradeCurrency()
+                                .call();
                         const tradeCurrency = await getERC20Contract(
                             web3,
                             tradeCurrencyAddress
                         );
+                        const tradeCurrencyDecimals =
+                            await tradeCurrency.methods.decimals();
 
                         // Check that funds are allocated to contract and if not allocate them
-                        await safeTransfer(
+                        await checkTransfer(
                             web3,
-                            optionsMarketAddress,
+                            optionsMarket?.address,
                             account as string,
-                            tokenPrice,
+                            Math.floor(
+                                strikePrice *
+                                    10 ** tradeCurrencyDecimals *
+                                    optionsMarket?.baseUnitAmount
+                            ),
                             tradeCurrency
                         );
                     } else {
@@ -61,23 +59,22 @@ function WriteOption() {
                         );
 
                         // Check that tokens are allocated to contract and if not allocate them
-                        await safeTransfer(
+                        await checkTransfer(
                             web3,
-                            optionsMarketAddress,
+                            optionsMarket?.address,
                             account as string,
-                            tokenAmount,
+                            optionsMarket?.baseUnitAmount,
                             token
                         );
                     }
 
                     // Create the new option
-                    await optionsMarket.methods
+                    await optionsMarket?.optionsMarket.methods
                         .writeOption(
                             optionType,
                             expiry,
                             tokenAddress,
-                            tokenAmount,
-                            tokenPrice
+                            strikePrice
                         )
                         .send({ from: account });
 
@@ -154,15 +151,15 @@ function WriteOption() {
                         className="text-gray-900 font-bold whitespace-nowrap"
                         htmlFor="tokenPrice"
                     >
-                        Token Price (DAI)
+                        Strike Price (DAI)
                     </label>
                     <input
                         type="number"
                         name="tokenPrice"
                         id="tokenPrice"
-                        placeholder="100"
+                        placeholder="10.0"
                         min={0}
-                        onChange={(e) => setTokenPrice(e.target.valueAsNumber)}
+                        onChange={(e) => setStrikePrice(e.target.valueAsNumber)}
                         required
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     />

@@ -8,6 +8,6 @@ export interface OptionsMarket {
 }
 
 // Options contract context
-export const selectorContext = createContext<
+export const optionsMarketContext = createContext<
     [OptionsMarket | null, Dispatch<SetStateAction<OptionsMarket | null>>]
 >(undefined as any);
