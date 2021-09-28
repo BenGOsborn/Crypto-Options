@@ -13,12 +13,11 @@ contract OptionsMarket {
         string status; // none, exercised, collected
         address writer;
         address tokenAddress;
-        uint256 tokenAmount;
         uint256 strikePrice;
         string optionType; // call, put
     }
 
-    uint8 private constant tokensPerOption = 100;
+    uint256 private constant BASE_UNIT_AMOUNT = 10e6;
     uint256 private optionId;
     mapping(uint256 => Option) private options;
     mapping(uint256 => address) private optionOwners;
@@ -60,9 +59,9 @@ contract OptionsMarket {
         return tradeCurrency;
     }
 
-    // Get the number of tokens per option
-    function getTokensPerOption() external view returns (uint8) {
-        return tokensPerOption;
+    // Get the number of base units of the token traded per option
+    function getBaseUnitAmount() external pure returns (uint256) {
+        return BASE_UNIT_AMOUNT;
     }
 
     // ============= Option functions =============
@@ -77,21 +76,12 @@ contract OptionsMarket {
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
         require(optionExpiry > block.timestamp, "Expiry must be in the future");
 
-        // Get the decimals of the contract
-        uint8 tokenDecimals;
-        try IERC20(tokenAddress).decimals() returns (uint8 d) {
-            tokenDecimals = d;
-        } catch {
-            tokenDecimals = 18;
-        }
-
         // Write a new option
         Option memory option = Option({
             expiry: optionExpiry,
             status: "none",
             writer: msg.sender,
             tokenAddress: tokenAddress,
-            tokenAmount: tokensPerOption * 10 ** tokenDecimals,
             strikePrice: strikePrice,
             optionType: optionType
         });
@@ -99,9 +89,9 @@ contract OptionsMarket {
         // If this is a call then transfer the amount of the token to the contract,
         // otherwise if a put then transfer the trade currency to the contract
         if (_compareStrings(optionType, "call")) {
-            IERC20(tokenAddress).transferFrom(msg.sender, address(this), tokensPerOption); 
+            IERC20(tokenAddress).transferFrom(msg.sender, address(this), BASE_UNIT_AMOUNT); 
         } else {
-            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), strikePrice * tokensPerOption);
+            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), strikePrice * BASE_UNIT_AMOUNT);
         }
 
         // Save the option
@@ -115,9 +105,9 @@ contract OptionsMarket {
     }
 
     // Get the data of an option
-    function getOption(uint256 _optionId) external view returns (uint256, string memory, address, address, uint256, uint256, string memory) {
+    function getOption(uint256 _optionId) external view returns (uint256, string memory, address, address, uint256, string memory) {
         Option memory option = options[_optionId];
-        return (option.expiry, option.status, option.writer, option.tokenAddress, option.tokenAmount, option.strikePrice, option.optionType);
+        return (option.expiry, option.status, option.writer, option.tokenAddress, option.strikePrice, option.optionType);
     }
 
     // Get the owner of an option
@@ -138,11 +128,11 @@ contract OptionsMarket {
         // If the option is a call, then charge the strike price to receive the tokens,
         // else if the option is a put, transfer their tokens
         if (_compareStrings(option.optionType, "call")) {
-            IERC20(tradeCurrency).transferFrom(msg.sender, option.writer, option.strikePrice * option.tokenAmount);
-            IERC20(option.tokenAddress).transfer(msg.sender, option.tokenAmount);
+            IERC20(tradeCurrency).transferFrom(msg.sender, option.writer, option.strikePrice * BASE_UNIT_AMOUNT);
+            IERC20(option.tokenAddress).transfer(msg.sender, BASE_UNIT_AMOUNT);
         } else {
-            IERC20(option.tokenAddress).transferFrom(msg.sender, option.writer, option.tokenAmount);
-            IERC20(tradeCurrency).transfer(msg.sender, option.tokenAmount * option.strikePrice);
+            IERC20(option.tokenAddress).transferFrom(msg.sender, option.writer, BASE_UNIT_AMOUNT);
+            IERC20(tradeCurrency).transfer(msg.sender, option.strikePrice * BASE_UNIT_AMOUNT);
         }
 
         // Update the status of the option and emit event
@@ -163,9 +153,9 @@ contract OptionsMarket {
         // If the option is a call then transfer the tokens back to the writer,
         // otherwise transfer the price back to the writer
         if (_compareStrings(option.optionType, "call")) {
-            IERC20(option.tokenAddress).transfer(msg.sender, option.tokenAmount);
+            IERC20(option.tokenAddress).transfer(msg.sender, BASE_UNIT_AMOUNT);
         } else {
-            IERC20(tradeCurrency).transfer(msg.sender, option.tokenAmount * option.strikePrice);
+            IERC20(tradeCurrency).transfer(msg.sender, option.strikePrice * BASE_UNIT_AMOUNT);
         }
 
         // Update the status of the option
