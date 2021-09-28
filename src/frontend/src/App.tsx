@@ -18,7 +18,7 @@ function App() {
     // Store the web3 data
     const [optionsMarket, setOptionsMarket] =
         useState<OptionsMarketData | null>(null);
-    const { active, account } = useWeb3React();
+    const { active } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
 
     useEffect(() => {
