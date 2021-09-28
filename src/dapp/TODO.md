@@ -11,5 +11,3 @@
 -   Make new account on metamask to test with ?
 -   Write more tests
 -   Maybe standardize the dates of the contracts as well (make it expire every friday at 3pm by dividing)
-
--   MAKE SURE TO MULTIPLY THE TOKENS BY THE AMOUNT TOO
