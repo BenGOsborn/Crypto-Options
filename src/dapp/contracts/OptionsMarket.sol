@@ -68,7 +68,7 @@ contract OptionsMarket {
 
     // Allow the address to create a new option
     function writeOption(string calldata optionType, uint256 expiry, address tokenAddress, uint256 strikePrice) external returns (uint256) {
-        // Make the expiry weekly
+        // Make the expiry weekly every friday
         uint256 expiryTemp = expiry / (86400 * 7);
         uint256 optionExpiry = expiryTemp * (86400 * 7) + 86400 * 5;
         
@@ -87,7 +87,7 @@ contract OptionsMarket {
         });
 
         // If this is a call then transfer the amount of the token to the contract,
-        // otherwise if a put then transfer the trade currency to the contract
+        // otherwise transfer the trade currency x strike price to the contract
         if (_compareStrings(optionType, "call")) {
             IERC20(tokenAddress).transferFrom(msg.sender, address(this), BASE_UNIT_AMOUNT); 
         } else {
@@ -125,7 +125,7 @@ contract OptionsMarket {
         require(_compareStrings(option.status, "none"), "Option has already been exercised");
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may exercise it");
 
-        // If the option is a call, then charge the strike price to receive the tokens,
+        // If the option is a call, then charge the strike price x num tokens to receive the tokens,
         // else if the option is a put, transfer their tokens
         if (_compareStrings(option.optionType, "call")) {
             IERC20(tradeCurrency).transferFrom(msg.sender, option.writer, option.strikePrice * BASE_UNIT_AMOUNT);
@@ -151,7 +151,7 @@ contract OptionsMarket {
         require(option.writer == msg.sender, "Only the writer may collect an expired option");
 
         // If the option is a call then transfer the tokens back to the writer,
-        // otherwise transfer the price back to the writer
+        // otherwise transfer the strike price x num tokens back to the writer
         if (_compareStrings(option.optionType, "call")) {
             IERC20(option.tokenAddress).transfer(msg.sender, BASE_UNIT_AMOUNT);
         } else {
