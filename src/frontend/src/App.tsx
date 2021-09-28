@@ -6,7 +6,7 @@ import {
     selectorContext,
 } from "./components/helpers";
 import Nav from "./components/nav";
-import Trades from "./components/trades";
+import Trades from "./components/trades/main";
 import Options from "./components/options/main";
 import Web3 from "web3";
 import { OptionsMarketData, optionsMarketContext } from "./components/helpers";
