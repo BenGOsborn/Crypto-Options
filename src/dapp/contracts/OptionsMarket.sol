@@ -63,13 +63,17 @@ contract OptionsMarket {
 
     // Allow the address to create a new option
     function writeOption(string calldata optionType, uint256 expiry, address tokenAddress, uint256 tokenAmount, uint256 strikePrice) external returns (uint256) {
+        // Make the expiry weekly
+        uint256 expiryTemp = expiry / (86400 * 7);
+        uint256 optionExpiry = expiryTemp * (86400 * 7) + 86400 * 5;
+        
         // Check that the option is valid
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
-        require(expiry > block.timestamp, "Expiry must be in the future");
+        require(optionExpiry > block.timestamp, "Expiry must be in the future");
 
         // Write a new option
         Option memory option = Option({
-            expiry: expiry,
+            expiry: optionExpiry,
             status: "none",
             writer: msg.sender,
             tokenAddress: tokenAddress,
