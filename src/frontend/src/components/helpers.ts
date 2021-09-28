@@ -3,7 +3,7 @@ import OptionsMarket from "../abi/OptionsMarket.json";
 import IERC20 from "../abi/IERC20.json";
 import { createContext, Dispatch, SetStateAction } from "react";
 
-// Shopping cart context
+// Nav selector context
 export const selectorContext = createContext<
     [string, Dispatch<SetStateAction<string>>]
 >(undefined as any);

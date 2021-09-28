@@ -3,7 +3,7 @@ import { useState } from "react";
 import { selectorContext } from "./components/helpers";
 import Nav from "./components/nav";
 import Trades from "./components/trades";
-import Options from "./components/options/display";
+import Options from "./components/options/main";
 
 function App() {
     const { active } = useWeb3React();

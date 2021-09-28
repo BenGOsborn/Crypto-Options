@@ -1,4 +1,25 @@
+import { useWeb3React } from "@web3-react/core";
+import { useEffect, useState } from "react";
+import Web3 from "web3";
+import { getOptionsMarketContract } from "../helpers";
+
 function WriteOption() {
+    // Store the web3 data
+    const [optionsMarket, setOptionsMarket] = useState<any | null>(null);
+    const { active, account } = useWeb3React();
+    const web3: Web3 = useWeb3React().library;
+
+    useEffect(() => {
+        if (active) {
+            getOptionsMarketContract(web3)
+                .then((contract) => {
+                    // Store the contract in the state
+                    setOptionsMarket(contract);
+                })
+                .catch((e) => console.error(e));
+        }
+    }, [active]);
+
     return (
         <div className="mx-auto w-1/4 min-w-min rounded-xl shadow-md p-6">
             <form
@@ -11,7 +32,7 @@ function WriteOption() {
                     const optionsMarketAddress = optionsMarket._address;
 
                     // Get the amount of option tokens
-                    const;
+                    // const;
 
                     // Check the ERC20 allowances
                     if (optionType === "put") {
