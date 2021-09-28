@@ -71,13 +71,21 @@ contract OptionsMarket {
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
         require(optionExpiry > block.timestamp, "Expiry must be in the future");
 
+        // Get the decimals of the contract
+        uint8 tokenDecimals;
+        try IERC20(tokenAddress).decimals() returns (uint8 d) {
+            tokenDecimals = d;
+        } catch {
+            tokenDecimals = 18;
+        }
+
         // Write a new option
         Option memory option = Option({
             expiry: optionExpiry,
             status: "none",
             writer: msg.sender,
             tokenAddress: tokenAddress,
-            tokenAmount: tokenAmount,
+            tokenAmount: 100 * 10 ** tokenDecimals,
             strikePrice: strikePrice,
             optionType: optionType
         });
