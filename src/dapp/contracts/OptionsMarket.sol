@@ -203,8 +203,8 @@ contract OptionsMarket {
         optionOwners[trade.optionId] = msg.sender;
 
         // Charge the recipient and pay a fee to the owner
-        uint256 fee = trade.premium * 3 / 100; 
-        uint256 payout = trade.premium - fee;
+        uint256 fee = trade.premium * BASE_UNIT_AMOUNT * 3 / 100; 
+        uint256 payout = trade.premium * BASE_UNIT_AMOUNT - fee;
         IERC20(tradeCurrency).transferFrom(msg.sender, trade.poster, payout);
         IERC20(tradeCurrency).transferFrom(msg.sender, owner, fee);
 
