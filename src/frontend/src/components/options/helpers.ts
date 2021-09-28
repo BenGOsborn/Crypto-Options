@@ -4,7 +4,8 @@ export interface OptionsMarket {
     optionsMarket: any;
     address: string;
     baseUnitAmount: number;
-    tradeCurrency: string;
+    tradeCurrency: any;
+    tradeCurrencyDecimals: number;
 }
 
 // Options contract context

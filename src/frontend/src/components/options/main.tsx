@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { getOptionsMarketContract } from "../helpers";
+import { getERC20Contract, getOptionsMarketContract } from "../helpers";
 import DisplayOptions from "./display";
 import { optionsMarketContext, OptionsMarket } from "./helpers";
 import WriteOption from "./write";
@@ -18,14 +18,25 @@ function Options() {
         if (active) {
             getOptionsMarketContract(web3)
                 .then(async (contract) => {
+                    // Get the data for the state
+                    const tradeCurrencyAddress =
+                        await contract.methods.getTradeCurrency();
+                    const tradeCurrency = await getERC20Contract(
+                        web3,
+                        tradeCurrencyAddress
+                    );
+                    const tradeCurrencyDecimals = (
+                        await tradeCurrency.methods.decimals()
+                    ).toNumber();
+
                     // Store the contract data in the state
                     const contractData: OptionsMarket = {
                         optionsMarket: contract,
                         address: (contract as any)._address,
                         baseUnitAmount:
                             await contract.methods.getBaseUnitAmount(),
-                        tradeCurrency:
-                            await contract.methods.getTradeCurrency(),
+                        tradeCurrency,
+                        tradeCurrencyDecimals,
                     };
                     setOptionsMarket(contractData);
                 })

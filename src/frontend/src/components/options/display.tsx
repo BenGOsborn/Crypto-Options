@@ -4,7 +4,7 @@ import Web3 from "web3";
 import {
     getOptionsMarketContract,
     getERC20Contract,
-    safeTransfer,
+    checkTransfer,
 } from "../helpers";
 
 interface Option {
@@ -83,9 +83,8 @@ function DisplayOptions() {
                                 writer: option[2],
                                 owner,
                                 tokenAddress: option[3],
-                                amount: option[4],
-                                price: option[5],
-                                type: option[6],
+                                strikePrice: option[4],
+                                type: option[5],
                             };
                             setOptions((prev) => [...prev, newOption]);
                         });
@@ -125,9 +124,8 @@ function DisplayOptions() {
                                         writer: option[2],
                                         owner,
                                         tokenAddress: option[3],
-                                        amount: option[4],
-                                        price: option[5],
-                                        type: option[6],
+                                        strikePrice: option[4],
+                                        type: option[5],
                                     };
                                     setOptions((prev) => [...prev, newOption]);
                                 }
@@ -265,9 +263,8 @@ function DisplayOptions() {
                         <th className="px-3 py-2 break-words w-1/12">
                             Token Address
                         </th>
-                        <th className="px-3 py-2 break-words w-1/12">Amount</th>
                         <th className="px-3 py-2 break-words w-1/12">
-                            Price (DAI)
+                            Strike Price (DAI)
                         </th>
                         <th className="px-3 py-2 break-words w-1/12">Option</th>
                     </tr>
@@ -380,15 +377,9 @@ function DisplayOptions() {
                                 </td>
                                 <td
                                     className="px-3 py-4"
-                                    title={option.amount.toString()}
+                                    title={option.strikePrice.toString()}
                                 >
-                                    {option.amount}
-                                </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.price.toString()}
-                                >
-                                    {option.price}
+                                    {option.strikePrice}
                                 </td>
                                 <td className="px-3 py-4 text-center">
                                     {option.owner === account ? (

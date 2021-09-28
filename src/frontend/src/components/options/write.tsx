@@ -26,6 +26,7 @@ function WriteOption() {
                     if (optionsMarket === null) return;
 
                     // Check the ERC20 allowances
+                    const tradeCurrencyDecimals = 10e18;
                     if (optionType === "put") {
                         // Check the trade currency and allocate funds
                         const tradeCurrencyAddress =
