@@ -23,4 +23,44 @@ contract("OptionsMarket", (accounts) => {
             "Trade currency does not natch stablecoin"
         );
     });
+
+    it("should get the balance of the whales and approve the contract as a spender", async () => {
+        // Get the contract and tokens
+        const optionsMarket = await OptionsMarket.deployed();
+        const stableCoin = await IERC20.at(STABLECOIN);
+        const token = await IERC20.at(TOKEN);
+
+        // Get the balance of the whales
+        const stableCoinSC = await stableCoin.balanceOf(STABLECOIN_WHALE);
+        const tokenT = await token.balanceOf(TOKEN_WHALE);
+
+        // Approve the contract to use tokens
+        await stableCoin.approve(optionsMarket.address, stableCoinSC, {
+            from: STABLECOIN_WHALE,
+        });
+        await token.approve(optionsMarket.address, tokenT, {
+            from: TOKEN_WHALE,
+        });
+
+        // Check that the approval was successful
+        const stableCoinAllowance = await stableCoin.allowance(
+            STABLECOIN_WHALE,
+            optionsMarket.address
+        );
+        assert.equal(
+            stableCoinAllowance.toString(),
+            stableCoinSC.toString(),
+            "Failed to transfer correct amount of stablecoins"
+        );
+
+        const tokenAllowance = await token.allowance(
+            TOKEN_WHALE,
+            optionsMarket.address
+        );
+        assert.equal(
+            tokenAllowance.toString(),
+            tokenT.toString(),
+            "Failed to transfer correct amount of tokens"
+        );
+    });
 });
