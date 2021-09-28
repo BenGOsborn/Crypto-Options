@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useContext, useState } from "react";
 import Web3 from "web3";
 import { checkTransfer, getERC20Contract } from "../helpers";
-import { optionsMarketContext } from "./helpers";
+import { optionsMarketContext } from "../helpers";
 
 function WriteOption() {
     // Store the web3 data

@@ -3,6 +3,22 @@ import OptionsMarket from "../abi/OptionsMarket.json";
 import IERC20 from "../abi/IERC20.json";
 import { createContext, Dispatch, SetStateAction } from "react";
 
+export interface OptionsMarketData {
+    optionsMarket: any;
+    address: string;
+    baseUnitAmount: number;
+    tradeCurrency: any;
+    tradeCurrencyDecimals: number;
+}
+
+// Options contract context
+export const optionsMarketContext = createContext<
+    [
+        OptionsMarketData | null,
+        Dispatch<SetStateAction<OptionsMarketData | null>>
+    ]
+>(undefined as any);
+
 // Nav selector context
 export const selectorContext = createContext<
     [string, Dispatch<SetStateAction<string>>]

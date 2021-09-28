@@ -1,57 +1,22 @@
 import { useWeb3React } from "@web3-react/core";
-import { useEffect, useState } from "react";
-import Web3 from "web3";
-import { getERC20Contract, getOptionsMarketContract } from "../helpers";
+import { useContext, useState } from "react";
+import { optionsMarketContext } from "../helpers";
 import DisplayOptions from "./display";
-import {
-    optionsMarketContext,
-    OptionsMarket,
-    Option,
-    sellOptionContext,
-} from "./helpers";
+import { Option, sellOptionContext } from "./helpers";
 import WriteOption from "./write";
 
 function Options() {
-    // Store the web3 data **** THIS IS ACTUALLY GOING TO BE A GLOBAL CONTEXT
-    const [optionsMarket, setOptionsMarket] = useState<OptionsMarket | null>(
-        null
-    );
-    const { active, account } = useWeb3React();
-    const web3: Web3 = useWeb3React().library;
+    // Store the web3 data
+    const [optionsMarket, setOptionsMarket] = useContext(optionsMarketContext);
 
     // Store the option to sell
     const [sellOption, setSellOption] = useState<Option | null>(null);
     const [sellOptionPrice, setSellOptionPrice] = useState<number>(0);
 
-    useEffect(() => {
-        if (active) {
-            getOptionsMarketContract(web3)
-                .then(async (contract) => {
-                    // Get the data for the state
-                    const tradeCurrencyAddress =
-                        await contract.methods.getTradeCurrency();
-                    const tradeCurrency = await getERC20Contract(
-                        web3,
-                        tradeCurrencyAddress
-                    );
-                    const tradeCurrencyDecimals = (
-                        await tradeCurrency.methods.decimals()
-                    ).toNumber();
+    // Get the options market from the context
 
-                    // Store the contract data in the state
-                    const contractData: OptionsMarket = {
-                        optionsMarket: contract,
-                        address: (contract as any)._address,
-                        baseUnitAmount:
-                            await contract.methods.getBaseUnitAmount(),
-                        tradeCurrency,
-                        tradeCurrencyDecimals,
-                    };
-                    setOptionsMarket(contractData);
-                })
-                .catch((e) => console.error(e));
-        }
-    }, [active]);
+    // Store the account
+    const { account } = useWeb3React();
 
     return (
         <div className="Options">
