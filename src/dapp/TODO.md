@@ -9,5 +9,11 @@
 -   Add labels for the different sections
 -   Add label to sell option section
 -   Make new account on metamask to test with ?
+
+<!-- HERE IS A PROBLEM --- WHEN WE MULTIPLE THE NUMBER OF TOKENS IT IS MULTIPLYING BY THE TOTAL AMOUNT AND NOT JUST THE TRUE NUMBER OF TOKENS (CONSIDERS THE DECIMAL PLACES) -->
+
 -   Write more tests
+
+    -   Check who owns the contract after different purchases
+
 -   Maybe standardize the dates of the contracts as well (make it expire every friday at 3pm by dividing)
