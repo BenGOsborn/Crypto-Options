@@ -134,6 +134,7 @@ contract("OptionsMarket", (accounts) => {
         //     putOptionParams[1],
         //     "Expiry times do not match"
         // );
+        console.log(new Date(putOption[0].toString().toString()));
         assert.equal(
             putOption[2].toString().toLowerCase(),
             STABLECOIN_WHALE.toString().toLowerCase(),
