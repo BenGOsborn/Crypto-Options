@@ -33,12 +33,6 @@ function DisplayOptions() {
     const { active, account } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
 
-    // Store the create option state
-    const [optionType, setOptionType] = useState<string>("call");
-    const [tokenAddress, setTokenAddress] = useState<string>("");
-    const [expiry, setExpiry] = useState<number>(0);
-    const [tokenPrice, setTokenPrice] = useState<number>(0);
-
     // Store the existing written options by the account
     const [options, setOptions] = useState<Option[]>([]);
 
