@@ -77,7 +77,7 @@ contract("OptionsMarket", (accounts) => {
 
         // Write a new call option and verify it was successful
         let expiry = Math.floor((Date.now() + 2.628e9) / 1000); // Has to be seconds for block.timestamp
-        const callOptionParams = ["call", expiry, TOKEN, 10, 20];
+        const callOptionParams = ["call", expiry, TOKEN, 20];
         const callTransaction = await optionsMarket.writeOption(
             ...callOptionParams,
             {
@@ -105,22 +105,17 @@ contract("OptionsMarket", (accounts) => {
         assert.equal(
             callOption[4].toString(),
             callOptionParams[3].toString(),
-            "Option token amounts do not match"
-        );
-        assert.equal(
-            callOption[5].toString(),
-            callOptionParams[4].toString(),
             "Strike prices do not match"
         );
         assert.equal(
-            callOption[6].toString(),
+            callOption[5].toString(),
             callOptionParams[0].toString(),
             "Option types do not match"
         );
 
         // Write a new put option and verify it was successful
         expiry = Math.floor((Date.now() + 2.628e9) / 1000); // Has to be seconds for block.timestamp
-        const putOptionParams = ["put", expiry, TOKEN, 10, 20];
+        const putOptionParams = ["put", expiry, TOKEN, 20];
         const putTransaction = await optionsMarket.writeOption(
             ...putOptionParams,
             {
@@ -408,7 +403,7 @@ contract("OptionsMarket", (accounts) => {
 
         // Write a new call option
         let expiry = Math.floor((Date.now() + 5000) / 1000); // Has to be seconds for block.timestamp
-        const callOptionParams = ["call", expiry, TOKEN, 10, 20];
+        const callOptionParams = ["call", expiry, TOKEN, 20];
         const callTransaction = await optionsMarket.writeOption(
             ...callOptionParams,
             {
@@ -419,7 +414,7 @@ contract("OptionsMarket", (accounts) => {
 
         // Write a new put option
         expiry = Math.floor((Date.now() + 5000) / 1000); // Has to be seconds for block.timestamp
-        const putOptionParams = ["put", expiry, TOKEN, 10, 20];
+        const putOptionParams = ["put", expiry, TOKEN, 20];
         const putTransaction = await optionsMarket.writeOption(
             ...putOptionParams,
             { from: STABLECOIN_WHALE }
@@ -462,7 +457,7 @@ contract("OptionsMarket", (accounts) => {
 
         // Write a new option
         let expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
-        const optionParams = ["put", expiry, TOKEN, 10, 20];
+        const optionParams = ["put", expiry, TOKEN, 20];
         const optionTransaction = await optionsMarket.writeOption(
             ...optionParams,
             {
