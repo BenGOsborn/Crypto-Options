@@ -10,3 +10,4 @@
 -   Add label to sell option section
 -   Make new account on metamask to test with ?
 -   Write more tests
+-   Add in the decimals when specifying token amounts (and round them down from the frontend)
