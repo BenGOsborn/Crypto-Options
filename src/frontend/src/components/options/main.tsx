@@ -12,7 +12,7 @@ import {
 import WriteOption from "./write";
 
 function Options() {
-    // Store the web3 data
+    // Store the web3 data **** THIS IS ACTUALLY GOING TO BE A GLOBAL CONTEXT
     const [optionsMarket, setOptionsMarket] = useState<OptionsMarket | null>(
         null
     );
@@ -21,6 +21,7 @@ function Options() {
 
     // Store the option to sell
     const [sellOption, setSellOption] = useState<Option | null>(null);
+    const [sellOptionPrice, setSellOptionPrice] = useState<number>(0);
 
     useEffect(() => {
         if (active) {
@@ -106,10 +107,12 @@ function Options() {
                                     // Prevent page from reloading
                                     e.preventDefault();
                                     // Open an order for the option
-                                    await optionsMarket.methods
+                                    await optionsMarket?.optionsMarket.methods
                                         .openTrade(
                                             sellOption.id,
-                                            sellOptionPrice
+                                            sellOptionPrice *
+                                                10 **
+                                                    optionsMarket?.tradeCurrencyDecimals
                                         )
                                         .send({ from: account });
                                     // Close the modal
