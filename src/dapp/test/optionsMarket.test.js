@@ -76,7 +76,7 @@ contract("OptionsMarket", (accounts) => {
         const tokenT = await token.balanceOf(TOKEN_WHALE);
 
         // Write a new call option and verify it was successful
-        let expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
+        let expiry = Math.floor((Date.now() + 2.628e9) / 1000); // Has to be seconds for block.timestamp
         const callOptionParams = ["call", expiry, TOKEN, 10, 20];
         const callTransaction = await optionsMarket.writeOption(
             ...callOptionParams,
@@ -91,6 +91,7 @@ contract("OptionsMarket", (accounts) => {
         //     callOptionParams[1].toString(),
         //     "Expiry times do not match"
         // );
+        console.log(new Date(callOption[0].toString().toString()));
         assert.equal(
             callOption[2].toString().toLowerCase(),
             TOKEN_WHALE.toString().toLowerCase(),
@@ -118,7 +119,7 @@ contract("OptionsMarket", (accounts) => {
         );
 
         // Write a new put option and verify it was successful
-        expiry = Math.floor((Date.now() + 86400000) / 1000); // Has to be seconds for block.timestamp
+        expiry = Math.floor((Date.now() + 2.628e9) / 1000); // Has to be seconds for block.timestamp
         const putOptionParams = ["put", expiry, TOKEN, 10, 20];
         const putTransaction = await optionsMarket.writeOption(
             ...putOptionParams,
@@ -202,6 +203,16 @@ contract("OptionsMarket", (accounts) => {
         );
         assert.equal(trade[3].toString(), "open", "Failed to open trade");
 
+        // Check the owner of the option
+        const optionOwnerListed = await optionsMarket.getOptionOwner(
+            tradeParams[0]
+        );
+        assert.equal(
+            optionsMarket.address.toLowerCase(),
+            optionOwnerList.toString().toLowerCase(),
+            "Owner of option is not the contract"
+        );
+
         // Cancel the trade
         await optionsMarket.cancelTrade(tradeId, {
             from: TOKEN_WHALE,
@@ -224,6 +235,16 @@ contract("OptionsMarket", (accounts) => {
             executed = false;
         }
         assert.equal(!executed, true, "Cancelled trade was executed");
+
+        // Check the owner of the option
+        const optionOwnerCancelled = await optionsMarket.getOptionOwner(
+            tradeParams[0]
+        );
+        assert.equal(
+            TOKEN_WHALE.toLowerCase(),
+            optionOwnerCancelled.toString().toLowerCase(),
+            "Owner of option is not the original owner"
+        );
     });
 
     it("should open a trade and execute it", async () => {
