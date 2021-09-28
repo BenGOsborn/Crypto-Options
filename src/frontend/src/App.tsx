@@ -1,9 +1,9 @@
 import { useWeb3React } from "@web3-react/core";
 import { useState } from "react";
-import { selectorContext } from "./components/context";
+import { selectorContext } from "./components/helpers";
 import Nav from "./components/nav";
 import Trades from "./components/trades";
-import Options from "./components/options";
+import Options from "./components/options/display";
 
 function App() {
     const { active } = useWeb3React();

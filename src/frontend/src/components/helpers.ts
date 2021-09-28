@@ -1,6 +1,12 @@
 import Web3 from "web3";
 import OptionsMarket from "../abi/OptionsMarket.json";
 import IERC20 from "../abi/IERC20.json";
+import { createContext, Dispatch, SetStateAction } from "react";
+
+// Shopping cart context
+export const selectorContext = createContext<
+    [string, Dispatch<SetStateAction<string>>]
+>(undefined as any);
 
 export async function getOptionsMarketContract(web3: Web3) {
     // Get the contract and return it
@@ -19,11 +25,11 @@ export async function getERC20Contract(web3: Web3, address: string) {
     return contract;
 }
 
-export async function safeTransfer(
+export async function checkTransfer(
     web3: Web3,
     contractAddress: string,
     account: string,
-    price: number,
+    amount: number,
     tokenContract: any
 ) {
     // Check the allowance of the contract
@@ -32,11 +38,11 @@ export async function safeTransfer(
         .call();
 
     // If the allowance of the contract is not enough allocate it more funds
-    if (allowance < price) {
+    if (allowance < amount) {
         await tokenContract.methods
             .approve(
                 contractAddress,
-                web3.utils.toBN(price).sub(web3.utils.toBN(allowance))
+                web3.utils.toBN(amount).sub(web3.utils.toBN(allowance))
             )
             .send({
                 from: account,
