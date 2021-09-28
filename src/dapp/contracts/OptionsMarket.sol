@@ -145,9 +145,9 @@ contract OptionsMarket {
         // If the option is a call then transfer the tokens back to the writer,
         // otherwise transfer the price back to the writer
         if (_compareStrings(option.optionType, "call")) {
-            IERC20(option.tokenAddress).transfer(msg.sender, option.amount);
+            IERC20(option.tokenAddress).transfer(msg.sender, option.tokenAmount);
         } else {
-            IERC20(tradeCurrency).transfer(msg.sender, option.price);
+            IERC20(tradeCurrency).transfer(msg.sender, option.tokenAmount * option.strikePrice);
         }
 
         // Update the status of the option
