@@ -1,12 +1,12 @@
 import { useWeb3React } from "@web3-react/core";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Web3 from "web3";
 import {
     getOptionsMarketContract,
     getERC20Contract,
     checkTransfer,
 } from "../helpers";
-import { Option } from "./helpers";
+import { Option, sellOptionContext } from "./helpers";
 
 interface SearchFilter {
     optionType: "call" | "put" | "any";
@@ -36,8 +36,8 @@ function DisplayOptions() {
         expiryDateEnd: Date.now() + 3.154e12,
     });
 
-    // Store the option to sell **** THIS WILL BE CONTEXT SOON
-    const [sellOption, setSellOption] = useState<Option | null>(null);
+    // Option to sell
+    const [sellOption, setSellOption] = useContext(sellOptionContext);
 
     useEffect(() => {
         if (active) {

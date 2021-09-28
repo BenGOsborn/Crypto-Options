@@ -23,3 +23,8 @@ export interface Option {
 export const optionsMarketContext = createContext<
     [OptionsMarket | null, Dispatch<SetStateAction<OptionsMarket | null>>]
 >(undefined as any);
+
+// Option to sell context
+export const sellOptionContext = createContext<
+    [Option | null, Dispatch<SetStateAction<Option | null>>]
+>(undefined as any);

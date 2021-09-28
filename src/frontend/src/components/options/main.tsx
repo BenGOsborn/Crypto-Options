@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { getERC20Contract, getOptionsMarketContract } from "../helpers";
 import DisplayOptions from "./display";
-import { optionsMarketContext, OptionsMarket } from "./helpers";
+import {
+    optionsMarketContext,
+    OptionsMarket,
+    Option,
+    sellOptionContext,
+} from "./helpers";
 import WriteOption from "./write";
 
 function Options() {
@@ -13,6 +18,9 @@ function Options() {
     );
     const { active, account } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
+
+    // Store the option to sell
+    const [sellOption, setSellOption] = useState<Option | null>(null);
 
     useEffect(() => {
         if (active) {
@@ -154,7 +162,9 @@ function Options() {
                 value={[optionsMarket, setOptionsMarket]}
             >
                 <WriteOption />
-                <DisplayOptions />
+                <sellOptionContext.Provider value={[sellOption, setSellOption]}>
+                    <DisplayOptions />
+                </sellOptionContext.Provider>
             </optionsMarketContext.Provider>
         </div>
     );
