@@ -6,17 +6,7 @@ import {
     getERC20Contract,
     checkTransfer,
 } from "../helpers";
-
-interface Option {
-    id: number;
-    expiry: number;
-    status: string;
-    writer: string;
-    owner: string;
-    tokenAddress: string;
-    strikePrice: number;
-    type: string;
-}
+import { Option } from "./helpers";
 
 interface SearchFilter {
     optionType: "call" | "put" | "any";
@@ -36,10 +26,6 @@ function DisplayOptions() {
     // Store the existing written options by the account
     const [options, setOptions] = useState<Option[]>([]);
 
-    // Used for selling the option
-    const [sellOption, setSellOption] = useState<Option | null>(null);
-    const [sellOptionPrice, setSellOptionPrice] = useState<number>(0);
-
     // Used for filtering
     const [searchFilter, setSearchFilter] = useState<SearchFilter>({
         optionType: "any",
@@ -49,6 +35,9 @@ function DisplayOptions() {
         expiryDateStart: 0,
         expiryDateEnd: Date.now() + 3.154e12,
     });
+
+    // Store the option to sell **** THIS WILL BE CONTEXT SOON
+    const [sellOption, setSellOption] = useState<Option | null>(null);
 
     useEffect(() => {
         if (active) {
@@ -377,9 +366,15 @@ function DisplayOptions() {
                                 </td>
                                 <td
                                     className="px-3 py-4"
-                                    title={option.strikePrice.toString()}
+                                    title={(
+                                        option.strikePrice /
+                                        10 **
+                                            optionsMarket?.tradeCurrencyDecimals
+                                    ).toString()}
                                 >
-                                    {option.strikePrice}
+                                    {option.strikePrice /
+                                        10 **
+                                            optionsMarket?.tradeCurrencyDecimals}
                                 </td>
                                 <td className="px-3 py-4 text-center">
                                     {option.owner === account ? (
@@ -394,42 +389,32 @@ function DisplayOptions() {
 
                                                         // Check the ERC20 allowances
                                                         if (
-                                                            optionType ===
+                                                            option.type ===
                                                             "call"
                                                         ) {
-                                                            // Check the trade currency and allocate funds
-                                                            const tradeCurrencyAddress =
-                                                                await optionsMarket.methods
-                                                                    .getTradeCurrency()
-                                                                    .call();
-                                                            const tradeCurrency =
-                                                                await getERC20Contract(
-                                                                    web3,
-                                                                    tradeCurrencyAddress
-                                                                );
-
                                                             // Check that funds are allocated to contract and if not allocate them
-                                                            await safeTransfer(
+                                                            await checkTransfer(
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                option.price,
-                                                                tradeCurrency
+                                                                option.strikePrice *
+                                                                    optionsMarket?.baseUnitAmount,
+                                                                optionsMarket?.tradeCurrency
                                                             );
                                                         } else {
                                                             // Get the contract of the token
                                                             const token =
                                                                 await getERC20Contract(
                                                                     web3,
-                                                                    tokenAddress
+                                                                    option.tokenAddress
                                                                 );
 
                                                             // Check that funds are allocated to contract and if not allocate them
-                                                            await safeTransfer(
+                                                            await checkTransfer(
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                option.amount,
+                                                                optionsMarket?.baseUnitAmount,
                                                                 token
                                                             );
                                                         }

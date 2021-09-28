@@ -26,20 +26,7 @@ function WriteOption() {
                     if (optionsMarket === null) return;
 
                     // Check the ERC20 allowances
-                    const tradeCurrencyDecimals = 10e18;
                     if (optionType === "put") {
-                        // Check the trade currency and allocate funds
-                        const tradeCurrencyAddress =
-                            await optionsMarket?.optionsMarket.methods
-                                .getTradeCurrency()
-                                .call();
-                        const tradeCurrency = await getERC20Contract(
-                            web3,
-                            tradeCurrencyAddress
-                        );
-                        const tradeCurrencyDecimals =
-                            await tradeCurrency.methods.decimals();
-
                         // Check that funds are allocated to contract and if not allocate them
                         await checkTransfer(
                             web3,
@@ -47,10 +34,10 @@ function WriteOption() {
                             account as string,
                             Math.floor(
                                 strikePrice *
-                                    10 ** tradeCurrencyDecimals *
+                                    10 ** optionsMarket?.tradeCurrencyDecimals *
                                     optionsMarket?.baseUnitAmount
                             ),
-                            tradeCurrency
+                            optionsMarket?.tradeCurrency
                         );
                     } else {
                         // Get the contract of the token
@@ -75,7 +62,8 @@ function WriteOption() {
                             optionType,
                             expiry,
                             tokenAddress,
-                            strikePrice
+                            strikePrice *
+                                10 ** optionsMarket?.tradeCurrencyDecimals
                         )
                         .send({ from: account });
 
