@@ -18,6 +18,7 @@ contract OptionsMarket {
         string optionType; // call, put
     }
 
+    uint8 private constant tokensPerOption = 100;
     uint256 private optionId;
     mapping(uint256 => Option) private options;
     mapping(uint256 => address) private optionOwners;
@@ -59,10 +60,15 @@ contract OptionsMarket {
         return tradeCurrency;
     }
 
+    // Get the number of tokens per option
+    function getTokensPerOption() external view returns (uint8) {
+        return tokensPerOption;
+    }
+
     // ============= Option functions =============
 
     // Allow the address to create a new option
-    function writeOption(string calldata optionType, uint256 expiry, address tokenAddress, uint256 tokenAmount, uint256 strikePrice) external returns (uint256) {
+    function writeOption(string calldata optionType, uint256 expiry, address tokenAddress, uint256 strikePrice) external returns (uint256) {
         // Make the expiry weekly
         uint256 expiryTemp = expiry / (86400 * 7);
         uint256 optionExpiry = expiryTemp * (86400 * 7) + 86400 * 5;
@@ -85,7 +91,7 @@ contract OptionsMarket {
             status: "none",
             writer: msg.sender,
             tokenAddress: tokenAddress,
-            tokenAmount: 100 * 10 ** tokenDecimals,
+            tokenAmount: tokensPerOption * 10 ** tokenDecimals,
             strikePrice: strikePrice,
             optionType: optionType
         });
@@ -93,9 +99,9 @@ contract OptionsMarket {
         // If this is a call then transfer the amount of the token to the contract,
         // otherwise if a put then transfer the trade currency to the contract
         if (_compareStrings(optionType, "call")) {
-            IERC20(tokenAddress).transferFrom(msg.sender, address(this), tokenAmount); 
+            IERC20(tokenAddress).transferFrom(msg.sender, address(this), tokensPerOption); 
         } else {
-            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), strikePrice * tokenAmount);
+            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), strikePrice * tokensPerOption);
         }
 
         // Save the option
