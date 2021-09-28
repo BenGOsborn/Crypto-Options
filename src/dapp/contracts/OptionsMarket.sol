@@ -157,7 +157,7 @@ contract OptionsMarket {
     // ============= Marketplace functions =============
 
     // Open a new trade for selling an option
-    function openTrade(uint256 _optionId, uint256 price) public returns (uint256) {
+    function openTrade(uint256 _optionId, uint256 premium) public returns (uint256) {
         // Check that the trade may be opened
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
         require(_compareStrings(options[_optionId].status, "none"), "Cannot list a used option");
@@ -166,7 +166,7 @@ contract OptionsMarket {
         Trade memory trade = Trade({
             poster: msg.sender,
             optionId: _optionId,
-            price: price,
+            premium: premium,
             status: "open"
         });
 
@@ -195,8 +195,8 @@ contract OptionsMarket {
         optionOwners[trade.optionId] = msg.sender;
 
         // Charge the recipient and pay a fee to the owner
-        uint256 fee = trade.price * 3 / 100; 
-        uint256 payout = trade.price - fee;
+        uint256 fee = trade.premium * 3 / 100; 
+        uint256 payout = trade.premium - fee;
         IERC20(tradeCurrency).transferFrom(msg.sender, trade.poster, payout);
         IERC20(tradeCurrency).transferFrom(msg.sender, owner, fee);
 
@@ -210,7 +210,7 @@ contract OptionsMarket {
     // View a trade
     function getTrade(uint256 _tradeId) public view returns (address, uint256, uint256, string memory) {
         Trade memory trade = trades[_tradeId];
-        return (trade.poster, trade.optionId, trade.price, trade.status);
+        return (trade.poster, trade.optionId, trade.premium, trade.status);
     }
 
     // Cancel a trade
