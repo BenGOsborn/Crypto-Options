@@ -17,7 +17,9 @@ contract OptionsMarket {
         string optionType; // call, put
     }
 
-    uint256 private constant BASE_UNIT_AMOUNT = 10e6;
+    uint256 private constant TOKEN_AMOUNT_PER_UNIT = 10e18;
+    uint8 private constant UNITS_PER_OPTION = 100;
+
     uint256 private optionId;
     mapping(uint256 => Option) private options;
     mapping(uint256 => address) private optionOwners;
@@ -59,9 +61,14 @@ contract OptionsMarket {
         return tradeCurrency;
     }
 
-    // Get the number of base units of the token traded per option
-    function getBaseUnitAmount() external pure returns (uint256) {
-        return BASE_UNIT_AMOUNT;
+    // Get the number of base units per unit for each token
+    function getTokenAmountPerUnit() external pure returns (uint256) {
+        return TOKEN_AMOUNT_PER_UNIT;
+    }
+
+    // Get the number of units contained in each option
+    function getUnitsPerOption() external pure returns (uint8) {
+        return UNITS_PER_OPTION;
     }
 
     // ============= Option functions =============
@@ -89,9 +96,9 @@ contract OptionsMarket {
         // If this is a call then transfer the amount of the token to the contract,
         // otherwise transfer the trade currency x strike price to the contract
         if (_compareStrings(optionType, "call")) {
-            IERC20(tokenAddress).transferFrom(msg.sender, address(this), BASE_UNIT_AMOUNT); 
+            IERC20(tokenAddress).transferFrom(msg.sender, address(this), TOKEN_AMOUNT_PER_UNIT * UNITS_PER_OPTION); 
         } else {
-            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), strikePrice * BASE_UNIT_AMOUNT);
+            IERC20(tradeCurrency).transferFrom(msg.sender, address(this), strikePrice * UNITS_PER_OPTION);
         }
 
         // Save the option
@@ -128,11 +135,11 @@ contract OptionsMarket {
         // If the option is a call, then charge the strike price x num tokens to receive the tokens,
         // else if the option is a put, transfer their tokens
         if (_compareStrings(option.optionType, "call")) {
-            IERC20(tradeCurrency).transferFrom(msg.sender, option.writer, option.strikePrice * BASE_UNIT_AMOUNT);
-            IERC20(option.tokenAddress).transfer(msg.sender, BASE_UNIT_AMOUNT);
+            IERC20(tradeCurrency).transferFrom(msg.sender, option.writer, option.strikePrice * UNITS_PER_OPTION);
+            IERC20(option.tokenAddress).transfer(msg.sender, UNITS_PER_OPTION * TOKEN_AMOUNT_PER_UNIT);
         } else {
-            IERC20(option.tokenAddress).transferFrom(msg.sender, option.writer, BASE_UNIT_AMOUNT);
-            IERC20(tradeCurrency).transfer(msg.sender, option.strikePrice * BASE_UNIT_AMOUNT);
+            IERC20(option.tokenAddress).transferFrom(msg.sender, option.writer, UNITS_PER_OPTION * TOKEN_AMOUNT_PER_UNIT);
+            IERC20(tradeCurrency).transfer(msg.sender, option.strikePrice * UNITS_PER_OPTION);
         }
 
         // Update the status of the option and emit event
@@ -153,9 +160,9 @@ contract OptionsMarket {
         // If the option is a call then transfer the tokens back to the writer,
         // otherwise transfer the strike price x num tokens back to the writer
         if (_compareStrings(option.optionType, "call")) {
-            IERC20(option.tokenAddress).transfer(msg.sender, BASE_UNIT_AMOUNT);
+            IERC20(option.tokenAddress).transfer(msg.sender, UNITS_PER_OPTION * TOKEN_AMOUNT_PER_UNIT);
         } else {
-            IERC20(tradeCurrency).transfer(msg.sender, option.strikePrice * BASE_UNIT_AMOUNT);
+            IERC20(tradeCurrency).transfer(msg.sender, option.strikePrice * UNITS_PER_OPTION);
         }
 
         // Update the status of the option
@@ -203,8 +210,8 @@ contract OptionsMarket {
         optionOwners[trade.optionId] = msg.sender;
 
         // Charge the recipient and pay a fee to the owner
-        uint256 fee = trade.premium * BASE_UNIT_AMOUNT * 3 / 100; 
-        uint256 payout = trade.premium * BASE_UNIT_AMOUNT - fee;
+        uint256 fee = trade.premium * UNITS_PER_OPTION * 3 / 100; 
+        uint256 payout = trade.premium * UNITS_PER_OPTION - fee;
         IERC20(tradeCurrency).transferFrom(msg.sender, trade.poster, payout);
         IERC20(tradeCurrency).transferFrom(msg.sender, owner, fee);
 
