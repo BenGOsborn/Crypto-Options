@@ -10,7 +10,7 @@
 -   Add label to sell option section
 -   Make new account on metamask to test with ?
 
--   Write more tests
+-   Write more tests / clean them up
 -   Add in the decimals when specifying token amounts (and round them down from the frontend)
 -   Change date selectors to weeks only AND MAKE SURE THAT THEY WORK
 -   Check all of the different functions for interacting with the contract
