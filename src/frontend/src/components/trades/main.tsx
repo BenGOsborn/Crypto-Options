@@ -57,12 +57,12 @@ function Trades() {
                             const newTrade: Trade = {
                                 id: tradeId,
                                 optionId: trade[1],
-                                tradePrice: trade[2],
+                                premium: trade[2],
                                 tradeStatus: trade[3],
                                 expiry: option[0] * 1000,
                                 writer: option[2],
                                 tokenAddress: option[3],
-                                price: option[4],
+                                strikePrice: option[4],
                                 type: option[5],
                             };
                             if (trade[3] === "open" && trade[0] !== account) {
@@ -113,7 +113,7 @@ function Trades() {
                                 </span>{" "}
                                 option for{" "}
                                 <span className="font-bold">
-                                    {buyTrade.tradePrice}
+                                    {buyTrade.premium}
                                 </span>{" "}
                                 DAI, you are buying the right but not the
                                 obligation to buy of the token with address '
@@ -123,7 +123,7 @@ function Trades() {
                                 >
                                     {buyTrade.tokenAddress.slice(0, 8)}...
                                 </span>
-                                ' for {buyTrade.price} DAI any time before{" "}
+                                ' for {buyTrade.strikePrice} DAI any time before{" "}
                                 <span className="font-bold">
                                     {new Date(
                                         buyTrade.expiry
@@ -139,7 +139,7 @@ function Trades() {
                                 </span>{" "}
                                 option for{" "}
                                 <span className="font-bold">
-                                    {buyTrade.tradePrice}
+                                    {buyTrade.premium}
                                 </span>{" "}
                                 DAI, you are buying the right but not the
                                 obligation to sell of the token with address '
@@ -149,7 +149,7 @@ function Trades() {
                                 >
                                     {buyTrade.tokenAddress.slice(0, 8)}...
                                 </span>
-                                ' for {buyTrade.price} DAI any time before{" "}
+                                ' for {buyTrade.strikePrice} DAI any time before{" "}
                                 <span className="font-bold">
                                     {new Date(
                                         buyTrade.expiry
@@ -178,7 +178,8 @@ function Trades() {
                                         web3,
                                         optionsMarket._address,
                                         account as string,
-                                        buyTrade.price,
+                                        buyTrade.premium *
+                                            10 ** optionsMarket?.decimals,
                                         tradeCurrency
                                     );
 

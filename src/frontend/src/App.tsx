@@ -32,9 +32,8 @@ function App() {
                         web3,
                         tradeCurrencyAddress
                     );
-                    const tradeCurrencyDecimals = (
-                        await tradeCurrency.methods.decimals()
-                    ).toNumber();
+                    const tradeCurrencyDecimals =
+                        await tradeCurrency.methods.decimals();
 
                     // Store the contract data in the state
                     const contractData: OptionsMarketData = {
