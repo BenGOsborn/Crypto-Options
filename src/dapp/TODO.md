@@ -16,3 +16,5 @@
 -   Check all of the different functions for interacting with the contract
 
 -   Maybe add a self destruct function which returns all of the funds to users or auto exercises their options for them ?
+
+-   I NEED TO BE ABLE TO CHANGE MY BASE UNITS TO THE QUANTITY AMOUNT, E.G. 100 AND THEN EACH PRICE IS FOR THAT AMOUNT
