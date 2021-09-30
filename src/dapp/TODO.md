@@ -11,6 +11,8 @@
 -   Make new account on metamask to test with ?
 -   \***\* I might have to make my app use big numbers instead of regular numbers \*\***
 
+-   Convert all of those other types back to strings as well
+
 -   Write more tests / clean them up
 -   Add in the decimals when specifying token amounts (and round them down from the frontend)
 -   Change date selectors to weeks only AND MAKE SURE THAT THEY WORK
