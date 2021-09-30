@@ -35,7 +35,7 @@ function WriteOption() {
                             Math.floor(
                                 strikePrice *
                                     10 ** optionsMarket?.tradeCurrencyDecimals *
-                                    optionsMarket?.baseUnitAmount
+                                    optionsMarket?.unitsPerOption
                             ),
                             optionsMarket?.tradeCurrency
                         );
@@ -51,7 +51,7 @@ function WriteOption() {
                             web3,
                             optionsMarket?.address,
                             account as string,
-                            optionsMarket?.baseUnitAmount,
+                            optionsMarket?.tokenAmountPerUnit * optionsMarket?.unitsPerOption,
                             token
                         );
                     }
@@ -63,7 +63,7 @@ function WriteOption() {
                             expiry,
                             tokenAddress,
                             strikePrice *
-                                10 ** optionsMarket?.tradeCurrencyDecimals
+                                10 ** optionsMarket?.tradeCurrencyDecimals * optionsMarket?.unitsPerOption
                         )
                         .send({ from: account });
 

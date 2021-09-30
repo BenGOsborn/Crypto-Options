@@ -6,9 +6,10 @@ import { createContext, Dispatch, SetStateAction } from "react";
 export interface OptionsMarketData {
     optionsMarket: any;
     address: string;
-    baseUnitAmount: number;
     tradeCurrency: any;
     tradeCurrencyDecimals: number;
+    tokenAmountPerUnit: number;
+    unitsPerOption: number;
 }
 
 // Options contract context
