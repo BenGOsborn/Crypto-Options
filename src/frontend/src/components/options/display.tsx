@@ -41,24 +41,65 @@ function DisplayOptions() {
 
     useEffect(() => {
         if (optionsMarket !== null) {
-                    // Add event listener for options written by the user
-                    optionsMarket?.optionsMarket.events
-                        .OptionWritten({
-                            fromBlock: 0,
-                            filter: {
-                                writer: account,
-                            },
-                        })
-                        .on("data", async (event: any) => {
-                            // Get the option and add it to the list
-                            const optionId = event.returnValues.optionId;
-                            const option = await optionsMarket?.optionsMarket.methods
-                                .getOption(optionId)
-                                .call();
-                            const owner = await optionsMarket?.optionsMarket.methods
-                                .getOptionOwner(optionId)
-                                .call();
+            // Add event listener for options written by the user
+            optionsMarket?.optionsMarket.events
+                .OptionWritten({
+                    fromBlock: 0,
+                    filter: {
+                        writer: account,
+                    },
+                })
+                .on("data", async (event: any) => {
+                    // Get the option and add it to the list
+                    const optionId = event.returnValues.optionId;
+                    const option = await optionsMarket?.optionsMarket.methods
+                        .getOption(optionId)
+                        .call();
+                    const owner = await optionsMarket?.optionsMarket.methods
+                        .getOptionOwner(optionId)
+                        .call();
 
+                    const newOption: Option = {
+                        id: optionId,
+                        expiry: option[0] * 1000,
+                        status: option[1],
+                        writer: option[2],
+                        owner,
+                        tokenAddress: option[3],
+                        strikePrice: option[4],
+                        type: option[5],
+                    };
+                    setOptions((prev) => [...prev, newOption]);
+                });
+
+            // Add events for options traded that belong to the user
+            optionsMarket?.optionsMarket.events
+                .TradeExecuted({
+                    fromBlock: 0,
+                    filter: {
+                        buyer: account,
+                    },
+                })
+                .on("data", async (event: any) => {
+                    // Get the option and add it to the list
+                    const optionId = event.returnValues.optionId;
+                    const option = await optionsMarket?.optionsMarket.methods
+                        .getOption(optionId)
+                        .call();
+                    const owner = await optionsMarket?.optionsMarket.methods
+                        .getOptionOwner(optionId)
+                        .call();
+
+                    // Only add the option if it is owned and the id is not within the list
+                    if (owner === account) {
+                        let contains = false;
+                        for (const opt of options) {
+                            if (opt.id === optionId) {
+                                contains = true;
+                                break;
+                            }
+                        }
+                        if (!contains) {
                             const newOption: Option = {
                                 id: optionId,
                                 expiry: option[0] * 1000,
@@ -70,51 +111,9 @@ function DisplayOptions() {
                                 type: option[5],
                             };
                             setOptions((prev) => [...prev, newOption]);
-                        });
-
-                    // Add events for options traded that belong to the user
-                    optionsMarket?.optionsMarket.events
-                        .TradeExecuted({
-                            fromBlock: 0,
-                            filter: {
-                                buyer: account,
-                            },
-                        })
-                        .on("data", async (event: any) => {
-                            // Get the option and add it to the list
-                            const optionId = event.returnValues.optionId;
-                            const option = await optionsMarket?.optionsMarket.methods
-                                .getOption(optionId)
-                                .call();
-                            const owner = await optionsMarket?.optionsMarket.methods
-                                .getOptionOwner(optionId)
-                                .call();
-
-                            // Only add the option if it is owned and the id is not within the list
-                            if (owner === account) {
-                                let contains = false;
-                                for (const opt of options) {
-                                    if (opt.id === optionId) {
-                                        contains = true;
-                                        break;
-                                    }
-                                }
-                                if (!contains) {
-                                    const newOption: Option = {
-                                        id: optionId,
-                                        expiry: option[0] * 1000,
-                                        status: option[1],
-                                        writer: option[2],
-                                        owner,
-                                        tokenAddress: option[3],
-                                        strikePrice: option[4],
-                                        type: option[5],
-                                    };
-                                    setOptions((prev) => [...prev, newOption]);
-                                }
-                            }
-                })
-                .catch((err: any) => console.error(err));
+                        }
+                    }
+                });
         }
     }, [optionsMarket]);
 
@@ -378,9 +377,12 @@ function DisplayOptions() {
                                                         // Get contract detials
                                                         const optionsMarketAddress =
                                                             optionsMarket?.address as string;
-                                                        const tradeCurrencyDecimals = optionsMarket?.tradeCurrencyDecimals as number;
-                                                        const tokenAmountPerUnit = optionsMarket?.tokenAmountPerUnit as number;
-                                                        const unitsPerOption = optionsMarket?.unitsPerOption as number;
+                                                        const tradeCurrencyDecimals =
+                                                            optionsMarket?.tradeCurrencyDecimals as number;
+                                                        const tokenAmountPerUnit =
+                                                            optionsMarket?.tokenAmountPerUnit as number;
+                                                        const unitsPerOption =
+                                                            optionsMarket?.unitsPerOption as number;
 
                                                         // Check the ERC20 allowances
                                                         if (
@@ -392,7 +394,10 @@ function DisplayOptions() {
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                option.strikePrice * 10 ** tradeCurrencyDecimals * unitsPerOption,
+                                                                option.strikePrice *
+                                                                    10 **
+                                                                        tradeCurrencyDecimals *
+                                                                    unitsPerOption,
                                                                 optionsMarket?.tradeCurrency
                                                             );
                                                         } else {
@@ -408,7 +413,8 @@ function DisplayOptions() {
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                tokenAmountPerUnit * unitsPerOption,
+                                                                tokenAmountPerUnit *
+                                                                    unitsPerOption,
                                                                 token
                                                             );
                                                         }

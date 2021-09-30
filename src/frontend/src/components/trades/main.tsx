@@ -1,23 +1,19 @@
 import { useWeb3React } from "@web3-react/core";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Web3 from "web3";
+import { checkTransfer, optionsMarketContext } from "../helpers";
 import {
-    getERC20Contract,
-    getOptionsMarketContract,
-    checkTransfer,
-} from "../helpers";
-import {
+    buyTradeContext,
     Trade,
     tradesContext,
     userTradesContext,
-    buyTradeContext,
 } from "./helpers";
 import NonUserTrades from "./nonUserTrades";
 import UserTrades from "./userTrades";
 
 function Trades() {
     // Store the web3 data
-    const [optionsMarket, setOptionsMarket] = useState<any | null>(null);
+    const [optionsMarket, setOptionsMarket] = useContext(optionsMarketContext);
     const { active, account } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
 
@@ -30,70 +26,62 @@ function Trades() {
 
     useEffect(() => {
         if (active) {
-            // Get the contract
-            getOptionsMarketContract(web3)
-                .then((contract) => {
-                    // Save the options market
-                    setOptionsMarket(contract);
-
-                    // Add an event listener for open trades
-                    contract.events
-                        .TradeOpened({
-                            fromBlock: 0,
-                        })
-                        .on("data", async (event: any) => {
-                            // Get the trade and add it to the list
-                            const tradeId = event.returnValues.tradeId;
-                            const trade = await contract.methods
-                                .getTrade(tradeId)
-                                .call();
-
-                            // Get the option from the trade
-                            const option = await contract.methods
-                                .getOption(trade[1])
-                                .call();
-
-                            // Add the new trade to the lists
-                            const newTrade: Trade = {
-                                id: tradeId,
-                                optionId: trade[1],
-                                premium: trade[2],
-                                tradeStatus: trade[3],
-                                expiry: option[0] * 1000,
-                                writer: option[2],
-                                tokenAddress: option[3],
-                                strikePrice: option[4],
-                                type: option[5],
-                            };
-                            if (trade[3] === "open" && trade[0] !== account) {
-                                setTrades((prev) => [...prev, newTrade]);
-                            }
-                            if (trade[0] === account) {
-                                setUserTrades((prev) => [...prev, newTrade]);
-                            }
-                        });
-
-                    // Add an event listener to remove executed or cancelled trades
-                    contract.events
-                        .TradeExecuted({ fromBlock: 0 })
-                        .on("data", async (event: any) => {
-                            // Remove trades that have been executed
-                            const tradeId = event.returnValues.tradeId;
-                            setTrades((prev) =>
-                                prev.filter((trade) => trade.id !== tradeId)
-                            );
-                        });
-                    contract.events
-                        .TradeCancelled({ fromBlock: 0 })
-                        .on("data", async (event: any) => {
-                            // Remove trades that have been cancelled
-                            const tradeId = event.returnValues.tradeId;
-                            setTrades((prev) =>
-                                prev.filter((trade) => trade.id !== tradeId)
-                            );
-                        });
+            // Add an event listener for open trades
+            optionsMarket?.optionsMarket.events
+                .TradeOpened({
+                    fromBlock: 0,
                 })
-                .catch((err: any) => console.error(err));
+                .on("data", async (event: any) => {
+                    // Get the trade and add it to the list
+                    const tradeId = event.returnValues.tradeId;
+                    const trade = await optionsMarket?.optionsMarket.methods
+                        .getTrade(tradeId)
+                        .call();
+
+                    // Get the option from the trade
+                    const option = await optionsMarket?.optionsMarket.methods
+                        .getOption(trade[1])
+                        .call();
+
+                    // Add the new trade to the lists
+                    const newTrade: Trade = {
+                        id: tradeId,
+                        optionId: trade[1],
+                        premium: trade[2],
+                        tradeStatus: trade[3],
+                        expiry: option[0] * 1000,
+                        writer: option[2],
+                        tokenAddress: option[3],
+                        strikePrice: option[4],
+                        type: option[5],
+                    };
+                    if (trade[3] === "open" && trade[0] !== account) {
+                        setTrades((prev) => [...prev, newTrade]);
+                    }
+                    if (trade[0] === account) {
+                        setUserTrades((prev) => [...prev, newTrade]);
+                    }
+                });
+
+            // Add an event listener to remove executed or cancelled trades
+            optionsMarket?.optionsMarket.events
+                .TradeExecuted({ fromBlock: 0 })
+                .on("data", async (event: any) => {
+                    // Remove trades that have been executed
+                    const tradeId = event.returnValues.tradeId;
+                    setTrades((prev) =>
+                        prev.filter((trade) => trade.id !== tradeId)
+                    );
+                });
+            optionsMarket?.optionsMarket.events
+                .TradeCancelled({ fromBlock: 0 })
+                .on("data", async (event: any) => {
+                    // Remove trades that have been cancelled
+                    const tradeId = event.returnValues.tradeId;
+                    setTrades((prev) =>
+                        prev.filter((trade) => trade.id !== tradeId)
+                    );
+                });
         }
     }, [active]);
 
@@ -164,27 +152,24 @@ function Trades() {
                                 onClick={async (e) => {
                                     // Get the trade currency
                                     const tradeCurrencyAddress =
-                                        await optionsMarket.methods
+                                        await optionsMarket?.optionsMarket.methods
                                             .getTradeCurrency()
                                             .call();
-                                    const tradeCurrency =
-                                        await getERC20Contract(
-                                            web3,
-                                            tradeCurrencyAddress
-                                        );
 
                                     // Safe allocate funds
                                     await checkTransfer(
                                         web3,
-                                        optionsMarket._address,
+                                        optionsMarket?.address as string,
                                         account as string,
                                         buyTrade.premium *
-                                            10 ** optionsMarket?.decimals,
-                                        tradeCurrency
+                                            10 **
+                                                (optionsMarket?.tradeCurrencyDecimals as number) *
+                                            (optionsMarket?.unitsPerOption as number),
+                                        optionsMarket?.tradeCurrency
                                     );
 
                                     // Execute the trade
-                                    await optionsMarket.methods
+                                    await optionsMarket?.optionsMarket.methods
                                         .executeTrade(buyTrade.id)
                                         .send({ from: account });
                                 }}
