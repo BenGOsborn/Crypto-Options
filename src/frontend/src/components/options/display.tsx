@@ -122,7 +122,6 @@ function DisplayOptions() {
                         });
                 })
                 .catch((err: any) => console.error(err));
-            // Also add in transferred options soon too (how can I transfer this)
         }
     }, [active]);
 
@@ -398,7 +397,7 @@ function DisplayOptions() {
                                                                 optionsMarketAddress,
                                                                 account as string,
                                                                 option.strikePrice *
-                                                                    optionsMarket?.baseUnitAmount,
+                                                                    optionsMarket?.unitsPerOption,
                                                                 optionsMarket?.tradeCurrency
                                                             );
                                                         } else {
@@ -414,7 +413,7 @@ function DisplayOptions() {
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                optionsMarket?.baseUnitAmount,
+                                                                optionsMarket?.tokenAmountPerUnit * optionsMarket?.unitsPerOption,
                                                                 token
                                                             );
                                                         }
