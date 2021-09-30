@@ -58,7 +58,10 @@ function WriteOption() {
                             optionType,
                             expiry / 1000,
                             tokenAddress,
-                            web3.utils.toBN(optionsMarket?.tokenAmountPerUnit).mul(web3.utils.toBN(optionsMarket?.unitsPerOption)).toString()
+                            web3.utils
+                                .toBN(Math.floor(strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals))
+                                .mul(web3.utils.toBN(optionsMarket?.unitsPerOption))
+                                .toString()
                         )
                         .send({ from: account });
 
