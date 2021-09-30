@@ -297,12 +297,12 @@ function DisplayOptions() {
                                     className="px-3 py-4"
                                     title={web3.utils
                                         .toBN(option.strikePrice)
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as string)))
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
                                         .toString()}
                                 >
                                     {web3.utils
                                         .toBN(option.strikePrice)
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as string)))
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
                                         .toString()}
                                 </td>
                                 <td className="px-3 py-4 text-center">
@@ -314,7 +314,7 @@ function DisplayOptions() {
                                                     onClick={async (e) => {
                                                         // Get contract detials
                                                         const optionsMarketAddress = optionsMarket?.address as string;
-                                                        const tradeCurrencyDecimals = web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as string);
+                                                        const tradeCurrencyDecimals = web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number);
                                                         const tokenAmountPerUnit = web3.utils.toBN(optionsMarket?.tokenAmountPerUnit as string);
                                                         const unitsPerOption = web3.utils.toBN(optionsMarket?.unitsPerOption as string);
 

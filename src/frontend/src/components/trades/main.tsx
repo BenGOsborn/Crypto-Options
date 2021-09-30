@@ -2,12 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useContext, useEffect, useState } from "react";
 import Web3 from "web3";
 import { checkTransfer, optionsMarketContext } from "../helpers";
-import {
-    buyTradeContext,
-    Trade,
-    tradesContext,
-    userTradesContext,
-} from "./helpers";
+import { buyTradeContext, Trade, tradesContext, userTradesContext } from "./helpers";
 import NonUserTrades from "./nonUserTrades";
 import UserTrades from "./userTrades";
 
@@ -34,14 +29,10 @@ function Trades() {
                 .on("data", async (event: any) => {
                     // Get the trade and add it to the list
                     const tradeId = event.returnValues.tradeId;
-                    const trade = await optionsMarket?.optionsMarket.methods
-                        .getTrade(tradeId)
-                        .call();
+                    const trade = await optionsMarket?.optionsMarket.methods.getTrade(tradeId).call();
 
                     // Get the option from the trade
-                    const option = await optionsMarket?.optionsMarket.methods
-                        .getOption(trade[1])
-                        .call();
+                    const option = await optionsMarket?.optionsMarket.methods.getOption(trade[1]).call();
 
                     // Add the new trade to the lists
                     const newTrade: Trade = {
@@ -64,24 +55,16 @@ function Trades() {
                 });
 
             // Add an event listener to remove executed or cancelled trades
-            optionsMarket?.optionsMarket.events
-                .TradeExecuted({ fromBlock: 0 })
-                .on("data", async (event: any) => {
-                    // Remove trades that have been executed
-                    const tradeId = event.returnValues.tradeId;
-                    setTrades((prev) =>
-                        prev.filter((trade) => trade.id !== tradeId)
-                    );
-                });
-            optionsMarket?.optionsMarket.events
-                .TradeCancelled({ fromBlock: 0 })
-                .on("data", async (event: any) => {
-                    // Remove trades that have been cancelled
-                    const tradeId = event.returnValues.tradeId;
-                    setTrades((prev) =>
-                        prev.filter((trade) => trade.id !== tradeId)
-                    );
-                });
+            optionsMarket?.optionsMarket.events.TradeExecuted({ fromBlock: 0 }).on("data", async (event: any) => {
+                // Remove trades that have been executed
+                const tradeId = event.returnValues.tradeId;
+                setTrades((prev) => prev.filter((trade) => trade.id !== tradeId));
+            });
+            optionsMarket?.optionsMarket.events.TradeCancelled({ fromBlock: 0 }).on("data", async (event: any) => {
+                // Remove trades that have been cancelled
+                const tradeId = event.returnValues.tradeId;
+                setTrades((prev) => prev.filter((trade) => trade.id !== tradeId));
+            });
         }
     }, [active]);
 
@@ -90,60 +73,24 @@ function Trades() {
             {buyTrade !== null ? (
                 <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
                     <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
-                        <h2 className="font-bold text-xl uppercase text-gray-900">
-                            Buy Option
-                        </h2>
+                        <h2 className="font-bold text-xl uppercase text-gray-900">Buy Option</h2>
                         {buyTrade.type === "call" ? (
                             <p className="text-gray-500">
-                                By purchasing this{" "}
-                                <span className="font-bold">
-                                    {buyTrade.type}
-                                </span>{" "}
-                                option for{" "}
-                                <span className="font-bold">
-                                    {buyTrade.premium}
-                                </span>{" "}
-                                DAI, you are buying the right but not the
-                                obligation to buy of the token with address '
-                                <span
-                                    className="font-bold"
-                                    title={buyTrade.tokenAddress}
-                                >
+                                By purchasing this <span className="font-bold">{buyTrade.type}</span> option for <span className="font-bold">{buyTrade.premium}</span>{" "}
+                                DAI, you are buying the right but not the obligation to buy of the token with address '
+                                <span className="font-bold" title={buyTrade.tokenAddress}>
                                     {buyTrade.tokenAddress.slice(0, 8)}...
                                 </span>
-                                ' for {buyTrade.strikePrice} DAI any time before{" "}
-                                <span className="font-bold">
-                                    {new Date(
-                                        buyTrade.expiry
-                                    ).toLocaleDateString()}
-                                </span>
-                                .
+                                ' for {buyTrade.strikePrice} DAI any time before <span className="font-bold">{new Date(buyTrade.expiry).toLocaleDateString()}</span>.
                             </p>
                         ) : (
                             <p className="text-gray-500">
-                                By purchasing this{" "}
-                                <span className="font-bold">
-                                    {buyTrade.type}
-                                </span>{" "}
-                                option for{" "}
-                                <span className="font-bold">
-                                    {buyTrade.premium}
-                                </span>{" "}
-                                DAI, you are buying the right but not the
-                                obligation to sell of the token with address '
-                                <span
-                                    className="font-bold"
-                                    title={buyTrade.tokenAddress}
-                                >
+                                By purchasing this <span className="font-bold">{buyTrade.type}</span> option for <span className="font-bold">{buyTrade.premium}</span>{" "}
+                                DAI, you are buying the right but not the obligation to sell of the token with address '
+                                <span className="font-bold" title={buyTrade.tokenAddress}>
                                     {buyTrade.tokenAddress.slice(0, 8)}...
                                 </span>
-                                ' for {buyTrade.strikePrice} DAI any time before{" "}
-                                <span className="font-bold">
-                                    {new Date(
-                                        buyTrade.expiry
-                                    ).toLocaleDateString()}
-                                </span>
-                                .
+                                ' for {buyTrade.strikePrice} DAI any time before <span className="font-bold">{new Date(buyTrade.expiry).toLocaleDateString()}</span>.
                             </p>
                         )}
                         <div className="flex justify-between sm:flex-row flex-col items-stretch sm:space-x-4 sm:space-y-0 space-y-4 mt-5">
@@ -151,27 +98,23 @@ function Trades() {
                                 className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-16"
                                 onClick={async (e) => {
                                     // Get the trade currency
-                                    const tradeCurrencyAddress =
-                                        await optionsMarket?.optionsMarket.methods
-                                            .getTradeCurrency()
-                                            .call();
+                                    const tradeCurrencyAddress = await optionsMarket?.optionsMarket.methods.getTradeCurrency().call();
 
                                     // Safe allocate funds
                                     await checkTransfer(
                                         web3,
                                         optionsMarket?.address as string,
                                         account as string,
-                                        buyTrade.premium *
-                                            10 **
-                                                (optionsMarket?.tradeCurrencyDecimals as number) *
-                                            (optionsMarket?.unitsPerOption as number),
+                                        web3.utils
+                                            .toBN(buyTrade.premium)
+                                            .mul(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                            .mul(web3.utils.toBN(optionsMarket?.unitsPerOption as string))
+                                            .toString(),
                                         optionsMarket?.tradeCurrency
                                     );
 
                                     // Execute the trade
-                                    await optionsMarket?.optionsMarket.methods
-                                        .executeTrade(buyTrade.id)
-                                        .send({ from: account });
+                                    await optionsMarket?.optionsMarket.methods.executeTrade(buyTrade.id).send({ from: account });
                                 }}
                             >
                                 Buy
