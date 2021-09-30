@@ -1,11 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState, useContext } from "react";
 import Web3 from "web3";
-import {
-    getERC20Contract,
-    checkTransfer,
-    optionsMarketContext,
-} from "../helpers";
+import { getERC20Contract, checkTransfer, optionsMarketContext } from "../helpers";
 import { Option, sellOptionContext } from "./helpers";
 
 interface SearchFilter {
@@ -52,12 +48,8 @@ function DisplayOptions() {
                 .on("data", async (event: any) => {
                     // Get the option and add it to the list
                     const optionId = event.returnValues.optionId;
-                    const option = await optionsMarket?.optionsMarket.methods
-                        .getOption(optionId)
-                        .call();
-                    const owner = await optionsMarket?.optionsMarket.methods
-                        .getOptionOwner(optionId)
-                        .call();
+                    const option = await optionsMarket?.optionsMarket.methods.getOption(optionId).call();
+                    const owner = await optionsMarket?.optionsMarket.methods.getOptionOwner(optionId).call();
 
                     const newOption: Option = {
                         id: optionId,
@@ -83,12 +75,8 @@ function DisplayOptions() {
                 .on("data", async (event: any) => {
                     // Get the option and add it to the list
                     const optionId = event.returnValues.optionId;
-                    const option = await optionsMarket?.optionsMarket.methods
-                        .getOption(optionId)
-                        .call();
-                    const owner = await optionsMarket?.optionsMarket.methods
-                        .getOptionOwner(optionId)
-                        .call();
+                    const option = await optionsMarket?.optionsMarket.methods.getOption(optionId).call();
+                    const owner = await optionsMarket?.optionsMarket.methods.getOptionOwner(optionId).call();
 
                     // Only add the option if it is owned and the id is not within the list
                     if (owner === account) {
@@ -172,9 +160,7 @@ function DisplayOptions() {
                         onChange={(e) => {
                             setSearchFilter((prev) => {
                                 const newPrev = { ...prev };
-                                newPrev.expiryDateStart = (
-                                    e.target.valueAsDate as Date
-                                ).getTime();
+                                newPrev.expiryDateStart = (e.target.valueAsDate as Date).getTime();
                                 return newPrev;
                             });
                         }}
@@ -184,19 +170,14 @@ function DisplayOptions() {
                         onChange={(e) => {
                             setSearchFilter((prev) => {
                                 const newPrev = { ...prev };
-                                newPrev.expiryDateEnd = (
-                                    e.target.valueAsDate as Date
-                                ).getTime();
+                                newPrev.expiryDateEnd = (e.target.valueAsDate as Date).getTime();
                                 return newPrev;
                             });
                         }}
                     />
                 </fieldset>
                 <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
-                    <label
-                        htmlFor="tokenAddress"
-                        className="text-gray-900 font-bold"
-                    >
+                    <label htmlFor="tokenAddress" className="text-gray-900 font-bold">
                         Token Address
                     </label>
                     <input
@@ -214,10 +195,7 @@ function DisplayOptions() {
                     />
                 </fieldset>
                 <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
-                    <label
-                        htmlFor="available"
-                        className="text-gray-900 font-bold"
-                    >
+                    <label htmlFor="available" className="text-gray-900 font-bold">
                         Show Unavailable
                     </label>
                     <input
@@ -240,12 +218,8 @@ function DisplayOptions() {
                         <th className="px-3 py-2 break-words w-1/12">Sell</th>
                         <th className="px-3 py-2 break-words w-1/12">Expiry</th>
                         <th className="px-3 py-2 break-words w-1/12">Status</th>
-                        <th className="px-3 py-2 break-words w-1/12">
-                            Token Address
-                        </th>
-                        <th className="px-3 py-2 break-words w-1/12">
-                            Strike Price (DAI)
-                        </th>
+                        <th className="px-3 py-2 break-words w-1/12">Token Address</th>
+                        <th className="px-3 py-2 break-words w-1/12">Strike Price (DAI)</th>
                         <th className="px-3 py-2 break-words w-1/12">Option</th>
                     </tr>
                 </thead>
@@ -253,74 +227,36 @@ function DisplayOptions() {
                     {options
                         .filter((option) => {
                             // Filter out option type
-                            if (
-                                searchFilter.optionType !== "any" &&
-                                option.type !== searchFilter.optionType
-                            ) {
+                            if (searchFilter.optionType !== "any" && option.type !== searchFilter.optionType) {
                                 return false;
                             }
 
                             // Filter token address
-                            if (
-                                !option.tokenAddress
-                                    .toLowerCase()
-                                    .startsWith(
-                                        searchFilter.tokenAddress.toLowerCase()
-                                    )
-                            )
-                                return false;
+                            if (!option.tokenAddress.toLowerCase().startsWith(searchFilter.tokenAddress.toLowerCase())) return false;
 
                             // Filter unavailable options
                             if (!searchFilter.showUnavailable) {
                                 if (option.status !== "none") return false;
 
-                                if (
-                                    option.owner !== account &&
-                                    option.writer !== account
-                                )
-                                    return false;
+                                if (option.owner !== account && option.writer !== account) return false;
                             }
 
                             // Filter out of range expiry options
-                            if (
-                                !(
-                                    searchFilter.expiryDateStart <=
-                                        option.expiry &&
-                                    option.expiry <= searchFilter.expiryDateEnd
-                                )
-                            )
-                                return false;
+                            if (!(searchFilter.expiryDateStart <= option.expiry && option.expiry <= searchFilter.expiryDateEnd)) return false;
 
                             // Filter options written by user
                             if (searchFilter.writtenByUser !== "any") {
-                                if (
-                                    searchFilter.writtenByUser === "true" &&
-                                    option.writer !== account
-                                )
-                                    return false;
+                                if (searchFilter.writtenByUser === "true" && option.writer !== account) return false;
 
-                                if (
-                                    searchFilter.writtenByUser === "false" &&
-                                    option.writer === account
-                                )
-                                    return false;
+                                if (searchFilter.writtenByUser === "false" && option.writer === account) return false;
                             }
 
                             return true;
                         })
                         .map((option, index) => (
-                            <tr
-                                key={index}
-                                className={`${
-                                    index < options.length - 1
-                                        ? "border-b-2 border-gray-100"
-                                        : ""
-                                }`}
-                            >
+                            <tr key={index} className={`${index < options.length - 1 ? "border-b-2 border-gray-100" : ""}`}>
                                 <td className="px-3 py-4 text-center">
-                                    {option.owner === account &&
-                                    option.expiry >= Date.now() &&
-                                    option.status === "none" ? (
+                                    {option.owner === account && option.expiry >= Date.now() && option.status === "none" ? (
                                         <button
                                             className="transition duration-100 cursor-pointer bg-green-400 hover:bg-green-500 text-white font-bold rounded py-2 px-4"
                                             onClick={(e) => {
@@ -330,42 +266,29 @@ function DisplayOptions() {
                                             Sell
                                         </button>
                                     ) : (
-                                        <span className="text-gray-600">
-                                            Unavailable
-                                        </span>
+                                        <span className="text-gray-600">Unavailable</span>
                                     )}
                                 </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={new Date(option.expiry).toString()}
-                                >
-                                    {new Date(
-                                        option.expiry
-                                    ).toLocaleDateString()}
+                                <td className="px-3 py-4" title={new Date(option.expiry).toString()}>
+                                    {new Date(option.expiry).toLocaleDateString()}
                                 </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.status.toString()}
-                                >
+                                <td className="px-3 py-4" title={option.status.toString()}>
                                     {option.status}
                                 </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={option.tokenAddress.toString()}
-                                >
+                                <td className="px-3 py-4" title={option.tokenAddress.toString()}>
                                     {option.tokenAddress.slice(0, 8)}...
                                 </td>
                                 <td
                                     className="px-3 py-4"
-                                    title={(
-                                        option.strikePrice /
-                                        10 **
-                                            (optionsMarket?.tradeCurrencyDecimals as number)
-                                    ).toString()}
+                                    title={web3.utils
+                                        .toBN(option.strikePrice)
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as string)))
+                                        .toString()}
                                 >
-                                    {option.strikePrice /
-                                        10 **
-                                            (optionsMarket?.tradeCurrencyDecimals as number)}
+                                    {web3.utils
+                                        .toBN(option.strikePrice)
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as string)))
+                                        .toString()}
                                 </td>
                                 <td className="px-3 py-4 text-center">
                                     {option.owner === account ? (
@@ -375,58 +298,43 @@ function DisplayOptions() {
                                                     className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
                                                     onClick={async (e) => {
                                                         // Get contract detials
-                                                        const optionsMarketAddress =
-                                                            optionsMarket?.address as string;
-                                                        const tradeCurrencyDecimals =
-                                                            optionsMarket?.tradeCurrencyDecimals as number;
-                                                        const tokenAmountPerUnit =
-                                                            optionsMarket?.tokenAmountPerUnit as number;
-                                                        const unitsPerOption =
-                                                            optionsMarket?.unitsPerOption as number;
+                                                        const optionsMarketAddress = optionsMarket?.address as string;
+                                                        const tradeCurrencyDecimals = web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as string);
+                                                        const tokenAmountPerUnit = web3.utils.toBN(optionsMarket?.tokenAmountPerUnit as string);
+                                                        const unitsPerOption = web3.utils.toBN(optionsMarket?.unitsPerOption as string);
 
                                                         // Check the ERC20 allowances
-                                                        if (
-                                                            option.type ===
-                                                            "call"
-                                                        ) {
+                                                        if (option.type === "call") {
                                                             // Check that funds are allocated to contract and if not allocate them
                                                             await checkTransfer(
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                option.strikePrice *
-                                                                    10 **
-                                                                        tradeCurrencyDecimals *
-                                                                    unitsPerOption,
+                                                                web3.utils
+                                                                    .toBN(option.strikePrice)
+                                                                    .mul(web3.utils.toBN(10).pow(tradeCurrencyDecimals))
+                                                                    .mul(unitsPerOption)
+                                                                    .toString(),
                                                                 optionsMarket?.tradeCurrency
                                                             );
                                                         } else {
                                                             // Get the contract of the token
-                                                            const token =
-                                                                await getERC20Contract(
-                                                                    web3,
-                                                                    option.tokenAddress
-                                                                );
+                                                            const token = await getERC20Contract(web3, option.tokenAddress);
 
                                                             // Check that funds are allocated to contract and if not allocate them
                                                             await checkTransfer(
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                tokenAmountPerUnit *
-                                                                    unitsPerOption,
+                                                                tokenAmountPerUnit * unitsPerOption,
                                                                 token
                                                             );
                                                         }
 
                                                         // Attempt to exercise the option
-                                                        await optionsMarket?.optionsMarket.methods
-                                                            .exerciseOption(
-                                                                option.id
-                                                            )
-                                                            .send({
-                                                                from: account,
-                                                            });
+                                                        await optionsMarket?.optionsMarket.methods.exerciseOption(option.id).send({
+                                                            from: account,
+                                                        });
                                                     }}
                                                 >
                                                     Exercise
@@ -436,31 +344,21 @@ function DisplayOptions() {
                                                     className="transition duration-100 cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded py-2 px-4"
                                                     onClick={async (e) => {
                                                         // Collect the tokens / funds stored in the option
-                                                        await optionsMarket?.optionsMarket.methods
-                                                            .collectExpired(
-                                                                option.id
-                                                            )
-                                                            .send({
-                                                                from: account,
-                                                            });
+                                                        await optionsMarket?.optionsMarket.methods.collectExpired(option.id).send({
+                                                            from: account,
+                                                        });
                                                     }}
                                                 >
                                                     Collect
                                                 </button>
                                             ) : (
-                                                <span className="text-gray-600">
-                                                    Unavailable
-                                                </span>
+                                                <span className="text-gray-600">Unavailable</span>
                                             )
                                         ) : (
-                                            <span className="text-gray-600">
-                                                Unavailable
-                                            </span>
+                                            <span className="text-gray-600">Unavailable</span>
                                         )
                                     ) : (
-                                        <span className="text-gray-600">
-                                            Unavailable
-                                        </span>
+                                        <span className="text-gray-600">Unavailable</span>
                                     )}
                                 </td>
                             </tr>

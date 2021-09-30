@@ -32,7 +32,7 @@ function App() {
                         web3,
                         tradeCurrencyAddress
                     );
-                    const tradeCurrencyDecimals = String(1e18); // This is hardcoded to the stablecoin - this is because IERC20 doesnt allow for decimals to be called
+                    const tradeCurrencyDecimals = (1e18).toString(); // This is hardcoded to the stablecoin - this is because IERC20 doesnt allow for decimals to be called
                     const tokenAmountPerUnit = (
                         await contract.methods.getTokenAmountPerUnit().call()
                     ).toString();

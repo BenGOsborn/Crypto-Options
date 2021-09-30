@@ -46,7 +46,7 @@ export async function checkTransfer(
     web3: Web3,
     contractAddress: string,
     account: string,
-    amount: number,
+    amount: string,
     tokenContract: any
 ) {
     // Check the allowance of the contract
