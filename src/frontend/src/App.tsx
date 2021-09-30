@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
-import { getERC20Contract, getOptionsMarketContract, selectorContext, shiftDecimal } from "./components/helpers";
+import { getERC20Contract, getOptionsMarketContract, selectorContext } from "./components/helpers";
 import Nav from "./components/nav";
 import Trades from "./components/trades/main";
 import Options from "./components/options/main";

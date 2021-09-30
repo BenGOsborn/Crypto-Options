@@ -54,7 +54,12 @@ function WriteOption() {
 
                     // Create the new option
                     await optionsMarket?.optionsMarket.methods
-                        .writeOption(optionType, expiry / 1000, tokenAddress, strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals * optionsMarket?.unitsPerOption)
+                        .writeOption(
+                            optionType,
+                            expiry / 1000,
+                            tokenAddress,
+                            web3.utils.toBN(optionsMarket?.tokenAmountPerUnit).mul(web3.utils.toBN(optionsMarket?.unitsPerOption)).toString()
+                        )
                         .send({ from: account });
 
                     // @ts-ignore
