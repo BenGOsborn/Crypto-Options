@@ -77,7 +77,7 @@ contract OptionsMarket {
     function writeOption(string calldata optionType, uint256 expiry, address tokenAddress, uint256 strikePrice) external returns (uint256) {
         // Make the expiry weekly every friday
         uint256 expiryTemp = expiry / (7 days);
-        uint256 optionExpiry = expiryTemp * (7 days) + 5 days;
+        uint256 optionExpiry = expiryTemp * (7 days) + 2 days;
         
         // Check that the option is valid
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
