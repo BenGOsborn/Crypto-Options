@@ -46,8 +46,26 @@ export async function checkTransfer(web3: Web3, contractAddress: string, account
 
 // Shift a string up a number of decimal places
 export function shiftDecimal(num: string, decimals: number, direction: "forward" | "backward") {
+    // Get the location of the decimal
+    let decimalIndex = num.indexOf(".");
+    if (decimalIndex === -1) decimalIndex = num.length;
+
     if (direction === "forward") {
     } else if (direction === "backward") {
+        console.log(num, decimals, direction, decimalIndex);
+
+        // Add on the correct amount of zeros depending on the decimal number
+        const charsToIndex = num.length - 1 - decimalIndex;
+        const zerosToAdd = decimals - charsToIndex;
+
+        // Pad the number
+        const padded = num + "0".repeat(Math.max(zerosToAdd, 0));
+        const shiftedIndex = decimalIndex + charsToIndex + zerosToAdd;
+        const decimalAdded = padded.slice(0, shiftedIndex + 1) + "." + padded.slice(shiftedIndex + 1, undefined);
+        let decimalRemoved = decimalAdded.slice(0, decimalIndex) + decimalAdded.slice(decimalIndex + 1, undefined);
+        if (decimalRemoved[decimalRemoved.length - 1] === ".") decimalRemoved = decimalRemoved.slice(0, decimalRemoved.length - 1);
+
+        return decimalRemoved;
     } else {
         throw "Invalid direction param";
     }
