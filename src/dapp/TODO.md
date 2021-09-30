@@ -9,6 +9,7 @@
 -   Add labels for the different sections
 -   Update labels to sell option section and write options and trade and such
 -   Make new account on metamask to test with ?
+-   \***\* I might have to make my app use big numbers instead of regular numbers \*\***
 
 -   Write more tests / clean them up
 -   Add in the decimals when specifying token amounts (and round them down from the frontend)

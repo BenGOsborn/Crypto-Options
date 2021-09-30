@@ -125,14 +125,14 @@ function NonUserTrades() {
                     <tr className="font-bold text-gray-900">
                         <th className="px-3 py-2 break-words w-1/12">Buy</th>
                         <th className="px-3 py-2 break-words w-1/12">
-                            Trade Price (DAI)
+                            Premium (DAI)
                         </th>
                         <th className="px-3 py-2 break-words w-1/12">Expiry</th>
                         <th className="px-3 py-2 break-words w-1/12">
                             Token Address
                         </th>
                         <th className="px-3 py-2 break-words w-1/12">
-                            Price (DAI)
+                            Strike Price (DAI)
                         </th>
                         <th className="px-3 py-2 break-words w-1/12">Type</th>
                         <th className="px-3 py-2 break-words w-1/12">
