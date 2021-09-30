@@ -10,15 +10,11 @@ function Options() {
     // Store the web3 data
     const [optionsMarket, setOptionsMarket] = useContext(optionsMarketContext);
     const web3: Web3 = useWeb3React().library;
+    const { account } = useWeb3React();
 
     // Store the option to sell
     const [sellOption, setSellOption] = useState<Option | null>(null);
     const [optionPremium, setOptionPremium] = useState<number>(0);
-
-    // Get the options market from the context
-
-    // Store the account
-    const { account } = useWeb3React();
 
     return (
         <div className="Options">
