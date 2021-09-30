@@ -40,9 +40,12 @@ function App() {
                         address: (contract as any)._address,
                         tradeCurrency,
                         tradeCurrencyDecimals,
-                        tokenAmountPerUnit:
-                            await contract.methods.getTokenAmountPerUnit().call(),
-                        unitsPerOption: await contract.methods.getUnitsPerOption().call()
+                        tokenAmountPerUnit: await contract.methods
+                            .getTokenAmountPerUnit()
+                            .call(),
+                        unitsPerOption: await contract.methods
+                            .getUnitsPerOption()
+                            .call(),
                     };
                     setOptionsMarket(contractData);
                 })
