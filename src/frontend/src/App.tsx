@@ -17,7 +17,7 @@ function App() {
     const web3: Web3 = useWeb3React().library;
 
     useEffect(() => {
-        console.log(shiftDecimal("15.2340", 3, "backward"));
+        console.log(shiftDecimal("0.23456789", 4, "backward"));
 
         if (active) {
             getOptionsMarketContract(web3)
