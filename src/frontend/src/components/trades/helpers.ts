@@ -3,12 +3,12 @@ import { createContext, Dispatch, SetStateAction } from "react";
 export interface Trade {
     id: number;
     optionId: number;
-    premium: number;
+    premium: string;
     tradeStatus: string;
     expiry: number;
     writer: string;
     tokenAddress: string;
-    strikePrice: number;
+    strikePrice: string;
     type: string;
 }
 

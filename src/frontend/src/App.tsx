@@ -18,11 +18,6 @@ function App() {
 
     useEffect(() => {
         if (active) {
-            const now = Date.now();
-            const defaultWeek = Math.floor(now / 6.048e8) * 6.048e8 + 2 * 8.64e7;
-            console.log(new Date(defaultWeek));
-            console.log(new Date(defaultWeek).toUTCString());
-
             getOptionsMarketContract(web3)
                 .then(async (contract) => {
                     // Get the data for the state

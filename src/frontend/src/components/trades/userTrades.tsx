@@ -5,8 +5,6 @@ import { optionsMarketContext } from "../helpers";
 import { SearchFilter, userTradesContext } from "./helpers";
 
 function UserTrades() {
-    // **** DONT FORGET TO DIVIDE THE PRICES BY THE DECIMALS
-
     // Web3 data
     const [optionsMarket, setOptionsMarket] = useContext(optionsMarketContext);
     const { account } = useWeb3React();
@@ -174,8 +172,17 @@ function UserTrades() {
                         })
                         .map((trade, index) => (
                             <tr key={index} className={`${index < trades.length - 1 ? "border-b-2 border-gray-100" : ""}`}>
-                                <td className="px-3 py-4" title={(trade.premium / 10 ** (optionsMarket?.tradeCurrencyDecimals as number)).toString()}>
-                                    {trade.premium / 10 ** (optionsMarket?.tradeCurrencyDecimals as number)}
+                                <td
+                                    className="px-3 py-4"
+                                    title={web3.utils
+                                        .toBN(trade.premium)
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .toString()}
+                                >
+                                    {web3.utils
+                                        .toBN(trade.premium)
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .toString()}
                                 </td>
                                 <td className="px-3 py-4" title={new Date(trade.expiry).toString()}>
                                     {new Date(trade.expiry).toLocaleDateString()}
@@ -183,8 +190,17 @@ function UserTrades() {
                                 <td className="px-3 py-4" title={trade.tokenAddress}>
                                     {trade.tokenAddress.slice(0, 8)}...
                                 </td>
-                                <td className="px-3 py-4" title={(trade.strikePrice / 10 ** (optionsMarket?.tradeCurrencyDecimals as number)).toString()}>
-                                    {trade.strikePrice / 10 ** (optionsMarket?.tradeCurrencyDecimals as number)}
+                                <td
+                                    className="px-3 py-4"
+                                    title={web3.utils
+                                        .toBN(trade.strikePrice)
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .toString()}
+                                >
+                                    {web3.utils
+                                        .toBN(trade.strikePrice)
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .toString()}
                                 </td>
                                 <td className="px-3 py-4" title={trade.tradeStatus}>
                                     {trade.tradeStatus}

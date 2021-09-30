@@ -7,7 +7,7 @@ export interface Option {
     writer: string;
     owner: string;
     tokenAddress: string;
-    strikePrice: number;
+    strikePrice: string;
     type: "call" | "put";
 }
 
