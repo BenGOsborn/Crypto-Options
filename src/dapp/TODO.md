@@ -12,6 +12,7 @@
 
 -   Write more tests / clean them up
 -   Add in the decimals when specifying token amounts (and round them down from the frontend)
+-   Implement some method that allows an admin to stop trades and new options from being written allowing the legacyfying of the old contract
 
 -   It appears there is a problem with its ability to determine a date ?
 

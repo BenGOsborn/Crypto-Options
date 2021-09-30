@@ -25,8 +25,6 @@ function WriteOption() {
                     e.preventDefault();
                     if (optionsMarket === null) return;
 
-                    console.log(optionsMarket);
-
                     // Check the ERC20 allowances
                     if (optionType === "put") {
                         // Check that funds are allocated to contract and if not allocate them
@@ -55,10 +53,11 @@ function WriteOption() {
                     }
 
                     // Create the new option
+                    const parsedExpiry = (new Date(expiry).getTime() + 5 * 8.64e7) / 1000;
                     await optionsMarket?.optionsMarket.methods
                         .writeOption(
                             optionType,
-                            expiry / 1000,
+                            parsedExpiry,
                             tokenAddress,
                             web3.utils
                                 .toBN(Math.floor(strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals))
