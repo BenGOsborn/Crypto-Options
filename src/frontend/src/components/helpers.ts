@@ -4,12 +4,12 @@ import IERC20 from "../abi/IERC20.json";
 import { createContext, Dispatch, SetStateAction } from "react";
 
 export interface OptionsMarketData {
-    optionsMarket: any;
+    optionsMarket: any; // Contract
     address: string;
-    tradeCurrency: any;
-    tradeCurrencyDecimals: number;
-    tokenAmountPerUnit: number;
-    unitsPerOption: number;
+    tradeCurrency: any; // Contract
+    tradeCurrencyDecimals: string;
+    tokenAmountPerUnit: string;
+    unitsPerOption: string;
 }
 
 // Options contract context

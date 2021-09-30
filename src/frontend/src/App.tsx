@@ -32,7 +32,13 @@ function App() {
                         web3,
                         tradeCurrencyAddress
                     );
-                    const tradeCurrencyDecimals = 1e18; // This is hardcoded to the stablecoin - this is because IERC20 doesnt allow for decimals to be called
+                    const tradeCurrencyDecimals = String(1e18); // This is hardcoded to the stablecoin - this is because IERC20 doesnt allow for decimals to be called
+                    const tokenAmountPerUnit = (
+                        await contract.methods.getTokenAmountPerUnit().call()
+                    ).toString();
+                    const unitsPerOption = (
+                        await contract.methods.getUnitsPerOption().call()
+                    ).toString();
 
                     // Store the contract data in the state
                     const contractData: OptionsMarketData = {
@@ -40,12 +46,8 @@ function App() {
                         address: (contract as any)._address,
                         tradeCurrency,
                         tradeCurrencyDecimals,
-                        tokenAmountPerUnit: await contract.methods
-                            .getTokenAmountPerUnit()
-                            .call(),
-                        unitsPerOption: await contract.methods
-                            .getUnitsPerOption()
-                            .call(),
+                        tokenAmountPerUnit,
+                        unitsPerOption,
                     };
                     setOptionsMarket(contractData);
                 })
