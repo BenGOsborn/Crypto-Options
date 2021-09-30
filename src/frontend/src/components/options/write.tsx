@@ -51,7 +51,8 @@ function WriteOption() {
                             web3,
                             optionsMarket?.address,
                             account as string,
-                            optionsMarket?.tokenAmountPerUnit * optionsMarket?.unitsPerOption,
+                            optionsMarket?.tokenAmountPerUnit *
+                                optionsMarket?.unitsPerOption,
                             token
                         );
                     }
@@ -60,10 +61,11 @@ function WriteOption() {
                     await optionsMarket?.optionsMarket.methods
                         .writeOption(
                             optionType,
-                            expiry,
+                            expiry / 1000,
                             tokenAddress,
                             strikePrice *
-                                10 ** optionsMarket?.tradeCurrencyDecimals * optionsMarket?.unitsPerOption
+                                10 ** optionsMarket?.tradeCurrencyDecimals *
+                                optionsMarket?.unitsPerOption
                         )
                         .send({ from: account });
 
@@ -98,11 +100,11 @@ function WriteOption() {
                             Expiry
                         </label>
                         <input
-                            type="datetime-local"
+                            type="week"
                             id="expiry"
                             onChange={(e) => {
                                 setExpiry(
-                                    new Date(e.target.value).getTime() / 1000
+                                    (e.target.valueAsDate as Date).getTime()
                                 );
                             }}
                             required

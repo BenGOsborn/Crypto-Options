@@ -168,24 +168,24 @@ function DisplayOptions() {
                         Expiry Range
                     </label>
                     <input
-                        type="datetime-local"
+                        type="week"
                         onChange={(e) => {
                             setSearchFilter((prev) => {
                                 const newPrev = { ...prev };
-                                newPrev.expiryDateStart = new Date(
-                                    e.target.value
+                                newPrev.expiryDateStart = (
+                                    e.target.valueAsDate as Date
                                 ).getTime();
                                 return newPrev;
                             });
                         }}
                     />
                     <input
-                        type="datetime-local"
+                        type="week"
                         onChange={(e) => {
                             setSearchFilter((prev) => {
                                 const newPrev = { ...prev };
-                                newPrev.expiryDateEnd = new Date(
-                                    e.target.value
+                                newPrev.expiryDateEnd = (
+                                    e.target.valueAsDate as Date
                                 ).getTime();
                                 return newPrev;
                             });
