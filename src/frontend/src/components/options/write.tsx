@@ -122,7 +122,8 @@ function WriteOption() {
                         type="number"
                         name="tokenPrice"
                         id="tokenPrice"
-                        placeholder="10.0"
+                        placeholder="2.00"
+                        step="any"
                         min={0}
                         onChange={(e) => setStrikePrice(e.target.valueAsNumber)}
                         required
