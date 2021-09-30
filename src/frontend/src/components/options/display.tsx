@@ -2,9 +2,9 @@ import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState, useContext } from "react";
 import Web3 from "web3";
 import {
-    getOptionsMarketContract,
     getERC20Contract,
     checkTransfer,
+    optionsMarketContext,
 } from "../helpers";
 import { Option, sellOptionContext } from "./helpers";
 
@@ -19,8 +19,8 @@ interface SearchFilter {
 
 function DisplayOptions() {
     // Store the web3 data
-    const [optionsMarket, setOptionsMarket] = useState<any | null>(null);
-    const { active, account } = useWeb3React();
+    const [optionsMarket, setOptionsMarket] = useContext(optionsMarketContext);
+    const { account } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
 
     // Store the existing written options by the account
@@ -40,15 +40,9 @@ function DisplayOptions() {
     const [sellOption, setSellOption] = useContext(sellOptionContext);
 
     useEffect(() => {
-        if (active) {
-            // Store the options market contract and listen for events
-            getOptionsMarketContract(web3)
-                .then((contract) => {
-                    // Store the contract in the state
-                    setOptionsMarket(contract);
-
+        if (optionsMarket !== null) {
                     // Add event listener for options written by the user
-                    contract.events
+                    optionsMarket?.optionsMarket.events
                         .OptionWritten({
                             fromBlock: 0,
                             filter: {
@@ -58,10 +52,10 @@ function DisplayOptions() {
                         .on("data", async (event: any) => {
                             // Get the option and add it to the list
                             const optionId = event.returnValues.optionId;
-                            const option = await contract.methods
+                            const option = await optionsMarket?.optionsMarket.methods
                                 .getOption(optionId)
                                 .call();
-                            const owner = await contract.methods
+                            const owner = await optionsMarket?.optionsMarket.methods
                                 .getOptionOwner(optionId)
                                 .call();
 
@@ -79,7 +73,7 @@ function DisplayOptions() {
                         });
 
                     // Add events for options traded that belong to the user
-                    contract.events
+                    optionsMarket?.optionsMarket.events
                         .TradeExecuted({
                             fromBlock: 0,
                             filter: {
@@ -89,10 +83,10 @@ function DisplayOptions() {
                         .on("data", async (event: any) => {
                             // Get the option and add it to the list
                             const optionId = event.returnValues.optionId;
-                            const option = await contract.methods
+                            const option = await optionsMarket?.optionsMarket.methods
                                 .getOption(optionId)
                                 .call();
-                            const owner = await contract.methods
+                            const owner = await optionsMarket?.optionsMarket.methods
                                 .getOptionOwner(optionId)
                                 .call();
 
@@ -119,11 +113,10 @@ function DisplayOptions() {
                                     setOptions((prev) => [...prev, newOption]);
                                 }
                             }
-                        });
                 })
                 .catch((err: any) => console.error(err));
         }
-    }, [active]);
+    }, [optionsMarket]);
 
     return (
         <div className="overflow-x-auto sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
@@ -368,12 +361,12 @@ function DisplayOptions() {
                                     title={(
                                         option.strikePrice /
                                         10 **
-                                            optionsMarket?.tradeCurrencyDecimals
+                                            (optionsMarket?.tradeCurrencyDecimals as number)
                                     ).toString()}
                                 >
                                     {option.strikePrice /
                                         10 **
-                                            optionsMarket?.tradeCurrencyDecimals}
+                                            (optionsMarket?.tradeCurrencyDecimals as number)}
                                 </td>
                                 <td className="px-3 py-4 text-center">
                                     {option.owner === account ? (
@@ -382,9 +375,12 @@ function DisplayOptions() {
                                                 <button
                                                     className="transition duration-100 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4"
                                                     onClick={async (e) => {
-                                                        // Get contract address
+                                                        // Get contract detials
                                                         const optionsMarketAddress =
-                                                            optionsMarket._address;
+                                                            optionsMarket?.address as string;
+                                                        const tradeCurrencyDecimals = optionsMarket?.tradeCurrencyDecimals as number;
+                                                        const tokenAmountPerUnit = optionsMarket?.tokenAmountPerUnit as number;
+                                                        const unitsPerOption = optionsMarket?.unitsPerOption as number;
 
                                                         // Check the ERC20 allowances
                                                         if (
@@ -396,7 +392,7 @@ function DisplayOptions() {
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                option.strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals * optionsMarket?.unitsPerOption,
+                                                                option.strikePrice * 10 ** tradeCurrencyDecimals * unitsPerOption,
                                                                 optionsMarket?.tradeCurrency
                                                             );
                                                         } else {
@@ -412,13 +408,13 @@ function DisplayOptions() {
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                optionsMarket?.tokenAmountPerUnit * optionsMarket?.unitsPerOption,
+                                                                tokenAmountPerUnit * unitsPerOption,
                                                                 token
                                                             );
                                                         }
 
                                                         // Attempt to exercise the option
-                                                        await optionsMarket.methods
+                                                        await optionsMarket?.optionsMarket.methods
                                                             .exerciseOption(
                                                                 option.id
                                                             )
@@ -434,7 +430,7 @@ function DisplayOptions() {
                                                     className="transition duration-100 cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded py-2 px-4"
                                                     onClick={async (e) => {
                                                         // Collect the tokens / funds stored in the option
-                                                        await optionsMarket.methods
+                                                        await optionsMarket?.optionsMarket.methods
                                                             .collectExpired(
                                                                 option.id
                                                             )
