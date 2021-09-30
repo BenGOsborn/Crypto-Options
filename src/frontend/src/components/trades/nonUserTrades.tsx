@@ -24,10 +24,7 @@ function NonUserTrades() {
 
     return (
         <div className="overflow-x-auto sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
-            <form
-                className="pb-6 mb-6 flex flex-wrap justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100"
-                style={{ minWidth: 500 }}
-            >
+            <form className="pb-6 mb-6 flex flex-wrap justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100" style={{ minWidth: 500 }}>
                 <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                     <label htmlFor="type" className="text-gray-900 font-bold">
                         Option Type
@@ -57,9 +54,7 @@ function NonUserTrades() {
                         onChange={(e) => {
                             setSearchFilter((prev) => {
                                 const newPrev = { ...prev };
-                                newPrev.expiryDateStart = (
-                                    e.target.valueAsDate as Date
-                                ).getTime();
+                                newPrev.expiryDateStart = (e.target.valueAsDate as Date).getTime();
                                 return newPrev;
                             });
                         }}
@@ -69,19 +64,14 @@ function NonUserTrades() {
                         onChange={(e) => {
                             setSearchFilter((prev) => {
                                 const newPrev = { ...prev };
-                                newPrev.expiryDateEnd = (
-                                    e.target.valueAsDate as Date
-                                ).getTime();
+                                newPrev.expiryDateEnd = (e.target.valueAsDate as Date).getTime();
                                 return newPrev;
                             });
                         }}
                     />
                 </fieldset>
                 <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
-                    <label
-                        htmlFor="tokenAddress"
-                        className="text-gray-900 font-bold"
-                    >
+                    <label htmlFor="tokenAddress" className="text-gray-900 font-bold">
                         Token Address
                     </label>
                     <input
@@ -124,72 +114,37 @@ function NonUserTrades() {
                 <thead>
                     <tr className="font-bold text-gray-900">
                         <th className="px-3 py-2 break-words w-1/12">Buy</th>
-                        <th className="px-3 py-2 break-words w-1/12">
-                            Premium (DAI)
-                        </th>
+                        <th className="px-3 py-2 break-words w-1/12">Premium (DAI)</th>
                         <th className="px-3 py-2 break-words w-1/12">Expiry</th>
-                        <th className="px-3 py-2 break-words w-1/12">
-                            Token Address
-                        </th>
-                        <th className="px-3 py-2 break-words w-1/12">
-                            Strike Price (DAI)
-                        </th>
+                        <th className="px-3 py-2 break-words w-1/12">Token Address</th>
+                        <th className="px-3 py-2 break-words w-1/12">Strike Price (DAI)</th>
                         <th className="px-3 py-2 break-words w-1/12">Type</th>
-                        <th className="px-3 py-2 break-words w-1/12">
-                            Trade Status
-                        </th>
+                        <th className="px-3 py-2 break-words w-1/12">Trade Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     {trades
                         .filter((trade) => {
                             // Filter out option type
-                            if (
-                                searchFilter.optionType !== "any" &&
-                                trade.type !== searchFilter.optionType
-                            ) {
+                            if (searchFilter.optionType !== "any" && trade.type !== searchFilter.optionType) {
                                 return false;
                             }
 
                             // Filter out trade type
-                            if (
-                                searchFilter.tradeStatus !== "any" &&
-                                trade.tradeStatus !== searchFilter.tradeStatus
-                            ) {
+                            if (searchFilter.tradeStatus !== "any" && trade.tradeStatus !== searchFilter.tradeStatus) {
                                 return false;
                             }
 
                             // Filter token address
-                            if (
-                                !trade.tokenAddress
-                                    .toLowerCase()
-                                    .startsWith(
-                                        searchFilter.tokenAddress.toLowerCase()
-                                    )
-                            )
-                                return false;
+                            if (!trade.tokenAddress.toLowerCase().startsWith(searchFilter.tokenAddress.toLowerCase())) return false;
 
                             // Filter out of range expiry options
-                            if (
-                                !(
-                                    searchFilter.expiryDateStart <=
-                                        trade.expiry &&
-                                    trade.expiry <= searchFilter.expiryDateEnd
-                                )
-                            )
-                                return false;
+                            if (!(searchFilter.expiryDateStart <= trade.expiry && trade.expiry <= searchFilter.expiryDateEnd)) return false;
 
                             return true;
                         })
                         .map((trade, index) => (
-                            <tr
-                                key={index}
-                                className={`${
-                                    index < trades.length - 1
-                                        ? "border-b-2 border-gray-100"
-                                        : ""
-                                }`}
-                            >
+                            <tr key={index} className={`${index < trades.length - 1 ? "border-b-2 border-gray-100" : ""}`}>
                                 <td className="px-3 py-4 text-center">
                                     {trade.tradeStatus === "open" ? (
                                         <button
@@ -201,56 +156,25 @@ function NonUserTrades() {
                                             Buy
                                         </button>
                                     ) : (
-                                        <span className="text-gray-600">
-                                            Unavailable
-                                        </span>
+                                        <span className="text-gray-600">Unavailable</span>
                                     )}
                                 </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={(
-                                        trade.premium /
-                                        10 **
-                                            (optionsMarket?.tradeCurrencyDecimals as number)
-                                    ).toString()}
-                                >
-                                    {trade.premium /
-                                        10 **
-                                            (optionsMarket?.tradeCurrencyDecimals as number)}
+                                <td className="px-3 py-4" title={(trade.premium / 10 ** (optionsMarket?.tradeCurrencyDecimals as number)).toString()}>
+                                    {trade.premium / 10 ** (optionsMarket?.tradeCurrencyDecimals as number)}
                                 </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={new Date(trade.expiry).toString()}
-                                >
-                                    {new Date(
-                                        trade.expiry
-                                    ).toLocaleDateString()}
+                                <td className="px-3 py-4" title={new Date(trade.expiry).toString()}>
+                                    {new Date(trade.expiry).toLocaleDateString()}
                                 </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.tokenAddress}
-                                >
+                                <td className="px-3 py-4" title={trade.tokenAddress}>
                                     {trade.tokenAddress.slice(0, 8)}...
                                 </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={(
-                                        trade.strikePrice /
-                                        10 **
-                                            (optionsMarket?.tradeCurrencyDecimals as number)
-                                    ).toString()}
-                                >
-                                    {trade.strikePrice /
-                                        10 **
-                                            (optionsMarket?.tradeCurrencyDecimals as number)}
+                                <td className="px-3 py-4" title={(trade.strikePrice / 10 ** (optionsMarket?.tradeCurrencyDecimals as number)).toString()}>
+                                    {trade.strikePrice / 10 ** (optionsMarket?.tradeCurrencyDecimals as number)}
                                 </td>
                                 <td className="px-3 py-4" title={trade.type}>
                                     {trade.type}
                                 </td>
-                                <td
-                                    className="px-3 py-4"
-                                    title={trade.tradeStatus}
-                                >
+                                <td className="px-3 py-4" title={trade.tradeStatus}>
                                     {trade.tradeStatus}
                                 </td>
                             </tr>
