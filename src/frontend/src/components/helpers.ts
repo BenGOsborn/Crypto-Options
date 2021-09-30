@@ -13,26 +13,16 @@ export interface OptionsMarketData {
 }
 
 // Options contract context
-export const optionsMarketContext = createContext<
-    [
-        OptionsMarketData | null,
-        Dispatch<SetStateAction<OptionsMarketData | null>>
-    ]
->(undefined as any);
+export const optionsMarketContext = createContext<[OptionsMarketData | null, Dispatch<SetStateAction<OptionsMarketData | null>>]>(undefined as any);
 
 // Nav selector context
-export const selectorContext = createContext<
-    [string, Dispatch<SetStateAction<string>>]
->(undefined as any);
+export const selectorContext = createContext<[string, Dispatch<SetStateAction<string>>]>(undefined as any);
 
 export async function getOptionsMarketContract(web3: Web3) {
     // Get the contract and return it
     const networkId = await web3.eth.net.getId();
     const deployedNetwork = (OptionsMarket.networks as any)[networkId];
-    const contract = new web3.eth.Contract(
-        OptionsMarket.abi as any,
-        deployedNetwork && deployedNetwork.address
-    );
+    const contract = new web3.eth.Contract(OptionsMarket.abi as any, deployedNetwork && deployedNetwork.address);
     return contract;
 }
 
@@ -42,27 +32,23 @@ export async function getERC20Contract(web3: Web3, address: string) {
     return contract;
 }
 
-export async function checkTransfer(
-    web3: Web3,
-    contractAddress: string,
-    account: string,
-    amount: string,
-    tokenContract: any
-) {
+export async function checkTransfer(web3: Web3, contractAddress: string, account: string, amount: string, tokenContract: any) {
     // Check the allowance of the contract
-    const allowance = await tokenContract.methods
-        .allowance(account, contractAddress)
-        .call();
+    const allowance = await tokenContract.methods.allowance(account, contractAddress).call();
 
     // If the allowance of the contract is not enough allocate it more funds
     if (allowance < amount) {
-        await tokenContract.methods
-            .approve(
-                contractAddress,
-                web3.utils.toBN(amount).sub(web3.utils.toBN(allowance))
-            )
-            .send({
-                from: account,
-            });
+        await tokenContract.methods.approve(contractAddress, web3.utils.toBN(amount).sub(web3.utils.toBN(allowance))).send({
+            from: account,
+        });
+    }
+}
+
+// Shift a string up a number of decimal places
+export function shiftDecimal(num: string, decimals: number, direction: "forward" | "backward") {
+    if (direction === "forward") {
+    } else if (direction === "backward") {
+    } else {
+        throw "Invalid direction param";
     }
 }

@@ -1,10 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
-import {
-    getERC20Contract,
-    getOptionsMarketContract,
-    selectorContext,
-} from "./components/helpers";
+import { getERC20Contract, getOptionsMarketContract, selectorContext } from "./components/helpers";
 import Nav from "./components/nav";
 import Trades from "./components/trades/main";
 import Options from "./components/options/main";
@@ -16,8 +12,7 @@ function App() {
     const [selector, setSelector] = useState<string>("trades");
 
     // Store the web3 data
-    const [optionsMarket, setOptionsMarket] =
-        useState<OptionsMarketData | null>(null);
+    const [optionsMarket, setOptionsMarket] = useState<OptionsMarketData | null>(null);
     const { active } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
 
@@ -26,19 +21,11 @@ function App() {
             getOptionsMarketContract(web3)
                 .then(async (contract) => {
                     // Get the data for the state
-                    const tradeCurrencyAddress =
-                        await contract.methods.getTradeCurrency();
-                    const tradeCurrency = await getERC20Contract(
-                        web3,
-                        tradeCurrencyAddress
-                    );
-                    const tradeCurrencyDecimals = (1e18).toString(); // This is hardcoded to the stablecoin - this is because IERC20 doesnt allow for decimals to be called
-                    const tokenAmountPerUnit = (
-                        await contract.methods.getTokenAmountPerUnit().call()
-                    ).toString();
-                    const unitsPerOption = (
-                        await contract.methods.getUnitsPerOption().call()
-                    ).toString();
+                    const tradeCurrencyAddress = await contract.methods.getTradeCurrency();
+                    const tradeCurrency = await getERC20Contract(web3, tradeCurrencyAddress);
+                    const tradeCurrencyDecimals = (18).toString();
+                    const tokenAmountPerUnit = (await contract.methods.getTokenAmountPerUnit().call()).toString();
+                    const unitsPerOption = (await contract.methods.getUnitsPerOption().call()).toString();
 
                     // Store the contract data in the state
                     const contractData: OptionsMarketData = {
@@ -60,9 +47,7 @@ function App() {
             <selectorContext.Provider value={[selector, setSelector]}>
                 <Nav />
             </selectorContext.Provider>
-            <optionsMarketContext.Provider
-                value={[optionsMarket, setOptionsMarket]}
-            >
+            <optionsMarketContext.Provider value={[optionsMarket, setOptionsMarket]}>
                 <div className="content mb-16">
                     {(() => {
                         if (selector === "trades") {

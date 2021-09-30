@@ -32,41 +32,29 @@ function WriteOption() {
                             web3,
                             optionsMarket?.address,
                             account as string,
-                            Math.floor(
-                                strikePrice *
-                                    10 ** optionsMarket?.tradeCurrencyDecimals *
-                                    optionsMarket?.unitsPerOption
-                            ),
+                            web3.utils
+                                .toBN(Math.floor(strikePrice * 10 ** parseInt(optionsMarket?.tradeCurrencyDecimals)))
+                                .mul(web3.utils.toBN(optionsMarket?.unitsPerOption))
+                                .toString(),
                             optionsMarket?.tradeCurrency
                         );
                     } else {
                         // Get the contract of the token
-                        const token = await getERC20Contract(
-                            web3,
-                            tokenAddress
-                        );
+                        const token = await getERC20Contract(web3, tokenAddress);
 
                         // Check that tokens are allocated to contract and if not allocate them
                         await checkTransfer(
                             web3,
                             optionsMarket?.address,
                             account as string,
-                            optionsMarket?.tokenAmountPerUnit *
-                                optionsMarket?.unitsPerOption,
+                            web3.utils.toBN(optionsMarket?.tokenAmountPerUnit).mul(web3.utils.toBN(optionsMarket?.unitsPerOption)).toString(),
                             token
                         );
                     }
 
                     // Create the new option
                     await optionsMarket?.optionsMarket.methods
-                        .writeOption(
-                            optionType,
-                            expiry / 1000,
-                            tokenAddress,
-                            strikePrice *
-                                10 ** optionsMarket?.tradeCurrencyDecimals *
-                                optionsMarket?.unitsPerOption
-                        )
+                        .writeOption(optionType, expiry / 1000, tokenAddress, strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals * optionsMarket?.unitsPerOption)
                         .send({ from: account });
 
                     // @ts-ignore
@@ -75,37 +63,25 @@ function WriteOption() {
             >
                 <div className="flex space-x-3 justify-between items-center">
                     <fieldset className="flex flex-col space-y-1">
-                        <label
-                            className="text-gray-900 font-bold"
-                            htmlFor="type"
-                        >
+                        <label className="text-gray-900 font-bold" htmlFor="type">
                             Option Type
                         </label>
                         <div>
-                            <select
-                                id="type"
-                                className="bg-green-500 text-white font-bold rounded py-2 px-3"
-                                onChange={(e) => setOptionType(e.target.value)}
-                            >
+                            <select id="type" className="bg-green-500 text-white font-bold rounded py-2 px-3" onChange={(e) => setOptionType(e.target.value)}>
                                 <option value="call">Call</option>
                                 <option value="put">Put</option>
                             </select>
                         </div>
                     </fieldset>
                     <fieldset className="flex flex-col">
-                        <label
-                            className="text-gray-900 font-bold"
-                            htmlFor="expiry"
-                        >
+                        <label className="text-gray-900 font-bold" htmlFor="expiry">
                             Expiry
                         </label>
                         <input
                             type="week"
                             id="expiry"
                             onChange={(e) => {
-                                setExpiry(
-                                    (e.target.valueAsDate as Date).getTime()
-                                );
+                                setExpiry((e.target.valueAsDate as Date).getTime());
                             }}
                             required
                         />
@@ -113,10 +89,7 @@ function WriteOption() {
                 </div>
 
                 <fieldset className="flex flex-col">
-                    <label
-                        className="text-gray-900 font-bold"
-                        htmlFor="tokenAddress"
-                    >
+                    <label className="text-gray-900 font-bold" htmlFor="tokenAddress">
                         Token Address
                     </label>
                     <input
@@ -128,20 +101,13 @@ function WriteOption() {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         onChange={(e) => setTokenAddress(e.target.value)}
                     />
-                    <label
-                        className="text-gray-500 text-sm italic mt-2"
-                        htmlFor="tokenAddress"
-                    >
-                        It is recommended you pre-approve the tokens you wish to
-                        use to save gas fees
+                    <label className="text-gray-500 text-sm italic mt-2" htmlFor="tokenAddress">
+                        It is recommended you pre-approve the tokens you wish to use to save gas fees
                     </label>
                 </fieldset>
 
                 <fieldset className="flex flex-col">
-                    <label
-                        className="text-gray-900 font-bold whitespace-nowrap"
-                        htmlFor="tokenPrice"
-                    >
+                    <label className="text-gray-900 font-bold whitespace-nowrap" htmlFor="tokenPrice">
                         Strike Price (DAI)
                     </label>
                     <input
