@@ -109,7 +109,9 @@ function DisplayOptions() {
         <div className="overflow-x-auto sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
             <form
                 className="pb-6 mb-6 flex flex-wrap min-w-min justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100"
-                style={{ minWidth: 500 }}
+                style={{
+                    minWidth: 500,
+                }}
             >
                 <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                     <label htmlFor="type" className="text-gray-900 font-bold">
@@ -120,7 +122,9 @@ function DisplayOptions() {
                         className="bg-green-500 text-white font-bold rounded py-2 px-3"
                         onChange={(e) =>
                             setSearchFilter((prev) => {
-                                const newPrev = { ...prev };
+                                const newPrev = {
+                                    ...prev,
+                                };
                                 newPrev.optionType = e.target.value as any;
                                 return newPrev;
                             })
@@ -140,7 +144,9 @@ function DisplayOptions() {
                         className="bg-green-500 text-white font-bold rounded py-2 px-3"
                         onChange={(e) =>
                             setSearchFilter((prev) => {
-                                const newPrev = { ...prev };
+                                const newPrev = {
+                                    ...prev,
+                                };
                                 newPrev.writtenByUser = e.target.value as any;
                                 return newPrev;
                             })
@@ -159,7 +165,9 @@ function DisplayOptions() {
                         type="week"
                         onChange={(e) => {
                             setSearchFilter((prev) => {
-                                const newPrev = { ...prev };
+                                const newPrev = {
+                                    ...prev,
+                                };
                                 newPrev.expiryDateStart = (e.target.valueAsDate as Date).getTime();
                                 return newPrev;
                             });
@@ -169,7 +177,9 @@ function DisplayOptions() {
                         type="week"
                         onChange={(e) => {
                             setSearchFilter((prev) => {
-                                const newPrev = { ...prev };
+                                const newPrev = {
+                                    ...prev,
+                                };
                                 newPrev.expiryDateEnd = (e.target.valueAsDate as Date).getTime();
                                 return newPrev;
                             });
@@ -187,7 +197,9 @@ function DisplayOptions() {
                         placeholder="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
                         onChange={(e) => {
                             setSearchFilter((prev) => {
-                                const newPrev = { ...prev };
+                                const newPrev = {
+                                    ...prev,
+                                };
                                 newPrev.tokenAddress = e.target.value;
                                 return newPrev;
                             });
@@ -204,7 +216,9 @@ function DisplayOptions() {
                         name="available"
                         onChange={(e) => {
                             setSearchFilter((prev) => {
-                                const newPrev = { ...prev };
+                                const newPrev = {
+                                    ...prev,
+                                };
                                 newPrev.showUnavailable = e.target.checked;
                                 return newPrev;
                             });
@@ -276,7 +290,8 @@ function DisplayOptions() {
                                     {option.status}
                                 </td>
                                 <td className="px-3 py-4" title={option.tokenAddress.toString()}>
-                                    {option.tokenAddress.slice(0, 8)}...
+                                    {option.tokenAddress.slice(0, 8)}
+                                    ...
                                 </td>
                                 <td
                                     className="px-3 py-4"
@@ -326,7 +341,7 @@ function DisplayOptions() {
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                tokenAmountPerUnit * unitsPerOption,
+                                                                tokenAmountPerUnit.mul(unitsPerOption).toString(),
                                                                 token
                                                             );
                                                         }
