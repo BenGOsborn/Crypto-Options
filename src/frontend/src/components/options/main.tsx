@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { useContext, useState } from "react";
+import Web3 from "web3";
 import { optionsMarketContext } from "../helpers";
 import DisplayOptions from "./display";
 import { Option, sellOptionContext } from "./helpers";
@@ -8,6 +9,7 @@ import WriteOption from "./write";
 function Options() {
     // Store the web3 data
     const [optionsMarket, setOptionsMarket] = useContext(optionsMarketContext);
+    const web3: Web3 = useWeb3React().library;
 
     // Store the option to sell
     const [sellOption, setSellOption] = useState<Option | null>(null);
@@ -24,47 +26,29 @@ function Options() {
                 {sellOption !== null ? (
                     <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
                         <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
-                            <h2 className="font-bold text-xl uppercase text-gray-900">
-                                Sell Option
-                            </h2>
+                            <h2 className="font-bold text-xl uppercase text-gray-900">Sell Option</h2>
                             {/* **** I NEED TO WRITE CUSTOM MESSAGES FOR A CALL OPTION AND A PUT OPTION AS AN OPTION WRITER AND NON OPTION WRITER */}
                             {sellOption.type === "call" ? (
                                 sellOption.writer === account ? (
                                     <p className="text-gray-500">
-                                        When someone buys your option, they will
-                                        have the right to exercise that option
-                                        for the strike price you set for the
-                                        option. Note that we will also take a
-                                        three percent transaction of the trade
-                                        price when the trade is executed.
+                                        When someone buys your option, they will have the right to exercise that option for the strike price you set for the option. Note
+                                        that we will also take a three percent transaction of the trade price when the trade is executed.
                                     </p>
                                 ) : (
                                     <p className="text-gray-500">
-                                        When someone buys your option, they will
-                                        have the right to exercise that option
-                                        for the strike price you set for the
-                                        option. Note that we will also take a
-                                        three percent transaction of the trade
-                                        price when the trade is executed.
+                                        When someone buys your option, they will have the right to exercise that option for the strike price you set for the option. Note
+                                        that we will also take a three percent transaction of the trade price when the trade is executed.
                                     </p>
                                 )
                             ) : sellOption.writer === account ? (
                                 <p className="text-gray-500">
-                                    When someone buys your option, they will
-                                    have the right to exercise that option for
-                                    the strike price you set for the option.
-                                    Note that we will also take a three percent
-                                    transaction of the trade price when the
-                                    trade is executed.
+                                    When someone buys your option, they will have the right to exercise that option for the strike price you set for the option. Note that
+                                    we will also take a three percent transaction of the trade price when the trade is executed.
                                 </p>
                             ) : (
                                 <p className="text-gray-500">
-                                    When someone buys your option, they will
-                                    have the right to exercise that option for
-                                    the strike price you set for the option.
-                                    Note that we will also take a three percent
-                                    transaction of the trade price when the
-                                    trade is executed.
+                                    When someone buys your option, they will have the right to exercise that option for the strike price you set for the option. Note that
+                                    we will also take a three percent transaction of the trade price when the trade is executed.
                                 </p>
                             )}
                             <form
@@ -75,9 +59,10 @@ function Options() {
                                     await optionsMarket?.optionsMarket.methods
                                         .openTrade(
                                             sellOption.id,
-                                            optionPremium *
-                                                10 **
-                                                    optionsMarket?.tradeCurrencyDecimals * optionsMarket?.unitsPerOption
+                                            web3.utils
+                                                .toBN(optionPremium)
+                                                .mul(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals)))
+                                                .mul(web3.utils.toBN(optionsMarket?.unitsPerOption))
                                         )
                                         .send({ from: account });
                                     // Close the modal
@@ -85,10 +70,7 @@ function Options() {
                                 }}
                             >
                                 <fieldset className="flex flex-col my-5">
-                                    <label
-                                        className="text-gray-900 font-bold whitespace-nowrap"
-                                        htmlFor="tokenPrice"
-                                    >
+                                    <label className="text-gray-900 font-bold whitespace-nowrap" htmlFor="tokenPrice">
                                         Premium
                                     </label>
                                     <input
@@ -97,11 +79,7 @@ function Options() {
                                         id="tokenPrice"
                                         placeholder="100"
                                         min={0}
-                                        onChange={(e) =>
-                                            setOptionPremium(
-                                                e.target.valueAsNumber
-                                            )
-                                        }
+                                        onChange={(e) => setOptionPremium(e.target.valueAsNumber)}
                                         required
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     />
@@ -126,9 +104,7 @@ function Options() {
                     </div>
                 ) : null}
             </div>
-            <optionsMarketContext.Provider
-                value={[optionsMarket, setOptionsMarket]}
-            >
+            <optionsMarketContext.Provider value={[optionsMarket, setOptionsMarket]}>
                 <WriteOption />
                 <sellOptionContext.Provider value={[sellOption, setSellOption]}>
                     <DisplayOptions />
