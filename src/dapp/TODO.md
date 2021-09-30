@@ -7,14 +7,10 @@
 -   Add a price range as a filter
 -   Add a way of limiting the size of the tables height
 -   Add labels for the different sections
--   Add label to sell option section
+-   Update labels to sell option section and write options and trade and such
 -   Make new account on metamask to test with ?
 
 -   Write more tests / clean them up
 -   Add in the decimals when specifying token amounts (and round them down from the frontend)
 -   Change date selectors to weeks only AND MAKE SURE THAT THEY WORK
 -   Check all of the different functions for interacting with the contract
-
--   Maybe add a self destruct function which returns all of the funds to users or auto exercises their options for them ?
-
--   I NEED TO BE ABLE TO CHANGE MY BASE UNITS TO THE QUANTITY AMOUNT, E.G. 100 AND THEN EACH PRICE IS FOR THAT AMOUNT

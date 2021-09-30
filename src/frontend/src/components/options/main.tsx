@@ -11,7 +11,7 @@ function Options() {
 
     // Store the option to sell
     const [sellOption, setSellOption] = useState<Option | null>(null);
-    const [sellOptionPrice, setSellOptionPrice] = useState<number>(0);
+    const [optionPremium, setOptionPremium] = useState<number>(0);
 
     // Get the options market from the context
 
@@ -75,9 +75,9 @@ function Options() {
                                     await optionsMarket?.optionsMarket.methods
                                         .openTrade(
                                             sellOption.id,
-                                            sellOptionPrice *
+                                            optionPremium *
                                                 10 **
-                                                    optionsMarket?.tradeCurrencyDecimals
+                                                    optionsMarket?.tradeCurrencyDecimals * optionsMarket?.unitsPerOption
                                         )
                                         .send({ from: account });
                                     // Close the modal
@@ -89,7 +89,7 @@ function Options() {
                                         className="text-gray-900 font-bold whitespace-nowrap"
                                         htmlFor="tokenPrice"
                                     >
-                                        Sell Price
+                                        Premium
                                     </label>
                                     <input
                                         type="number"
@@ -98,7 +98,7 @@ function Options() {
                                         placeholder="100"
                                         min={0}
                                         onChange={(e) =>
-                                            setSellOptionPrice(
+                                            setOptionPremium(
                                                 e.target.valueAsNumber
                                             )
                                         }

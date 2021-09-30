@@ -396,8 +396,7 @@ function DisplayOptions() {
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                option.strikePrice *
-                                                                    optionsMarket?.unitsPerOption,
+                                                                option.strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals * optionsMarket?.unitsPerOption,
                                                                 optionsMarket?.tradeCurrency
                                                             );
                                                         } else {
