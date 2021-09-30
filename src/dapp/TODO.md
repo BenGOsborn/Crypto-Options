@@ -12,3 +12,5 @@
 
 -   Write more tests / clean them up
 -   Add in the decimals when specifying token amounts (and round them down from the frontend)
+
+-   It appears there is a problem with its ability to determine a date ?
