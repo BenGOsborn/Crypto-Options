@@ -21,7 +21,7 @@ function App() {
             getOptionsMarketContract(web3)
                 .then(async (contract) => {
                     // Get the data for the state
-                    const tradeCurrencyAddress = await contract.methods.getTradeCurrency();
+                    const tradeCurrencyAddress = await contract.methods.getTradeCurrency().call();
                     const tradeCurrency = await getERC20Contract(web3, tradeCurrencyAddress);
                     const tradeCurrencyDecimals = 18;
                     const tokenAmountPerUnit = (await contract.methods.getTokenAmountPerUnit().call()).toString();

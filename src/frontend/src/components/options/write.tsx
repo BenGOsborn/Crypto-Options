@@ -25,6 +25,8 @@ function WriteOption() {
                     e.preventDefault();
                     if (optionsMarket === null) return;
 
+                    console.log(optionsMarket);
+
                     // Check the ERC20 allowances
                     if (optionType === "put") {
                         // Check that funds are allocated to contract and if not allocate them
