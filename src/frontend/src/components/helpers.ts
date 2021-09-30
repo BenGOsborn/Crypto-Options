@@ -7,7 +7,7 @@ export interface OptionsMarketData {
     optionsMarket: any; // Contract
     address: string;
     tradeCurrency: any; // Contract
-    tradeCurrencyDecimals: string;
+    tradeCurrencyDecimals: number;
     tokenAmountPerUnit: string;
     unitsPerOption: string;
 }

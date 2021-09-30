@@ -33,7 +33,7 @@ function WriteOption() {
                             optionsMarket?.address,
                             account as string,
                             web3.utils
-                                .toBN(Math.floor(strikePrice * 10 ** parseInt(optionsMarket?.tradeCurrencyDecimals)))
+                                .toBN(Math.floor(strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals))
                                 .mul(web3.utils.toBN(optionsMarket?.unitsPerOption))
                                 .toString(),
                             optionsMarket?.tradeCurrency

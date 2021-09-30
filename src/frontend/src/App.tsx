@@ -23,7 +23,7 @@ function App() {
                     // Get the data for the state
                     const tradeCurrencyAddress = await contract.methods.getTradeCurrency();
                     const tradeCurrency = await getERC20Contract(web3, tradeCurrencyAddress);
-                    const tradeCurrencyDecimals = (18).toString();
+                    const tradeCurrencyDecimals = 18;
                     const tokenAmountPerUnit = (await contract.methods.getTokenAmountPerUnit().call()).toString();
                     const unitsPerOption = (await contract.methods.getUnitsPerOption().call()).toString();
 
