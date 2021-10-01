@@ -13,7 +13,7 @@ contract OptionsMarket {
 
     // Admin access
     address private owner;
-    bool private shutDown;
+    bool private enabled;
 
     // Option data
     struct Option {
@@ -45,18 +45,18 @@ contract OptionsMarket {
     address private immutable tradeCurrency;
 
     constructor(address currency) {
-        // Set the owner as the deployer of the contract, set the currency of the trades, and set shutdown to false
+        // Set the owner as the deployer of the contract, set the currency of the trades, and set enabled to true
         owner = msg.sender;
         tradeCurrency = currency;
-        shutDown = false;
+        enabled = true;
     }
 
     // ============= Admin functions =============
 
-    // Shutdown the ability to write or trade options (use when migrating to new contract)
-    function ownerContractState(bool state) external {
+    // Enable/disable the ability to write or trade options (use when migrating to new contract)
+    function ownerSetContractEnabled(bool _enabled) external {
         require(msg.sender == owner, "Only the owner may enable/disable the contract");
-        shutDown = state;
+        enabled = _enabled;
     }
 
     // Transfer ownership of the contract to another owner
@@ -87,6 +87,11 @@ contract OptionsMarket {
         return UNITS_PER_OPTION;
     }
 
+    // Check the state of the contract
+    function contractEnabled() external pure returns (bool) {
+        return enabled;
+    }
+
     // ============= Option functions =============
 
     // Allow the address to create a new option
@@ -96,7 +101,7 @@ contract OptionsMarket {
         uint256 optionExpiry = expiryTemp * (7 days) + 2 days;
         
         // Check that the option is valid
-        require(!shutDown, "This contract has been shut down");
+        require(enabled, "Contract is currently disabled");
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
         require(optionExpiry > block.timestamp, "Expiry must be in the future");
 
@@ -191,7 +196,7 @@ contract OptionsMarket {
     // Open a new trade for selling an option
     function openTrade(uint256 _optionId, uint256 premium) external returns (uint256) {
         // Check that the trade may be opened
-        require(!shutDown, "This contract has been shut down");
+        require(enabled, "Contract is currently disabled");
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
         require(_compareStrings(options[_optionId].status, "none"), "Cannot list a used option");
 
