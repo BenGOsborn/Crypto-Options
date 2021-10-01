@@ -86,9 +86,9 @@ function DisplayOptions() {
                 })
                 .on("data", async (event: any) => {
                     // Get the option and add it to the list
-                    const optionId = event.returnValues.optionId;
-                    const option = await optionsMarket?.optionsMarket.methods.getOption(optionId).call();
-                    const owner = await optionsMarket?.optionsMarket.methods.getOptionOwner(optionId).call();
+                    const tradeId = event.returnValues.tradeId;
+                    const trade = await optionsMarket?.optionsMarket.methods.getTrade(tradeId).call();
+                    const optionOwner = await optionsMarket?.optionsMarket.methods.getOptionOwner(trade[1]).call();
 
                     // Only add the option if it is owned and the id is not within the list
                     if (owner === account) {
