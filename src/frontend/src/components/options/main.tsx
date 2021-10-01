@@ -52,7 +52,7 @@ function Options() {
                                     </span>{" "}
                                     and you will receive{" "}
                                     <span className="text-gray-700 font-bold">
-                                        {optionsMarket?.unitsPerOption} <span title={optionsMarket?.tokenAmountPerUnit}>base units</span>
+                                        {optionsMarket?.unitsPerOption} <span title={`${optionsMarket?.tokenAmountPerUnit} base tokens`}>units</span>
                                     </span>{" "}
                                     of{" "}
                                     <span className="text-gray-700 font-bold" title={sellOption.tokenAddress}>
