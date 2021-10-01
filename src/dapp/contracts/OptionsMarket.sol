@@ -4,8 +4,16 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract OptionsMarket {
+    // Declare events for logging data
+    event OptionWritten(uint256 optionId, address indexed writer);
+    event OptionExercised(uint256 optionId, address indexed writer, address indexed exerciser);
+    event TradeOpened(uint256 tradeId, address indexed poster);
+    event TradeExecuted(uint256 tradeId, address indexed buyer);
+    event TradeCancelled(uint256 tradeId);
+
     // Admin access
     address private owner;
+    bool private shutDown;
 
     // Option data
     struct Option {
@@ -37,17 +45,25 @@ contract OptionsMarket {
     address private immutable tradeCurrency;
 
     constructor(address currency) {
-        // Set the owner as the deployer of the contract and set the currency of the trades
+        // Set the owner as the deployer of the contract, set the currency of the trades, and set shutdown to false
         owner = msg.sender;
         tradeCurrency = currency;
+        shutDown = false;
     }
 
-    // Declare events for logging data
-    event OptionWritten(uint256 optionId, address indexed writer);
-    event OptionExercised(uint256 optionId, address indexed writer, address indexed exerciser);
-    event TradeOpened(uint256 tradeId, address indexed poster);
-    event TradeExecuted(uint256 tradeId, address indexed buyer);
-    event TradeCancelled(uint256 tradeId);
+    // ============= Admin functions =============
+
+    // Shutdown the ability to write or trade options (use when migrating to new contract)
+    function ownerShutdown(string calldata confirmation) external {
+        require(msg.sender == owner, "Only the owner may shut the contract down");
+        require(_compareStrings(confirmation, "shutdown"), "Confirmation word does not match");
+        shutDown = true;
+    }
+
+    // Transfer ownership of the contract to another owner
+    function ownerTransferOwnership() external {
+        
+    }
 
     // ============= Util functions =============
 
@@ -80,6 +96,7 @@ contract OptionsMarket {
         uint256 optionExpiry = expiryTemp * (7 days) + 2 days;
         
         // Check that the option is valid
+        require(!shutDown, "This contract has been shut down");
         require(_compareStrings(optionType, "call") || _compareStrings(optionType, "put"), "Option type may only be 'call' or 'put'");
         require(optionExpiry > block.timestamp, "Expiry must be in the future");
 
@@ -174,6 +191,7 @@ contract OptionsMarket {
     // Open a new trade for selling an option
     function openTrade(uint256 _optionId, uint256 premium) external returns (uint256) {
         // Check that the trade may be opened
+        require(!shutDown, "This contract has been shut down");
         require(optionOwners[_optionId] == msg.sender, "Only the owner of the option may open a trade for it");
         require(_compareStrings(options[_optionId].status, "none"), "Cannot list a used option");
 
@@ -206,14 +224,14 @@ contract OptionsMarket {
         require(_compareStrings(trade.status, "open"), "Only open trades may be executed");
         require(msg.sender != trade.poster, "Trade poster may not execute their own trade, use 'cancelTrade' instead");
 
-        // Transfer the option
-        optionOwners[trade.optionId] = msg.sender;
-
         // Charge the recipient and pay a fee to the owner
         uint256 fee = trade.premium * UNITS_PER_OPTION * 3 / 100; 
         uint256 payout = trade.premium * UNITS_PER_OPTION - fee;
         IERC20(tradeCurrency).transferFrom(msg.sender, trade.poster, payout);
         IERC20(tradeCurrency).transferFrom(msg.sender, owner, fee);
+
+        // Transfer the option
+        optionOwners[trade.optionId] = msg.sender;
 
         // Update the status of the trade
         trades[_tradeId].status = "closed";

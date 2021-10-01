@@ -19,3 +19,4 @@
 -   Maybe add some type of bid system where if one person offers to execute the trade, it is held in limbo and lets other people bid on it for more, after a short amount of time this option will be transferred to them and unlocked ?
 
 -   \*\*\*\* IS THERE A PROBLEM WITH THE STRIKE PRICE WRITTEN AND WHAT SHOWS UP ????
+-   Does require AND assert both revert the changes ?
