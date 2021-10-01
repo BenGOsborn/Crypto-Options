@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState, useContext } from "react";
 import Web3 from "web3";
-import { getERC20Contract, checkTransfer, optionsMarketContext } from "../helpers";
+import { getERC20Contract, checkTransfer, optionsMarketContext, DISPLAY_DECIMALS } from "../helpers";
 import { Option, sellOptionContext } from "./helpers";
 
 interface SearchFilter {
@@ -61,7 +61,20 @@ function DisplayOptions() {
                         strikePrice: option[4],
                         type: option[5],
                     };
-                    setOptions((prev) => [...prev, newOption]);
+                    setOptions((prev) => {
+                        let contains = false;
+                        for (const option of prev) {
+                            if (option.id === newOption.id) {
+                                contains = true;
+                                break;
+                            }
+                        }
+                        if (contains) {
+                            return prev;
+                        }
+                        console.log(newOption);
+                        return [...prev, newOption];
+                    });
                 });
 
             // Add events for options traded that belong to the user
@@ -98,7 +111,19 @@ function DisplayOptions() {
                                 strikePrice: option[4],
                                 type: option[5],
                             };
-                            setOptions((prev) => [...prev, newOption]);
+                            setOptions((prev) => {
+                                let contains = false;
+                                for (const option of prev) {
+                                    if (option.id === newOption.id) {
+                                        contains = true;
+                                        break;
+                                    }
+                                }
+                                if (contains) {
+                                    return prev;
+                                }
+                                return [...prev, newOption];
+                            });
                         }
                     }
                 });
@@ -295,15 +320,23 @@ function DisplayOptions() {
                                 </td>
                                 <td
                                     className="px-3 py-4"
-                                    title={web3.utils
-                                        .toBN(option.strikePrice)
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .toString()}
+                                    title={(
+                                        web3.utils
+                                            .toBN(option.strikePrice)
+                                            .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                            .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                            .toNumber() /
+                                        10 ** DISPLAY_DECIMALS
+                                    ).toString()}
                                 >
-                                    {web3.utils
-                                        .toBN(option.strikePrice)
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .toString()}
+                                    {(
+                                        web3.utils
+                                            .toBN(option.strikePrice)
+                                            .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                            .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                            .toNumber() /
+                                        10 ** DISPLAY_DECIMALS
+                                    ).toString()}
                                 </td>
                                 <td className="px-3 py-4 text-center">
                                     {option.owner === account ? (

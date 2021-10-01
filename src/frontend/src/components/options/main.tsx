@@ -23,7 +23,6 @@ function Options() {
                     <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
                         <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
                             <h2 className="font-bold text-xl uppercase text-gray-900">Sell Option</h2>
-                            {/* **** I NEED TO WRITE CUSTOM MESSAGES FOR A CALL OPTION AND A PUT OPTION AS AN OPTION WRITER AND NON OPTION WRITER */}
                             {sellOption.type === "call" ? (
                                 sellOption.writer === account ? (
                                     <p className="text-gray-500">
@@ -38,8 +37,13 @@ function Options() {
                                 )
                             ) : sellOption.writer === account ? (
                                 <p className="text-gray-500">
-                                    When someone buys your option, they will have the right to exercise that option for the strike price you set for the option. Note that
-                                    we will also take a three percent transaction of the trade price when the trade is executed.
+                                    When someone buys your <span className="text-gray-700 font-bold">call</span> option, they will have the right, but not the obligation
+                                    to exercise that option for the strike price and you will receive{" "}
+                                    <span>
+                                        {optionsMarket?.unitsPerOption} <span title={optionsMarket?.tokenAmountPerUnit}>base units</span>
+                                    </span>{" "}
+                                    of <span title={sellOption.tokenAddress}>{sellOption.tokenAddress.slice(0, 8)}...</span> token. Note that we will also take a three
+                                    percent transaction of the trade price when the trade is executed.
                                 </p>
                             ) : (
                                 <p className="text-gray-500">
@@ -73,7 +77,8 @@ function Options() {
                                         type="number"
                                         name="tokenPrice"
                                         id="tokenPrice"
-                                        placeholder="100"
+                                        placeholder="2.00"
+                                        step="any"
                                         min={0}
                                         onChange={(e) => setOptionPremium(e.target.valueAsNumber)}
                                         required

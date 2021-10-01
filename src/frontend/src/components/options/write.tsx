@@ -59,10 +59,7 @@ function WriteOption() {
                             optionType,
                             parsedExpiry,
                             tokenAddress,
-                            web3.utils
-                                .toBN(Math.floor(strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals))
-                                .mul(web3.utils.toBN(optionsMarket?.unitsPerOption))
-                                .toString()
+                            web3.utils.toBN(Math.floor(strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals)).toString()
                         )
                         .send({ from: account });
 
