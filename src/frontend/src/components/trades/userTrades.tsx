@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useContext, useState } from "react";
 import Web3 from "web3";
-import { optionsMarketContext } from "../helpers";
+import { DISPLAY_DECIMALS, optionsMarketContext } from "../helpers";
 import { SearchFilter, userTradesContext } from "./helpers";
 
 function UserTrades() {
@@ -134,10 +134,14 @@ function UserTrades() {
             <table className="mx-auto table-fixed" style={{ minWidth: 500 }}>
                 <thead>
                     <tr className="font-bold text-gray-900">
-                        <th className="px-3 py-2 break-words w-1/12">Premium (DAI)</th>
+                        <th className="px-3 py-2 break-words w-1/12" title={`${DISPLAY_DECIMALS} d.p`}>
+                            Premium (DAI)
+                        </th>
                         <th className="px-3 py-2 break-words w-1/12">Expiry</th>
                         <th className="px-3 py-2 break-words w-1/12">Token Address</th>
-                        <th className="px-3 py-2 break-words w-1/12">Strike Price (DAI)</th>
+                        <th className="px-3 py-2 break-words w-1/12" title={`${DISPLAY_DECIMALS} d.p`}>
+                            Strike Price (DAI)
+                        </th>
                         <th className="px-3 py-2 break-words w-1/12">Trade Status</th>
                         <th className="px-3 py-2 break-words w-1/12">Cancel</th>
                     </tr>
@@ -174,15 +178,21 @@ function UserTrades() {
                             <tr key={index} className={`${index < trades.length - 1 ? "border-b-2 border-gray-100" : ""}`}>
                                 <td
                                     className="px-3 py-4"
-                                    title={web3.utils
-                                        .toBN(trade.premium)
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .toString()}
+                                    title={(
+                                        web3.utils
+                                            .toBN(trade.premium)
+                                            .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                            .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                            .toNumber() /
+                                        10 ** DISPLAY_DECIMALS
+                                    ).toString()}
                                 >
                                     {web3.utils
                                         .toBN(trade.premium)
+                                        .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
                                         .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .toString()}
+                                        .toNumber() /
+                                        10 ** DISPLAY_DECIMALS}
                                 </td>
                                 <td className="px-3 py-4" title={new Date(trade.expiry).toString()}>
                                     {new Date(trade.expiry).toLocaleDateString()}
@@ -192,15 +202,21 @@ function UserTrades() {
                                 </td>
                                 <td
                                     className="px-3 py-4"
-                                    title={web3.utils
-                                        .toBN(trade.strikePrice)
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .toString()}
+                                    title={(
+                                        web3.utils
+                                            .toBN(trade.strikePrice)
+                                            .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                            .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                            .toNumber() /
+                                        10 ** DISPLAY_DECIMALS
+                                    ).toString()}
                                 >
                                     {web3.utils
                                         .toBN(trade.strikePrice)
+                                        .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
                                         .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .toString()}
+                                        .toNumber() /
+                                        10 ** DISPLAY_DECIMALS}
                                 </td>
                                 <td className="px-3 py-4" title={trade.tradeStatus}>
                                     {trade.tradeStatus}

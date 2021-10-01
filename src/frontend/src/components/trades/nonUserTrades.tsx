@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useContext, useState } from "react";
 import Web3 from "web3";
-import { optionsMarketContext } from "../helpers";
+import { DISPLAY_DECIMALS, optionsMarketContext } from "../helpers";
 import { buyTradeContext, SearchFilter, tradesContext } from "./helpers";
 
 function NonUserTrades() {
@@ -117,10 +117,14 @@ function NonUserTrades() {
                 <thead>
                     <tr className="font-bold text-gray-900">
                         <th className="px-3 py-2 break-words w-1/12">Buy</th>
-                        <th className="px-3 py-2 break-words w-1/12">Premium (DAI)</th>
+                        <th className="px-3 py-2 break-words w-1/12" title={`${DISPLAY_DECIMALS} d.p`}>
+                            Premium (DAI)
+                        </th>
                         <th className="px-3 py-2 break-words w-1/12">Expiry</th>
                         <th className="px-3 py-2 break-words w-1/12">Token Address</th>
-                        <th className="px-3 py-2 break-words w-1/12">Strike Price (DAI)</th>
+                        <th className="px-3 py-2 break-words w-1/12" title={`${DISPLAY_DECIMALS} d.p`}>
+                            Strike Price (DAI)
+                        </th>
                         <th className="px-3 py-2 break-words w-1/12">Type</th>
                         <th className="px-3 py-2 break-words w-1/12">Trade Status</th>
                     </tr>
@@ -184,12 +188,16 @@ function NonUserTrades() {
                                     className="px-3 py-4"
                                     title={web3.utils
                                         .toBN(trade.strikePrice)
+                                        .mul(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
                                         .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
                                         .toString()}
                                 >
                                     {web3.utils
                                         .toBN(trade.strikePrice)
+                                        .mul(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
                                         .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
                                         .toString()}
                                 </td>
                                 <td className="px-3 py-4" title={trade.type}>

@@ -94,7 +94,10 @@ function Options() {
                                     await optionsMarket?.optionsMarket.methods
                                         .openTrade(
                                             sellOption.id,
-                                            web3.utils.toBN(optionPremium).mul(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals)))
+                                            web3.utils
+                                                .toBN(Math.floor(optionPremium * 10 ** DISPLAY_DECIMALS))
+                                                .mul(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals)))
+                                                .div(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
                                         )
                                         .send({ from: account });
                                     // Close the modal
@@ -102,7 +105,7 @@ function Options() {
                                 }}
                             >
                                 <fieldset className="flex flex-col my-5">
-                                    <label className="text-gray-900 font-bold whitespace-nowrap" htmlFor="tokenPrice">
+                                    <label className="text-gray-900 font-bold whitespace-nowrap" htmlFor="tokenPrice" title={`${DISPLAY_DECIMALS} d.p`}>
                                         Premium
                                     </label>
                                     <input

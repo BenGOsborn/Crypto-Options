@@ -66,7 +66,7 @@ function Trades() {
                 setTrades((prev) => prev.filter((trade) => trade.id !== tradeId));
             });
         }
-    }, [active]);
+    }, [optionsMarket]);
 
     return (
         <div className="Trades">

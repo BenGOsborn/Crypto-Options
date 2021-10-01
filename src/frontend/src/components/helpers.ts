@@ -41,7 +41,7 @@ export async function checkTransfer(web3: Web3, contractAddress: string, account
 
     // If the allowance of the contract is not enough allocate it more funds
     if (allowance.lt(amountBN)) {
-        await tokenContract.methods.approve(contractAddress, amountBN.add(allowance).toString()).send({
+        await tokenContract.methods.approve(contractAddress, amountBN.add(allowance)).send({
             from: account,
         });
     }

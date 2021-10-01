@@ -348,7 +348,6 @@ function DisplayOptions() {
                                                     onClick={async (e) => {
                                                         // Get contract detials
                                                         const optionsMarketAddress = optionsMarket?.address as string;
-                                                        const tradeCurrencyDecimals = web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number);
                                                         const tokenAmountPerUnit = web3.utils.toBN(optionsMarket?.tokenAmountPerUnit as string);
                                                         const unitsPerOption = web3.utils.toBN(optionsMarket?.unitsPerOption as string);
 
@@ -359,11 +358,7 @@ function DisplayOptions() {
                                                                 web3,
                                                                 optionsMarketAddress,
                                                                 account as string,
-                                                                web3.utils
-                                                                    .toBN(option.strikePrice)
-                                                                    .mul(web3.utils.toBN(10).pow(tradeCurrencyDecimals))
-                                                                    .mul(unitsPerOption)
-                                                                    .toString(),
+                                                                web3.utils.toBN(option.strikePrice).mul(unitsPerOption).toString(),
                                                                 optionsMarket?.tradeCurrency
                                                             );
                                                         } else {
