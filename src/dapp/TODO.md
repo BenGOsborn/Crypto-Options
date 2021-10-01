@@ -1,8 +1,8 @@
 -   Implement the market with some kind of stable coin (what would be the problem with trading using ETH if ETH's price fluctuates ?)
 -   Deploy to multiple networks with the same ABI
 
--   Add labels for the different sections
 -   Write more tests / clean them up
+-   Add labels for the different sections
 -   Update the states when an option is added / removed
 -   Remove trade status from the non user trades + update fields when they have been exercised or sold or bought
 -   Fix the expiry range for the search fields
