@@ -54,15 +54,15 @@ contract OptionsMarket {
     // ============= Admin functions =============
 
     // Shutdown the ability to write or trade options (use when migrating to new contract)
-    function ownerShutdown(string calldata confirmation) external {
-        require(msg.sender == owner, "Only the owner may shut the contract down");
-        require(_compareStrings(confirmation, "shutdown"), "Confirmation word does not match");
-        shutDown = true;
+    function ownerContractState(bool state) external {
+        require(msg.sender == owner, "Only the owner may enable/disable the contract");
+        shutDown = state;
     }
 
     // Transfer ownership of the contract to another owner
     function ownerTransferOwnership() external {
-        
+        require(msg.sender == owner, "Only the owner may transfer ownership of the contract"); 
+        owner = msg.sender;
     }
 
     // ============= Util functions =============
