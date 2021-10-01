@@ -47,10 +47,34 @@ function Trades() {
                         type: option[5],
                     };
                     if (trade[3] === "open" && trade[0] !== account) {
-                        setTrades((prev) => [...prev, newTrade]);
+                        setTrades((prev) => {
+                            let contains = false;
+                            for (const trade of prev) {
+                                if (trade.id === newTrade.id) {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if (contains) {
+                                return prev;
+                            }
+                            return [...prev, newTrade];
+                        });
                     }
                     if (trade[0] === account) {
-                        setUserTrades((prev) => [...prev, newTrade]);
+                        setUserTrades((prev) => {
+                            let contains = false;
+                            for (const trade of prev) {
+                                if (trade.id === newTrade.id) {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if (contains) {
+                                return prev;
+                            }
+                            return [...prev, newTrade];
+                        });
                     }
                 });
 
@@ -129,14 +153,15 @@ function Trades() {
                     </div>
                 </div>
             ) : null}
-            <userTradesContext.Provider value={[userTrades, setUserTrades]}>
-                <UserTrades />
-            </userTradesContext.Provider>
             <tradesContext.Provider value={[trades, setTrades]}>
                 <buyTradeContext.Provider value={[buyTrade, setBuyTrade]}>
                     <NonUserTrades />
                 </buyTradeContext.Provider>
             </tradesContext.Provider>
+            <span />
+            <userTradesContext.Provider value={[userTrades, setUserTrades]}>
+                <UserTrades />
+            </userTradesContext.Provider>
         </div>
     );
 }
