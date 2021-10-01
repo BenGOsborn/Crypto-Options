@@ -26,7 +26,7 @@ function NonUserTrades() {
     });
 
     return (
-        <div className="overflow-x-auto sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
+        <div className="overflow-auto h-96 sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
             <form className="pb-6 mb-6 flex flex-wrap justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100" style={{ minWidth: 500 }}>
                 <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                     <label htmlFor="type" className="text-gray-900 font-bold">
