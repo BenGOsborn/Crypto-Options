@@ -168,15 +168,21 @@ function NonUserTrades() {
                                 </td>
                                 <td
                                     className="px-3 py-4"
-                                    title={web3.utils
-                                        .toBN(trade.premium)
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .toString()}
+                                    title={(
+                                        web3.utils
+                                            .toBN(trade.premium)
+                                            .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                            .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                            .toNumber() /
+                                        10 ** DISPLAY_DECIMALS
+                                    ).toString()}
                                 >
                                     {web3.utils
                                         .toBN(trade.premium)
+                                        .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
                                         .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .toString()}
+                                        .toNumber() /
+                                        10 ** DISPLAY_DECIMALS}
                                 </td>
                                 <td className="px-3 py-4" title={new Date(trade.expiry).toString()}>
                                     {new Date(trade.expiry).toLocaleDateString()}
@@ -186,19 +192,21 @@ function NonUserTrades() {
                                 </td>
                                 <td
                                     className="px-3 py-4"
-                                    title={web3.utils
-                                        .toBN(trade.strikePrice)
-                                        .mul(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
-                                        .toString()}
+                                    title={(
+                                        web3.utils
+                                            .toBN(trade.strikePrice)
+                                            .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                            .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                            .toNumber() /
+                                        10 ** DISPLAY_DECIMALS
+                                    ).toString()}
                                 >
                                     {web3.utils
                                         .toBN(trade.strikePrice)
-                                        .mul(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
+                                        .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
                                         .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
-                                        .toString()}
+                                        .toNumber() /
+                                        10 ** DISPLAY_DECIMALS}
                                 </td>
                                 <td className="px-3 py-4" title={trade.type}>
                                     {trade.type}
