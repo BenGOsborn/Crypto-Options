@@ -46,3 +46,13 @@ export async function checkTransfer(web3: Web3, contractAddress: string, account
         });
     }
 }
+
+export interface SearchFilter {
+    optionType?: "call" | "put";
+    tokenAddress?: string;
+    optionStatus?: "none" | "exercised" | "collected" | "any";
+    tradeStatus?: "open" | "closed" | "cancelled" | "any";
+    writtenByUser?: "true" | "false" | "any";
+    expiryDateStart?: number;
+    expiryDateEnd?: number;
+}

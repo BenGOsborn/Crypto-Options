@@ -12,15 +12,6 @@ export interface Trade {
     type: string;
 }
 
-export interface SearchFilter {
-    optionType: "call" | "put" | "any";
-    tokenAddress: string;
-    tradeStatus: "open" | "closed" | "cancelled" | "any";
-    writtenByUser: "true" | "false" | "any";
-    expiryDateStart: number;
-    expiryDateEnd: number;
-}
-
 export const tradesContext = createContext<[Trade[], Dispatch<SetStateAction<Trade[]>>]>(undefined as any);
 
 export const userTradesContext = createContext<[Trade[], Dispatch<SetStateAction<Trade[]>>]>(undefined as any);

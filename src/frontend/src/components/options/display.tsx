@@ -1,17 +1,8 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState, useContext } from "react";
 import Web3 from "web3";
-import { getERC20Contract, checkTransfer, optionsMarketContext, DISPLAY_DECIMALS } from "../helpers";
+import { getERC20Contract, checkTransfer, optionsMarketContext, DISPLAY_DECIMALS, SearchFilter } from "../helpers";
 import { Option, sellOptionContext } from "./helpers";
-
-interface SearchFilter {
-    optionType: "call" | "put" | "any";
-    tokenAddress: string;
-    showUnavailable: boolean;
-    writtenByUser: "true" | "false" | "any";
-    expiryDateStart: number;
-    expiryDateEnd: number;
-}
 
 function DisplayOptions() {
     // Store the web3 data
@@ -24,9 +15,9 @@ function DisplayOptions() {
 
     // Used for filtering
     const [searchFilter, setSearchFilter] = useState<SearchFilter>({
-        optionType: "any",
-        showUnavailable: false,
+        optionType: "call",
         tokenAddress: "",
+        optionStatus: "any",
         writtenByUser: "any",
         expiryDateStart: 0,
         expiryDateEnd: Date.now() + 3.154e12,
@@ -146,7 +137,6 @@ function DisplayOptions() {
                             })
                         }
                     >
-                        <option value="any">Any</option>
                         <option value="call">Call</option>
                         <option value="put">Put</option>
                     </select>
@@ -224,22 +214,26 @@ function DisplayOptions() {
                 </fieldset>
                 <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
                     <label htmlFor="available" className="text-gray-900 font-bold">
-                        Show Unavailable
+                        Option Status
                     </label>
-                    <input
-                        type="checkbox"
-                        id="available"
-                        name="available"
-                        onChange={(e) => {
+                    <select
+                        id="type"
+                        className="bg-green-500 text-white font-bold rounded py-2 px-3"
+                        onChange={(e) =>
                             setSearchFilter((prev) => {
                                 const newPrev = {
                                     ...prev,
                                 };
-                                newPrev.showUnavailable = e.target.checked;
+                                newPrev.optionStatus = e.target.value as any;
                                 return newPrev;
-                            });
-                        }}
-                    />
+                            })
+                        }
+                    >
+                        <option value="any">Any</option>
+                        <option value="none">None</option>
+                        <option value="collected">Collected</option>
+                        <option value="exercised">Excercised</option>
+                    </select>
                 </fieldset>
             </form>
             <table className="mx-auto table-fixed min-w-min">
@@ -259,22 +253,18 @@ function DisplayOptions() {
                     {options
                         .filter((option) => {
                             // Filter out option type
-                            if (searchFilter.optionType !== "any" && option.type !== searchFilter.optionType) {
+                            if (option.type !== searchFilter.optionType) {
                                 return false;
                             }
 
                             // Filter token address
-                            if (!option.tokenAddress.toLowerCase().startsWith(searchFilter.tokenAddress.toLowerCase())) return false;
+                            if (!option.tokenAddress.toLowerCase().startsWith(searchFilter.tokenAddress?.toLowerCase() as string)) return false;
 
-                            // Filter unavailable options
-                            if (!searchFilter.showUnavailable) {
-                                if (option.status !== "none") return false;
-
-                                if (option.owner !== account && option.writer !== account) return false;
-                            }
+                            // Filter by option status
+                            if (searchFilter.optionStatus !== "any" && searchFilter.optionStatus !== option.status) return false;
 
                             // Filter out of range expiry options
-                            if (!(searchFilter.expiryDateStart <= option.expiry && option.expiry <= searchFilter.expiryDateEnd)) return false;
+                            if (!((searchFilter.expiryDateStart as number) <= option.expiry && option.expiry <= (searchFilter.expiryDateEnd as number))) return false;
 
                             // Filter options written by user
                             if (searchFilter.writtenByUser !== "any") {
