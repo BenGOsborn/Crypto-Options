@@ -17,7 +17,7 @@ contract OptionsMarket {
         string optionType; // call, put
     }
 
-    uint256 private constant TOKEN_AMOUNT_PER_UNIT = 10e18;
+    uint256 private constant TOKEN_AMOUNT_PER_UNIT = 1e18;
     uint8 private constant UNITS_PER_OPTION = 100;
 
     uint256 private optionId;

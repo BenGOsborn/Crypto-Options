@@ -12,7 +12,7 @@ export interface OptionsMarketData {
     unitsPerOption: string;
 }
 
-export const DISPLAY_DECIMALS = 16;
+export const DISPLAY_DECIMALS = 12;
 
 // Options contract context
 export const optionsMarketContext = createContext<[OptionsMarketData | null, Dispatch<SetStateAction<OptionsMarketData | null>>]>(undefined as any);
@@ -36,11 +36,12 @@ export async function getERC20Contract(web3: Web3, address: string) {
 
 export async function checkTransfer(web3: Web3, contractAddress: string, account: string, amount: string, tokenContract: any) {
     // Check the allowance of the contract
-    const allowance = await tokenContract.methods.allowance(account, contractAddress).call();
+    const allowance = web3.utils.toBN(await tokenContract.methods.allowance(account, contractAddress).call());
+    const amountBN = web3.utils.toBN(amount);
 
     // If the allowance of the contract is not enough allocate it more funds
-    if (allowance < amount) {
-        await tokenContract.methods.approve(contractAddress, web3.utils.toBN(amount).sub(web3.utils.toBN(allowance))).send({
+    if (allowance.lt(amountBN)) {
+        await tokenContract.methods.approve(contractAddress, amountBN.add(allowance).toString()).send({
             from: account,
         });
     }

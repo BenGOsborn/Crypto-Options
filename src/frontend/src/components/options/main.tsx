@@ -26,8 +26,28 @@ function Options() {
                             {sellOption.type === "call" ? (
                                 sellOption.writer === account ? (
                                     <p className="text-gray-500">
-                                        When someone buys your option, they will have the right to exercise that option for the strike price you set for the option. Note
-                                        that we will also take a three percent transaction of the trade price when the trade is executed.
+                                        When someone buys your <span className="text-gray-700 font-bold">call</span> option, they will have the right, but not the
+                                        obligation to exercise that option for the strike price of{" "}
+                                        <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
+                                            {(
+                                                web3.utils
+                                                    .toBN(sellOption.strikePrice)
+                                                    .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                                    .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                                    .toNumber() /
+                                                10 ** DISPLAY_DECIMALS
+                                            ).toString()}{" "}
+                                            DAI
+                                        </span>{" "}
+                                        and you will receive{" "}
+                                        <span className="text-gray-700 font-bold">
+                                            {optionsMarket?.unitsPerOption} <span title={`${optionsMarket?.tokenAmountPerUnit} base tokens`}>units</span>
+                                        </span>{" "}
+                                        of{" "}
+                                        <span className="text-gray-700 font-bold" title={sellOption.tokenAddress}>
+                                            {sellOption.tokenAddress.slice(0, 8)}...
+                                        </span>{" "}
+                                        token. Note that we will also take a three percent transaction of the trade price when the trade is executed.
                                     </p>
                                 ) : (
                                     <p className="text-gray-500">

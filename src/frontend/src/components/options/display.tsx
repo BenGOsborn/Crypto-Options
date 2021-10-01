@@ -72,6 +72,7 @@ function DisplayOptions() {
                         if (contains) {
                             return prev;
                         }
+                        console.log(newOption);
                         return [...prev, newOption];
                     });
                 });
