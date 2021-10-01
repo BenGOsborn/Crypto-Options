@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useContext, useState } from "react";
 import Web3 from "web3";
-import { optionsMarketContext } from "../helpers";
+import { DISPLAY_DECIMALS, optionsMarketContext } from "../helpers";
 import DisplayOptions from "./display";
 import { Option, sellOptionContext } from "./helpers";
 import WriteOption from "./write";
@@ -38,12 +38,27 @@ function Options() {
                             ) : sellOption.writer === account ? (
                                 <p className="text-gray-500">
                                     When someone buys your <span className="text-gray-700 font-bold">call</span> option, they will have the right, but not the obligation
-                                    to exercise that option for the strike price and you will receive{" "}
-                                    <span>
+                                    to exercise that option for the strike price of{" "}
+                                    <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
+                                        {(
+                                            web3.utils
+                                                .toBN(sellOption.strikePrice)
+                                                .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                                .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                                .toNumber() /
+                                            10 ** DISPLAY_DECIMALS
+                                        ).toString()}{" "}
+                                        DAI
+                                    </span>{" "}
+                                    and you will receive{" "}
+                                    <span className="text-gray-700 font-bold">
                                         {optionsMarket?.unitsPerOption} <span title={optionsMarket?.tokenAmountPerUnit}>base units</span>
                                     </span>{" "}
-                                    of <span title={sellOption.tokenAddress}>{sellOption.tokenAddress.slice(0, 8)}...</span> token. Note that we will also take a three
-                                    percent transaction of the trade price when the trade is executed.
+                                    of{" "}
+                                    <span className="text-gray-700 font-bold" title={sellOption.tokenAddress}>
+                                        {sellOption.tokenAddress.slice(0, 8)}...
+                                    </span>{" "}
+                                    token. Note that we will also take a three percent transaction of the trade price when the trade is executed.
                                 </p>
                             ) : (
                                 <p className="text-gray-500">
@@ -59,10 +74,7 @@ function Options() {
                                     await optionsMarket?.optionsMarket.methods
                                         .openTrade(
                                             sellOption.id,
-                                            web3.utils
-                                                .toBN(optionPremium)
-                                                .mul(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals)))
-                                                .mul(web3.utils.toBN(optionsMarket?.unitsPerOption))
+                                            web3.utils.toBN(optionPremium).mul(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals)))
                                         )
                                         .send({ from: account });
                                     // Close the modal

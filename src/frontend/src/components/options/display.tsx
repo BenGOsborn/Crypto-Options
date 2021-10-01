@@ -72,7 +72,6 @@ function DisplayOptions() {
                         if (contains) {
                             return prev;
                         }
-                        console.log(newOption);
                         return [...prev, newOption];
                     });
                 });
@@ -258,7 +257,9 @@ function DisplayOptions() {
                         <th className="px-3 py-2 break-words w-1/12">Expiry</th>
                         <th className="px-3 py-2 break-words w-1/12">Status</th>
                         <th className="px-3 py-2 break-words w-1/12">Token Address</th>
-                        <th className="px-3 py-2 break-words w-1/12">Strike Price (DAI)</th>
+                        <th className="px-3 py-2 break-words w-1/12" title={`${DISPLAY_DECIMALS} d.p`}>
+                            Strike Price (DAI)
+                        </th>
                         <th className="px-3 py-2 break-words w-1/12">Option</th>
                     </tr>
                 </thead>
