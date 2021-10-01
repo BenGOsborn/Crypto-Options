@@ -88,7 +88,7 @@ contract OptionsMarket {
     }
 
     // Check the state of the contract
-    function contractEnabled() external pure returns (bool) {
+    function contractEnabled() external view returns (bool) {
         return enabled;
     }
 
