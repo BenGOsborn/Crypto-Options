@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState, useContext } from "react";
 import Web3 from "web3";
 import { getERC20Contract, checkTransfer, optionsMarketContext, DISPLAY_DECIMALS, SearchFilter } from "../helpers";
-import { Option, sellOptionContext } from "./helpers";
+import { Option, optionsContext, sellOptionContext } from "./helpers";
 
 function DisplayOptions() {
     // Store the web3 data
@@ -11,7 +11,7 @@ function DisplayOptions() {
     const web3: Web3 = useWeb3React().library;
 
     // Store the existing written options by the account
-    const [options, setOptions] = useState<Option[]>([]);
+    const [options, setOptions] = useContext(optionsContext);
 
     // Used for filtering
     const [searchFilter, setSearchFilter] = useState<SearchFilter>({
@@ -361,6 +361,12 @@ function DisplayOptions() {
                                                         await optionsMarket?.optionsMarket.methods.exerciseOption(option.id).send({
                                                             from: account,
                                                         });
+
+                                                        // Update the state
+                                                        setOptions((prev) => {
+                                                            prev[index].status = "exercised";
+                                                            return prev;
+                                                        });
                                                     }}
                                                 >
                                                     Exercise
@@ -372,6 +378,12 @@ function DisplayOptions() {
                                                         // Collect the tokens / funds stored in the option
                                                         await optionsMarket?.optionsMarket.methods.collectExpired(option.id).send({
                                                             from: account,
+                                                        });
+
+                                                        // Update the state
+                                                        setOptions((prev) => {
+                                                            prev[index].status = "collected";
+                                                            return prev;
                                                         });
                                                     }}
                                                 >

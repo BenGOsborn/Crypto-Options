@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import Web3 from "web3";
 import { DISPLAY_DECIMALS, optionsMarketContext } from "../helpers";
 import DisplayOptions from "./display";
-import { Option, sellOptionContext } from "./helpers";
+import { Option, optionsContext, sellOptionContext } from "./helpers";
 import WriteOption from "./write";
 
 function Options() {
@@ -11,6 +11,9 @@ function Options() {
     const [optionsMarket, setOptionsMarket] = useContext(optionsMarketContext);
     const web3: Web3 = useWeb3React().library;
     const { account } = useWeb3React();
+
+    // Store the existing written options by the account
+    const [options, setOptions] = useState<Option[]>([]);
 
     // Store the option to sell
     const [sellOption, setSellOption] = useState<Option | null>(null);
@@ -100,6 +103,10 @@ function Options() {
                                                 .div(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
                                         )
                                         .send({ from: account });
+
+                                    // Update the state of the option
+                                    setOptions((prev) => prev.filter((opt) => opt.id !== sellOption.id));
+
                                     // Close the modal
                                     setSellOption(null);
                                 }}
@@ -142,9 +149,11 @@ function Options() {
             </div>
             <optionsMarketContext.Provider value={[optionsMarket, setOptionsMarket]}>
                 <WriteOption />
-                <sellOptionContext.Provider value={[sellOption, setSellOption]}>
-                    <DisplayOptions />
-                </sellOptionContext.Provider>
+                <optionsContext.Provider value={[options, setOptions]}>
+                    <sellOptionContext.Provider value={[sellOption, setSellOption]}>
+                        <DisplayOptions />
+                    </sellOptionContext.Provider>
+                </optionsContext.Provider>
             </optionsMarketContext.Provider>
         </div>
     );
