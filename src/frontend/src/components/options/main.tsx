@@ -105,7 +105,7 @@ function Options() {
                                         .send({ from: account });
 
                                     // Update the state of the option
-                                    setOptions((prev) => prev.filter((opt) => opt.id !== sellOption.id));
+                                    setOptions((prev) => prev.filter((opt) => opt.writer === account || opt.id !== sellOption.id));
 
                                     // Close the modal
                                     setSellOption(null);

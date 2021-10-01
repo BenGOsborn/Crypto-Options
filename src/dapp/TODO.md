@@ -3,8 +3,6 @@
 
 -   Write more tests / clean them up
 -   Add labels for the different sections
--   Update the states when an option is added / removed
--   Remove trade status from the non user trades + update fields when they have been exercised or sold or bought
 -   Fix the expiry range for the search fields
 
 -   Maybe add some type of bid system where if one person offers to execute the trade, it is held in limbo and lets other people bid on it for more, after a short amount of time this option will be transferred to them and unlocked ?

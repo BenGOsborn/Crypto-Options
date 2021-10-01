@@ -80,9 +80,6 @@ function Trades() {
 
             // Add an event listener to remove executed or cancelled trades
             optionsMarket?.optionsMarket.events.TradeExecuted({ fromBlock: 0 }).on("data", async (event: any) => {
-                // **** MAYBE IN THIS SECTION AND THE ONE BELOW, WE CAN UPDATE THE AREA TO ADD THE ITEM TO THE LIST WHEN IT IS CHANGED
-                // **** WE COULD DO THE SAME THING FOR THE OPTION FILTER AS WELL I GUESS, BUT HOW WOULD WE DO STATE CHANGES FOR THAT E.G. EXERCISED ???
-
                 // Remove trades that have been executed
                 const tradeId = event.returnValues.tradeId;
                 setTrades((prev) => prev.filter((trade) => trade.id !== tradeId));
