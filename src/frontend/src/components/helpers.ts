@@ -12,7 +12,7 @@ export interface OptionsMarketData {
     unitsPerOption: string;
 }
 
-export const DISPLAY_DECIMALS = 12;
+export const DISPLAY_DECIMALS = 8;
 
 // Options contract context
 export const optionsMarketContext = createContext<[OptionsMarketData | null, Dispatch<SetStateAction<OptionsMarketData | null>>]>(undefined as any);

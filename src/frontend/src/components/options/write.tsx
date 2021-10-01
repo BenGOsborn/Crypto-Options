@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useContext, useState } from "react";
 import Web3 from "web3";
-import { checkTransfer, getERC20Contract } from "../helpers";
+import { checkTransfer, DISPLAY_DECIMALS, getERC20Contract } from "../helpers";
 import { optionsMarketContext } from "../helpers";
 
 function WriteOption() {
@@ -33,8 +33,10 @@ function WriteOption() {
                             optionsMarket?.address,
                             account as string,
                             web3.utils
-                                .toBN(Math.floor(strikePrice * 10 ** optionsMarket?.tradeCurrencyDecimals))
+                                .toBN(Math.floor(strikePrice * 10 ** DISPLAY_DECIMALS))
                                 .mul(web3.utils.toBN(optionsMarket?.unitsPerOption))
+                                .mul(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals)))
+                                .div(web3.utils.toBN(10).pow(web3.utils.toBN(DISPLAY_DECIMALS)))
                                 .toString(),
                             optionsMarket?.tradeCurrency
                         );
@@ -113,7 +115,7 @@ function WriteOption() {
                 </fieldset>
 
                 <fieldset className="flex flex-col">
-                    <label className="text-gray-900 font-bold whitespace-nowrap" htmlFor="tokenPrice">
+                    <label className="text-gray-900 font-bold whitespace-nowrap" htmlFor="tokenPrice" title={`${DISPLAY_DECIMALS} d.p`}>
                         Strike Price (DAI)
                     </label>
                     <input
