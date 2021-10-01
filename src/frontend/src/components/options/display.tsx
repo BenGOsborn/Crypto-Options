@@ -88,42 +88,34 @@ function DisplayOptions() {
                     // Get the option and add it to the list
                     const tradeId = event.returnValues.tradeId;
                     const trade = await optionsMarket?.optionsMarket.methods.getTrade(tradeId).call();
-                    const optionOwner = await optionsMarket?.optionsMarket.methods.getOptionOwner(trade[1]).call();
+                    const option = await optionsMarket?.optionsMarket.methods.getOption(trade[1]).call();
+                    const owner = await optionsMarket?.optionsMarket.methods.getOptionOwner(trade[1]).call();
 
                     // Only add the option if it is owned and the id is not within the list
                     if (owner === account) {
-                        let contains = false;
-                        for (const opt of options) {
-                            if (opt.id === optionId) {
-                                contains = true;
-                                break;
+                        const newOption: Option = {
+                            id: trade[1],
+                            expiry: option[0] * 1000,
+                            status: option[1],
+                            writer: option[2],
+                            owner,
+                            tokenAddress: option[3],
+                            strikePrice: option[4],
+                            type: option[5],
+                        };
+                        setOptions((prev) => {
+                            let contains = false;
+                            for (const option of prev) {
+                                if (option.id === newOption.id) {
+                                    contains = true;
+                                    break;
+                                }
                             }
-                        }
-                        if (!contains) {
-                            const newOption: Option = {
-                                id: optionId,
-                                expiry: option[0] * 1000,
-                                status: option[1],
-                                writer: option[2],
-                                owner,
-                                tokenAddress: option[3],
-                                strikePrice: option[4],
-                                type: option[5],
-                            };
-                            setOptions((prev) => {
-                                let contains = false;
-                                for (const option of prev) {
-                                    if (option.id === newOption.id) {
-                                        contains = true;
-                                        break;
-                                    }
-                                }
-                                if (contains) {
-                                    return prev;
-                                }
-                                return [...prev, newOption];
-                            });
-                        }
+                            if (contains) {
+                                return prev;
+                            }
+                            return [...prev, newOption];
+                        });
                     }
                 });
         }
