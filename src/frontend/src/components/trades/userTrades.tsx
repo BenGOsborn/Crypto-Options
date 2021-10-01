@@ -1,8 +1,8 @@
 import { useWeb3React } from "@web3-react/core";
 import { useContext, useState } from "react";
 import Web3 from "web3";
-import { DISPLAY_DECIMALS, optionsMarketContext } from "../helpers";
-import { SearchFilter, userTradesContext } from "./helpers";
+import { DISPLAY_DECIMALS, optionsMarketContext, SearchFilter } from "../helpers";
+import { userTradesContext } from "./helpers";
 
 function UserTrades() {
     // Web3 data
@@ -15,7 +15,7 @@ function UserTrades() {
 
     // Used for filtering
     const [searchFilter, setSearchFilter] = useState<SearchFilter>({
-        optionType: "any",
+        optionType: "call",
         tradeStatus: "any",
         tokenAddress: "",
         writtenByUser: "any",
@@ -41,7 +41,6 @@ function UserTrades() {
                             });
                         }}
                     >
-                        <option value="any">Any</option>
                         <option value="call">Call</option>
                         <option value="put">Put</option>
                     </select>
@@ -150,7 +149,7 @@ function UserTrades() {
                     {trades
                         .filter((trade) => {
                             // Filter out option type
-                            if (searchFilter.optionType !== "any" && trade.type !== searchFilter.optionType) {
+                            if (trade.type !== searchFilter.optionType) {
                                 return false;
                             }
 
@@ -160,10 +159,10 @@ function UserTrades() {
                             }
 
                             // Filter token address
-                            if (!trade.tokenAddress.toLowerCase().startsWith(searchFilter.tokenAddress.toLowerCase())) return false;
+                            if (!trade.tokenAddress.toLowerCase().startsWith(searchFilter.tokenAddress?.toLowerCase() as string)) return false;
 
                             // Filter out of range expiry options
-                            if (!(searchFilter.expiryDateStart <= trade.expiry && trade.expiry <= searchFilter.expiryDateEnd)) return false;
+                            if (!((searchFilter.expiryDateStart as number) <= trade.expiry && trade.expiry <= (searchFilter.expiryDateEnd as number))) return false;
 
                             // Filter options written by user
                             if (searchFilter.writtenByUser !== "any") {
