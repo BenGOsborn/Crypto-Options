@@ -91,27 +91,6 @@ function NonUserTrades() {
                         }}
                     />
                 </fieldset>
-                <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
-                    <label htmlFor="type" className="text-gray-900 font-bold">
-                        Trade Status
-                    </label>
-                    <select
-                        id="type"
-                        className="bg-green-500 text-white font-bold rounded py-2 px-3"
-                        onChange={(e) => {
-                            setSearchFilter((prev) => {
-                                const newPrev = { ...prev };
-                                newPrev.tradeStatus = e.target.value as any;
-                                return newPrev;
-                            });
-                        }}
-                    >
-                        <option value="any">Any</option>
-                        <option value="open">Open</option>
-                        <option value="closed">Closed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                </fieldset>
             </form>
             <table className="mx-auto table-fixed" style={{ minWidth: 500 }}>
                 <thead>
@@ -125,8 +104,6 @@ function NonUserTrades() {
                         <th className="px-3 py-2 break-words w-1/12" title={`${DISPLAY_DECIMALS} d.p`}>
                             Strike Price (DAI)
                         </th>
-                        <th className="px-3 py-2 break-words w-1/12">Type</th>
-                        <th className="px-3 py-2 break-words w-1/12">Trade Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -134,11 +111,6 @@ function NonUserTrades() {
                         .filter((trade) => {
                             // Filter out option type
                             if (searchFilter.optionType !== "any" && trade.type !== searchFilter.optionType) {
-                                return false;
-                            }
-
-                            // Filter out trade type
-                            if (searchFilter.tradeStatus !== "any" && trade.tradeStatus !== searchFilter.tradeStatus) {
                                 return false;
                             }
 
@@ -207,12 +179,6 @@ function NonUserTrades() {
                                         .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
                                         .toNumber() /
                                         10 ** DISPLAY_DECIMALS}
-                                </td>
-                                <td className="px-3 py-4" title={trade.type}>
-                                    {trade.type}
-                                </td>
-                                <td className="px-3 py-4" title={trade.tradeStatus}>
-                                    {trade.tradeStatus}
                                 </td>
                             </tr>
                         ))}
