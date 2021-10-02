@@ -84,6 +84,7 @@ function Options() {
                                 onSubmit={async (e) => {
                                     // Prevent page from reloading
                                     e.preventDefault();
+
                                     // Open an order for the option
                                     await optionsMarket?.optionsMarket.methods
                                         .openTrade(
@@ -96,7 +97,16 @@ function Options() {
                                         .send({ from: account });
 
                                     // Update the state of the option
-                                    setOptions((prev) => prev.filter((opt) => opt.writer === account || opt.id !== sellOption.id));
+                                    setOptions((prev) => {
+                                        const clone = [...prev];
+                                        for (let i = 0; i < clone.length; i++) {
+                                            if (clone[i].id === sellOption.id) {
+                                                clone[i].owner = optionsMarket?.address as string;
+                                                break;
+                                            }
+                                        }
+                                        return clone;
+                                    });
 
                                     // Close the modal
                                     setSellOption(null);
