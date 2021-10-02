@@ -53,16 +53,17 @@ function Options() {
                                 ) : (
                                     <p className="text-gray-500">
                                         When someone buys your <span className="text-gray-700 font-bold">{sellOption.type}</span> option, they will have the right but not
-                                        the obligation to take your{" "}
+                                        the obligation to take your staked{" "}
                                         <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
                                             {web3.utils
                                                 .toBN(sellOption.strikePrice)
+                                                .mul(web3.utils.toBN(optionsMarket?.unitsPerOption as string))
                                                 .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
                                                 .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
                                                 .toNumber() /
                                                 10 ** DISPLAY_DECIMALS}
                                         </span>{" "}
-                                        per unit exchanged staked DAI in exchange for{" "}
+                                        DAI in exchange for{" "}
                                         <span className="text-gray-700 font-bold" title={`1 unit = ${optionsMarket?.tokenAmountPerUnit} base units of token`}>
                                             {optionsMarket?.unitsPerOption} units
                                         </span>{" "}
