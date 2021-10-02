@@ -364,8 +364,14 @@ function DisplayOptions() {
 
                                                         // Update the state
                                                         setOptions((prev) => {
-                                                            prev[index].status = "exercised";
-                                                            return prev;
+                                                            const clone = [...prev];
+                                                            for (let i = 0; i < clone.length; i++) {
+                                                                if (clone[i].id === option.id) {
+                                                                    clone[i].status = "exercised";
+                                                                    break;
+                                                                }
+                                                            }
+                                                            return clone;
                                                         });
                                                     }}
                                                 >
@@ -382,8 +388,14 @@ function DisplayOptions() {
 
                                                         // Update the state
                                                         setOptions((prev) => {
-                                                            prev[index].status = "collected";
-                                                            return prev;
+                                                            const clone = [...prev];
+                                                            for (let i = 0; i < clone.length; i++) {
+                                                                if (clone[i].id === option.id) {
+                                                                    clone[i].status = "collected";
+                                                                    break;
+                                                                }
+                                                            }
+                                                            return clone;
                                                         });
                                                     }}
                                                 >
