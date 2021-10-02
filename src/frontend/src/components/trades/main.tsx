@@ -20,7 +20,7 @@ function Trades() {
     const [buyTrade, setBuyTrade] = useState<Trade | null>(null);
 
     useEffect(() => {
-        if (active) {
+        if (optionsMarket !== null) {
             // Add an event listener for open trades
             optionsMarket?.optionsMarket.events
                 .TradeOpened({

@@ -7,7 +7,7 @@ import { Option, optionsContext, sellOptionContext } from "./helpers";
 function DisplayOptions() {
     // Store the web3 data
     const [optionsMarket, setOptionsMarket] = useContext(optionsMarketContext);
-    const { account } = useWeb3React();
+    const { active, account } = useWeb3React();
     const web3: Web3 = useWeb3React().library;
 
     // Store the existing written options by the account
