@@ -2,6 +2,7 @@
 -   Deploy to multiple networks with the same ABI
 
 -   Write more tests / clean them up
+-   Redeploy new version of contract to ropsten
 
 -   Fix the broken part of collecting and updating the list when an option is exercised / sold
 
