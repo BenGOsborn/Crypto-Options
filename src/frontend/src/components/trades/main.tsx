@@ -100,43 +100,75 @@ function Trades() {
                         <h2 className="font-bold text-xl uppercase text-gray-900">Buy Option</h2>
                         {buyTrade.type === "call" ? (
                             <p className="text-gray-500">
-                                By purchasing this {buyTrade.type} option for{" "}
-                                {web3.utils
-                                    .toBN(buyTrade.premium)
-                                    .mul(web3.utils.toBN(optionsMarket?.unitsPerOption as string))
-                                    .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
-                                    .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                    .toNumber() /
-                                    10 ** DISPLAY_DECIMALS}{" "}
-                                DAI, you are buying the right but not the obligation to buy {optionsMarket?.unitsPerOption} units of the token with address{" "}
-                                {buyTrade.tokenAddress.slice(0, 8)}... for{" "}
-                                {web3.utils
-                                    .toBN(buyTrade.strikePrice)
-                                    .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
-                                    .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                    .toNumber() /
-                                    10 ** DISPLAY_DECIMALS}{" "}
-                                DAI per unit any time before {new Date(buyTrade.expiry).toLocaleDateString()}.
+                                By purchasing this <span className="text-gray-700 font-bold">{buyTrade.type}</span> option for{" "}
+                                <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
+                                    {web3.utils
+                                        .toBN(buyTrade.premium)
+                                        .mul(web3.utils.toBN(optionsMarket?.unitsPerOption as string))
+                                        .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .toNumber() /
+                                        10 ** DISPLAY_DECIMALS}
+                                </span>{" "}
+                                DAI, you are buying the right but not the obligation to buy{" "}
+                                <span className="text-gray-700 font-bold">{optionsMarket?.unitsPerOption}</span>{" "}
+                                <span className="text-gray-700 font-bold" title={`1 unit = ${optionsMarket?.tokenAmountPerUnit} base token units`}>
+                                    units
+                                </span>{" "}
+                                of the token with address{" "}
+                                <span className="text-gray-700 font-bold" title={buyTrade.tokenAddress}>
+                                    {buyTrade.tokenAddress.slice(0, 8)}...
+                                </span>{" "}
+                                for{" "}
+                                <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
+                                    {web3.utils
+                                        .toBN(buyTrade.strikePrice)
+                                        .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .toNumber() /
+                                        10 ** DISPLAY_DECIMALS}
+                                </span>{" "}
+                                DAI per unit any time before{" "}
+                                <span className="text-gray-700 font-bold" title={new Date(buyTrade.expiry).toString()}>
+                                    {new Date(buyTrade.expiry).toLocaleDateString()}
+                                </span>
+                                .
                             </p>
                         ) : (
                             <p className="text-gray-500">
-                                By purchasing this {buyTrade.type} option for{" "}
-                                {web3.utils
-                                    .toBN(buyTrade.premium)
-                                    .mul(web3.utils.toBN(optionsMarket?.unitsPerOption as string))
-                                    .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
-                                    .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                    .toNumber() /
-                                    10 ** DISPLAY_DECIMALS}{" "}
-                                DAI, you are buying the right but not the obligation to sell {optionsMarket?.unitsPerOption} units of the token with address{" "}
-                                {buyTrade.tokenAddress.slice(0, 8)}... for{" "}
-                                {web3.utils
-                                    .toBN(buyTrade.strikePrice)
-                                    .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
-                                    .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                    .toNumber() /
-                                    10 ** DISPLAY_DECIMALS}{" "}
-                                DAI per unit any time before {new Date(buyTrade.expiry).toLocaleDateString()}.
+                                By purchasing this <span className="text-gray-700 font-bold">{buyTrade.type}</span> option for{" "}
+                                <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
+                                    {web3.utils
+                                        .toBN(buyTrade.premium)
+                                        .mul(web3.utils.toBN(optionsMarket?.unitsPerOption as string))
+                                        .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .toNumber() /
+                                        10 ** DISPLAY_DECIMALS}
+                                </span>{" "}
+                                DAI, you are buying the right but not the obligation to sell{" "}
+                                <span className="text-gray-700 font-bold">{optionsMarket?.unitsPerOption}</span>{" "}
+                                <span className="text-gray-700 font-bold" title={`1 unit = ${optionsMarket?.tokenAmountPerUnit} base token units`}>
+                                    units
+                                </span>{" "}
+                                of the token with address{" "}
+                                <span className="text-gray-700 font-bold" title={buyTrade.tokenAddress}>
+                                    {buyTrade.tokenAddress.slice(0, 8)}...
+                                </span>{" "}
+                                for{" "}
+                                <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
+                                    {web3.utils
+                                        .toBN(buyTrade.strikePrice)
+                                        .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                        .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                        .toNumber() /
+                                        10 ** DISPLAY_DECIMALS}
+                                </span>{" "}
+                                DAI per unit any time before{" "}
+                                <span className="text-gray-700 font-bold" title={new Date(buyTrade.expiry).toString()}>
+                                    {new Date(buyTrade.expiry).toLocaleDateString()}
+                                </span>
+                                .
                             </p>
                         )}
                         <div className="flex justify-between sm:flex-row flex-col items-stretch sm:space-x-4 sm:space-y-0 space-y-4 mt-5">
