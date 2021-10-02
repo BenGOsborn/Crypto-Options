@@ -58,7 +58,7 @@ function Trades() {
                             if (contains) {
                                 return prev;
                             }
-                            return [...prev, newTrade];
+                            return [newTrade, ...prev];
                         });
                     }
                     if (trade[0] === account) {
@@ -73,7 +73,7 @@ function Trades() {
                             if (contains) {
                                 return prev;
                             }
-                            return [...prev, newTrade];
+                            return [newTrade, ...prev];
                         });
                     }
                 });

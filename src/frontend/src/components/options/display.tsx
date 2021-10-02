@@ -63,7 +63,7 @@ function DisplayOptions() {
                         if (contains) {
                             return prev;
                         }
-                        return [...prev, newOption];
+                        return [newOption, ...prev];
                     });
                 });
 
@@ -105,7 +105,7 @@ function DisplayOptions() {
                             if (contains) {
                                 return prev;
                             }
-                            return [...prev, newOption];
+                            return [newOption, ...prev];
                         });
                     }
                 });
