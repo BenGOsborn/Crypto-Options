@@ -226,6 +226,7 @@ contract OptionsMarket {
         Trade memory trade = trades[_tradeId];
 
         // Verify that the trade may be executed
+        require(enabled, "Contract is currently disabled");
         require(_compareStrings(trade.status, "open"), "Only open trades may be executed");
         require(msg.sender != trade.poster, "Trade poster may not execute their own trade, use 'cancelTrade' instead");
 
