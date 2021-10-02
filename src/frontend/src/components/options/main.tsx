@@ -44,12 +44,14 @@ function Options() {
                                                 .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
                                                 .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
                                                 .toNumber() /
-                                                10 ** DISPLAY_DECIMALS}
-                                        </span>{" "}
-                                        <span className="text-gray-700 font-bold" title={`${optionsMarket?.tokenAmountPerUnit} base units of token`}>
+                                                10 ** DISPLAY_DECIMALS}{" "}
                                             per unit
                                         </span>{" "}
-                                        in the option staked DAI in exchange for <span className="text-gray-700 font-bold">{optionsMarket?.unitsPerOption}</span> units of{" "}
+                                        exchanged staked DAI in exchange for{" "}
+                                        <span className="text-gray-700 font-bold" title={`1 unit = ${optionsMarket?.tokenAmountPerUnit} base units of token`}>
+                                            {optionsMarket?.unitsPerOption} units
+                                        </span>{" "}
+                                        of{" "}
                                         <span className="text-gray-700 font-bold" title={sellOption.tokenAddress}>
                                             {sellOption.tokenAddress.slice(0, 8)}...
                                         </span>{" "}
