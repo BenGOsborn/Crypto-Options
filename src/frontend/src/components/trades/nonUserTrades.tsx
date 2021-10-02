@@ -27,7 +27,7 @@ function NonUserTrades() {
 
     return (
         <div className="overflow-auto h-96 sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
-            <h2 className="px-8 pt-4 text-3xl font-extrabold text-gray-900">Your Trades</h2>
+            <h2 className="px-8 pt-4 text-3xl font-extrabold text-gray-900">Options Market</h2>
             <h3 className="px-8 mb-1 text-lg text-gray-500 pb-6">Stake your funds into the contract and create a new options contract which can be traded.</h3>
             <form className="pb-6 mb-6 flex flex-wrap justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100" style={{ minWidth: 500 }}>
                 <fieldset className="flex flex-col space-x-1 space-y-2 justify-center items-center">
