@@ -26,69 +26,27 @@ function Options() {
                     <div className="bg-black bg-opacity-80 fixed inset-0 flex items-center justify-center">
                         <div className="mx-auto sm:w-2/5 w-4/5 min-w-min bg-white rounded-xl shadow-md p-6">
                             <h2 className="font-bold text-xl uppercase text-gray-900">Sell Option</h2>
-                            {sellOption.type === "call" ? (
-                                sellOption.writer === account ? (
+
+                            {sellOption.writer === account ? (
+                                sellOption.type === "call" ? (
                                     <p className="text-gray-500">
-                                        When someone buys your <span className="text-gray-700 font-bold">call</span> option, they will have the right, but not the
-                                        obligation to exercise that option for the strike price of{" "}
-                                        <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
-                                            {(
-                                                web3.utils
-                                                    .toBN(sellOption.strikePrice)
-                                                    .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
-                                                    .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                                    .toNumber() /
-                                                10 ** DISPLAY_DECIMALS
-                                            ).toString()}{" "}
-                                            DAI
-                                        </span>{" "}
-                                        and you will receive{" "}
-                                        <span className="text-gray-700 font-bold">
-                                            {optionsMarket?.unitsPerOption} <span title={`${optionsMarket?.tokenAmountPerUnit} base tokens`}>units</span>
-                                        </span>{" "}
-                                        of{" "}
-                                        <span className="text-gray-700 font-bold" title={sellOption.tokenAddress}>
-                                            {sellOption.tokenAddress.slice(0, 8)}...
-                                        </span>{" "}
-                                        token. Note that we will also take a three percent transaction of the trade price when the trade is executed.
+                                        When someone buys your {sellOption.type} option, they will have the right but not the obligation to take your{" "}
+                                        {optionsMarket?.unitsPerOption} staked units in the option in exchange for the strike price of DAI per unit in the option.
                                     </p>
                                 ) : (
                                     <p className="text-gray-500">
-                                        When someone buys your option, they will have the right to exercise that option for the strike price you set for the option. Note
-                                        that we will also take a three percent transaction of the trade price when the trade is executed.
+                                        {/* **** Modify this one */}
+                                        {/* **** Add bolding and span tags to different parts of the variable text */}
+                                        When someone buys your {sellOption.type} option, they will have the right but not the obligation to take your{" "}
+                                        {optionsMarket?.unitsPerOption} staked units in the option in exchange for the strike price of DAI per unit in the option.
                                     </p>
                                 )
-                            ) : sellOption.writer === account ? (
-                                <p className="text-gray-500">
-                                    When someone buys your <span className="text-gray-700 font-bold">call</span> option, they will have the right, but not the obligation
-                                    to exercise that option for the strike price of{" "}
-                                    <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
-                                        {(
-                                            web3.utils
-                                                .toBN(sellOption.strikePrice)
-                                                .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
-                                                .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
-                                                .toNumber() /
-                                            10 ** DISPLAY_DECIMALS
-                                        ).toString()}{" "}
-                                        DAI
-                                    </span>{" "}
-                                    and you will receive{" "}
-                                    <span className="text-gray-700 font-bold">
-                                        {optionsMarket?.unitsPerOption} <span title={`${optionsMarket?.tokenAmountPerUnit} base tokens`}>units</span>
-                                    </span>{" "}
-                                    of{" "}
-                                    <span className="text-gray-700 font-bold" title={sellOption.tokenAddress}>
-                                        {sellOption.tokenAddress.slice(0, 8)}...
-                                    </span>{" "}
-                                    token. Note that we will also take a three percent transaction of the trade price when the trade is executed.
-                                </p>
                             ) : (
                                 <p className="text-gray-500">
-                                    When someone buys your option, they will have the right to exercise that option for the strike price you set for the option. Note that
-                                    we will also take a three percent transaction of the trade price when the trade is executed.
+                                    When someone buys your {sellOption.type} option, you will no longer have the right to exercise this option.
                                 </p>
                             )}
+                            <p className="text-gray-500 mt-5">Note that we will also take a three percent transaction of the trade price when the trade is executed.</p>
                             <form
                                 onSubmit={async (e) => {
                                     // Prevent page from reloading
@@ -114,6 +72,10 @@ function Options() {
                                 <fieldset className="flex flex-col my-5">
                                     <label className="text-gray-900 font-bold whitespace-nowrap" htmlFor="tokenPrice" title={`${DISPLAY_DECIMALS} d.p`}>
                                         Premium
+                                    </label>
+                                    <label className="text-gray-500 text-sm italic" htmlFor="tokenPrice">
+                                        This will be the price that the buyer will pay for each unit of the option. Note that each option contains{" "}
+                                        <span className="text-gray-700 font-bold">{optionsMarket?.unitsPerOption}</span> units.
                                     </label>
                                     <input
                                         type="number"
