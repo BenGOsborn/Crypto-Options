@@ -114,6 +114,13 @@ function DisplayOptions() {
 
     return (
         <div className="overflow-x-auto sm:w-3/5 w-11/12 mx-auto mt-16 rounded-xl shadow-md p-6">
+            <h2 className="pl-6 text-3xl font-extrabold text-gray-900">Your Options</h2>
+            <h3 className="pl-6 mb-1 text-lg text-gray-500 pb-6">
+                View, filter, and interact with all of your written or owned options below. You may sell an option by clicking the{" "}
+                <span className="text-green-500 font-bold">sell</span> button, exercise the option by clicking the{" "}
+                <span className="text-red-600 font-bold">exercise</span> button, and you may collect your staked tokens out of an expired option by clicking the{" "}
+                <span className="text-yellow-500 font-bold">collect</span> button.
+            </h3>
             <form
                 className="pb-6 mb-6 flex flex-wrap min-w-min justify-evenly lg:items-start items-center space-x-4 border-b-4 border-gray-100"
                 style={{

@@ -18,6 +18,8 @@ function WriteOption() {
 
     return (
         <div className="mx-auto w-1/4 min-w-min rounded-xl shadow-md p-6">
+            <h2 className="text-3xl font-extrabold text-gray-900">Write An Option</h2>
+            <h3 className="mb-1 text-lg text-gray-500 pb-6">Stake your funds into the contract and create a new options contract which can be traded.</h3>
             <form
                 className="flex flex-col space-y-6"
                 onSubmit={async (e) => {
