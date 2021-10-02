@@ -30,15 +30,30 @@ function Options() {
                             {sellOption.writer === account ? (
                                 sellOption.type === "call" ? (
                                     <p className="text-gray-500">
-                                        When someone buys your {sellOption.type} option, they will have the right but not the obligation to take your{" "}
-                                        {optionsMarket?.unitsPerOption} staked units in the option in exchange for the strike price of DAI per unit in the option.
+                                        When someone buys your <span className="text-gray-700 font-bold">{sellOption.type}</span> option, they will have the right but not
+                                        the obligation to take your {optionsMarket?.unitsPerOption} staked units of {sellOption.tokenAddress} in the option in exchange
+                                        for the strike price of DAI per unit in the option.
                                     </p>
                                 ) : (
                                     <p className="text-gray-500">
-                                        {/* **** Modify this one */}
-                                        {/* **** Add bolding and span tags to different parts of the variable text */}
-                                        When someone buys your {sellOption.type} option, they will have the right but not the obligation to take your{" "}
-                                        {optionsMarket?.unitsPerOption} staked units in the option in exchange for the strike price of DAI per unit in the option.
+                                        When someone buys your <span className="text-gray-700 font-bold">{sellOption.type}</span> option, they will have the right but not
+                                        the obligation to take your{" "}
+                                        <span className="text-gray-700 font-bold" title={`${DISPLAY_DECIMALS} d.p`}>
+                                            {web3.utils
+                                                .toBN(sellOption.strikePrice)
+                                                .mul(web3.utils.toBN(10 ** DISPLAY_DECIMALS))
+                                                .div(web3.utils.toBN(10).pow(web3.utils.toBN(optionsMarket?.tradeCurrencyDecimals as number)))
+                                                .toNumber() /
+                                                10 ** DISPLAY_DECIMALS}
+                                        </span>{" "}
+                                        <span className="text-gray-700 font-bold" title={`${optionsMarket?.tokenAmountPerUnit} base units of token`}>
+                                            per unit
+                                        </span>{" "}
+                                        in the option staked DAI in exchange for <span className="text-gray-700 font-bold">{optionsMarket?.unitsPerOption}</span> units of{" "}
+                                        <span className="text-gray-700 font-bold" title={sellOption.tokenAddress}>
+                                            {sellOption.tokenAddress.slice(0, 8)}...
+                                        </span>{" "}
+                                        token.
                                     </p>
                                 )
                             ) : (
