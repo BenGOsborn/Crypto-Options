@@ -10,3 +10,4 @@
     -   I could make a bidding system where people can submit bids to an order, and then after a certain expiration date then a person can go through, execute those trades, and then pay a portion of the bids paid to the person. The amount that the trade is listed for will be the bid price, and it will be the minimum they can pay for that trade
 
 -   Instead of having the number of coins per option be determined, allow the user to go through and write multiple options in the same transaction each with a fixed amount of the token
+-   Please try and make some sort of orderbook that automatically calculates the price of the option in DAI (I need some way of getting implied volatility though)
